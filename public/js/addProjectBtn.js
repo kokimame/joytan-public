@@ -50,6 +50,7 @@ function loadAudioBtn(projectRef, targetId) {
             res.prefixes.forEach(userRef => {
               userRef.listAll().then(res => {
                 res.items.forEach(wavRef => {
+                  console.log(wavRef.name)
                   addAudioPlayer(wavRef, targetId)
                 })
               })
