@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Joytan Rating</title>
+  <title>Joytan Public</title>
 
   <!-- update the version number as needed -->
   <script defer src="/__/firebase/6.4.1/firebase-app.js"></script>
@@ -23,8 +23,8 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
   <script src="/js/addAudio.js"></script>
+  <script src="/js/addProjectBtn.js"></script>
   <script src="/js/addProjectContent.js"></script>
-  <script src="/js/dropdown.js"></script>
   <script src="/js/startUp.js"></script>
   <link rel="stylesheet" href="css/main.css">
 
@@ -34,11 +34,17 @@
     window.onload = function() {
       const storage = firebase.storage();
       const storageRef = storage.ref();
-      const projectsRef = storageRef.child('projects_structure.json');
-      const topUsersRef = storageRef.child('users');
-
-      var wavRefLookup = parseStorage(topUsersRef);
-      loadProjects(wavRefLookup);
+      const topProjectsRef = storageRef.child('projects');
+      const structureRef = storageRef.child('projects_structure_2.json');
+      var structureData;
+      structureRef.getDownloadURL().then(function(url) {
+        $.getJSON(url, function(data) {
+          readProjects(data, topProjectsRef);
+        })
+      })
+      // const topUsersRef = storageRef.child('users');
+      // var wavRefLookup = parseStorage(topUsersRef);
+      // loadProjects(wavRefLookup);
     }
   </script>
 
@@ -48,9 +54,9 @@
   <div class="row justify-content-center">
     <div class="col-12">
       <div class="container">
-        <h2 class="mt-2">Joytan Rating</h2>
+        <h2 class="mt-2">Joytan Public</h2>
         <hr />
-        <div class="col-12" id="project_contents">
+        <div class="col-12" id="projects_top">
         </div>
 
         <div class="col-12" id="audio_players">
