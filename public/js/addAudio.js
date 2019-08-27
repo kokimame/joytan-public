@@ -1,4 +1,4 @@
-function addAudioPlayer(wavRef, targetId) {
+function addAudioPlayer(wavRef, targetId, script) {
   wavRef.getMetadata().then(function(data) {
     var date = data["timeCreated"].slice(0, 10)
     var path = data["fullPath"]
@@ -6,7 +6,7 @@ function addAudioPlayer(wavRef, targetId) {
       const div = document.createElement('div');
       div.className = 'row';
       div.innerHTML = `
-      <p>"${date}, ${path}"</p>
+      <p>"${date}, ${script}"</p>
       <audio controls>
         <source src="${url}" type="audio/wav">
       Your browser does not support the audio element.
