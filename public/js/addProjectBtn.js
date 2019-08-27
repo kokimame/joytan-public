@@ -25,13 +25,37 @@ function addProjectBtn(item, projectRef) {
   </p>
   `;
   document.getElementById('projects_top').appendChild(div);
+  document.getElementById(loadId).addEventListener("click", function() {
+    loadAudioBtn(projectRef, cardId)
+  })
+
   projectRef.listAll().then(res => {
     var fileCount = 0;
     var titleDiv = document.getElementById(titleId)
-    res.prefixes.forEach(function(entryRef) {
+    res.prefixes.forEach(entryRef => {
       entryRef.listAll().then(res => {
         fileCount += res.prefixes.length;
         titleDiv.innerHTML = [titleFixed, fileCount.toString()].join(' ');
+      })
+    })
+  })
+}
+
+function loadAudioBtn(projectRef, targetId) {
+  projectRef.listAll().then(res => {
+    res.prefixes.forEach(entryRef => {
+      entryRef.listAll().then(res => {
+        res.prefixes.forEach(keyRef => {
+          keyRef.listAll().then(res => {
+            res.prefixes.forEach(userRef => {
+              userRef.listAll().then(res => {
+                res.items.forEach(wavRef => {
+                  addAudioPlayer(wavRef, targetId)
+                })
+              })
+            })    
+          })
+        })
       })
     })
   })

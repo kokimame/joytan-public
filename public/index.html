@@ -39,7 +39,7 @@
       var structureData;
       structureRef.getDownloadURL().then(function(url) {
         $.getJSON(url, function(data) {
-          readProjects(data, topProjectsRef);
+          loadProjects(data, topProjectsRef);
         })
       })
       // const topUsersRef = storageRef.child('users');
