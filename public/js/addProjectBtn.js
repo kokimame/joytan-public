@@ -15,18 +15,18 @@ function addProjectBtn(item, projectRef) {
     </button>
   <div class="collapse" id="${item["dirname"]}">
     <div class="card card-body" id="${cardId}">
+      <p>
+        <button type="button" class="btn btn-success" id="${btnId}">>></button>
+      </p>
       <div id="${loadId}">
-        <p>
-          <button type="button" class="btn btn-success" id="${btnId}">Load audio</button>
-        </p>
       </div>
     </div>
   </div>
   </p>
   `;
   document.getElementById('projects_top').appendChild(div);
-  document.getElementById(loadId).addEventListener("click", function() {
-    loadAudioBtn(projectRef, cardId)
+  document.getElementById(btnId).addEventListener("click", function() {
+    loadAudioBtn(projectRef, loadId)
   })
 
   projectRef.listAll().then(res => {
@@ -35,13 +35,18 @@ function addProjectBtn(item, projectRef) {
     res.prefixes.forEach(entryRef => {
       entryRef.listAll().then(res => {
         fileCount += res.prefixes.length;
-        titleDiv.innerHTML = [titleFixed, fileCount.toString()].join(' ');
+        titleDiv.innerHTML = [titleFixed, fileCount.toString()].join(' ... ');
       })
     })
   })
 }
 
+var audioNumToShow = 4;
+var openedStack = [];
 function loadAudioBtn(projectRef, targetId) {
+  var loadCount = 0;
+  var isNewlyAdded = false;
+  removeAudioPlayers(targetId);
   projectRef.listAll().then(res => {
     res.prefixes.forEach(entryRef => {
       entryRef.listAll().then(res => {
@@ -49,10 +54,25 @@ function loadAudioBtn(projectRef, targetId) {
           keyRef.listAll().then(res => {
             res.prefixes.forEach(userRef => {
               userRef.listAll().then(res => {
-                res.items.forEach(wavRef => {
-                  console.log(wavRef.name)
-                  addAudioPlayer(wavRef, targetId)
-                })
+                console.log("opened stack ... ", openedStack.length, openedStack);
+                for(var wavRef of res.items) {
+                  if (loadCount >= audioNumToShow) {
+                    console.log("Broke the for loop");
+                    break;
+                  }
+                  if (wavRef.name.startsWith('n_d_') &&
+                   !openedStack.includes(wavRef.fullPath) ) {
+                    addAudioPlayer(wavRef, targetId);
+                    openedStack.push(wavRef.fullPath);
+                    loadCount += 1;
+                    isNewlyAdded = true;
+                  }
+                }
+                // Nothing newly added; openedStack is full and needs to reflesh
+                if (!isNewlyAdded) {
+                  console.log("Reflesh opened stack.");
+                  openedStack = [];
+                }
               })
             })    
           })

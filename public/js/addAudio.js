@@ -15,5 +15,11 @@ function addAudioPlayer(wavRef, targetId) {
       document.getElementById(targetId).appendChild(div);
     })
   })
+}
 
+function removeAudioPlayers(targetId) {
+  const node = document.getElementById(targetId);
+  while (node.firstChild) {
+    node.removeChild(node.firstChild);
+  }
 }
