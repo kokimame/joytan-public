@@ -1,0 +1,27 @@
+table {
+    font-family: arial, sans-serif;
+    border: 2px solid #666666;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+tr:nth-child(3) {
+    background-color: #dddddd;
+}
+
+audio {
+    filter: sepia(20%) saturate(70%) grayscale(1) contrast(99%) invert(12%);
+}
+
+.btn-success {
+    margin-right: 100px;
+}

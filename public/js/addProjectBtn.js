@@ -25,6 +25,7 @@ function addProjectBtn(item, projectRef) {
     <div class="card card-body" id="${cardId}">
       <p>
         <button type="button" class="btn btn-success" id="${btnId}">>></button>
+        <button type="button" class="btn btn-success" id="vote">Vote</button>
       </p>
       <div id="${loadId}">
       </div>

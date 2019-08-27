@@ -6,11 +6,32 @@ function addAudioPlayer(wavRef, targetId, script) {
       const div = document.createElement('div');
       div.className = 'row';
       div.innerHTML = `
-      <p>"${date}, ${script}"</p>
-      <audio controls>
-        <source src="${url}" type="audio/wav">
-      Your browser does not support the audio element.
-      </audio>
+      <table>
+        <col width="90px" />
+        <tr>
+          <td><font size="2">${date}</font></td>
+          <td>${script}</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>
+          <audio controls>
+            <source src="${url}" type="audio/wav">
+            Your browser does not support the audio element.
+          </audio>
+          </td>
+        </tr>
+        <tr>
+        <td></td>
+        <td>
+          <form>
+            <input type="radio" name="review" value="okay"> OK  
+            <input type="radio" name="review" value="wrong"> Wrong  
+            <input type="radio" name="review" value="unclear"> Unclear  
+          </form>
+        </td>
+      </tr>
+      </table>
       `;
       document.getElementById(targetId).appendChild(div);
     })
