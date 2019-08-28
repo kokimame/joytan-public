@@ -18,12 +18,10 @@ function addAudioPlayer(wavRef, targetId, script) {
         </tr>
         <tr>
         <td>
-          <div>
-              <button id="${btnId}">▶️</button>
-          </div>
         </td>
         <td>
-          <form>
+          <button id="${btnId}">▶️</button>
+          <form style="display: inline-block;">
             <input type="radio" name="review" value="okay"> OK  
             <input type="radio" name="review" value="wrong"> Wrong  
             <input type="radio" name="review" value="unclear"> Unclear  
