@@ -8,6 +8,10 @@ function addProjectBtn(item, projectRef) {
   const cardId = "".concat("card_", item["dirname"])
   const loadId = "".concat("load_", item["dirname"])
   const titleId = "".concat("title_", item["dirname"])
+  const doneProgId = "".concat("done", titleId)
+  const reviewProgId = "".concat("review", titleId)
+  const availProgId = "".concat("avail", titleId)
+  const totalEntries = item["entries"].length;
   var titleFixed = item["flags"] + item["title"]
 
   fileCountLookup[item["dirname"]] = 0;
@@ -16,16 +20,28 @@ function addProjectBtn(item, projectRef) {
   //🇯🇵🇫🇷🇩🇪🇬🇧🇺🇸🇷🇺🇰🇷🇮🇹🇸🇪🇪🇸🇹🇷
   div.innerHTML = `
   <p>
-    <button class="btn btn-outline-dark btn-block" type="button" data-toggle="collapse" data-target="#${item["dirname"]}" aria-expanded="false">
+    <button class="btn btn-outline-dark btn-block text-left" type="button" 
+      data-toggle="collapse" data-target="#${item["dirname"]}" aria-expanded="false">
       <div class"btn-title" id="${titleId}">
-        ${titleFixed} 0
+        ${titleFixed}
+      </div>
+      
+      <div class="progress">
+        <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" 
+          role="progressbar" style="width: 0%; height: 100%" aria-valuenow="10" 
+          aria-valuemin="0" aria-valuemax="100" id="${doneProgId}"></div>
+        <div class="progress-bar" 
+          role="progressbar" style="width: 0%; height: 90%" aria-valuenow="10" 
+          aria-valuemin="0" aria-valuemax="100" id="${reviewProgId}"></div>
+        <div class="progress-bar bg-info" role="progressbar" 
+          style="width: 0%; height: 80%" aria-valuenow="30"
+           aria-valuemin="0" aria-valuemax="100" id="${availProgId}"></div>
       </div>
     </button>
   <div class="collapse" id="${item["dirname"]}">
     <div class="card card-body" id="${cardId}">
       <p>
-        <button type="button" class="btn btn-success" id="${btnId}">>></button>
-        <button type="button" class="btn btn-success" id="vote">Vote</button>
+        <button type="button" class="btn btn-success" id="${btnId}">Vote and next</button>
       </p>
       <div id="${loadId}">
       </div>
@@ -33,21 +49,25 @@ function addProjectBtn(item, projectRef) {
   </div>
   </p>
   `;
+
   document.getElementById('projects_top').appendChild(div);
-  document.getElementById(btnId).addEventListener("click", function() {
-    loadAudioBtn(projectRef, loadId, item["entries"])
+  document.getElementById(btnId).addEventListener("click", () => {
+    loadAudioBtn(projectRef, loadId, item["entries"]);
   })
 
   projectRef.listAll().then(res => {
-    var titleDiv = document.getElementById(titleId)
     res.prefixes.forEach(entryRef => {
       entryRef.listAll().then(res => {
         res.prefixes.forEach(keyRef => {
           keyRef.listAll().then(res => {
+            var availProg = document.getElementById(availProgId);
+            
             fileCountLookup[item["dirname"]] += res.prefixes.length;
-            titleDiv.innerHTML = [
-              titleFixed, fileCountLookup[item["dirname"]
-            ].toString()].join(' ... ');
+            availRatio = (100 * fileCountLookup[item["dirname"]] / totalEntries)
+            availProg.style.width = availRatio.toString() + "%";
+            if (availRatio > 10) {
+              availProg.innerText = "Available";
+            }
           })
         })
       })
@@ -58,7 +78,7 @@ function addProjectBtn(item, projectRef) {
 function loadAudioBtn(projectRef, targetId, entries) {
   var loadCount = 0;
   const audioNumToShow = 4;
-  
+
   removeAudioPlayers(targetId);
 
   projectRef.listAll().then(res => {
@@ -68,17 +88,17 @@ function loadAudioBtn(projectRef, targetId, entries) {
           keyRef.listAll().then(res => {
             res.prefixes.forEach(userRef => {
               userRef.listAll().then(res => {
-                if (openedStackLookup[projectRef.name].length 
+                if (openedStackLookup[projectRef.name].length
                   == fileCountLookup[projectRef.name]) {
                   openedStackLookup[projectRef.name] = [];
                 }
-                for(var wavRef of res.items) {
+                for (var wavRef of res.items) {
                   if (loadCount >= audioNumToShow) {
                     console.log("Skip the loop");
                     break;
                   }
                   if (wavRef.name.startsWith('n_d_') &&
-                   !openedStackLookup[projectRef.name].includes(wavRef.fullPath) ) {
+                    !openedStackLookup[projectRef.name].includes(wavRef.fullPath)) {
                     var script = entries[parseInt(entryRef.name, 10) - 1][keyRef.name];
                     addAudioPlayer(wavRef, targetId, script);
                     openedStackLookup[projectRef.name].push(wavRef.fullPath);
@@ -87,7 +107,7 @@ function loadAudioBtn(projectRef, targetId, entries) {
                   }
                 }
               })
-            })    
+            })
           })
         })
       })

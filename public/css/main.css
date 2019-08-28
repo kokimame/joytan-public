@@ -1,3 +1,14 @@
+.text-left {
+    text-align: left !important;
+ }
+
+ .card-header .fa {
+    transition: .3s transform ease-in-out;
+  }
+  .card-header .collapsed .fa {
+    transform: rotate(90deg);
+  }
+
 table {
     font-family: arial, sans-serif;
     border: 2px solid #666666;
