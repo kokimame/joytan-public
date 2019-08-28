@@ -29,10 +29,21 @@ tr:nth-child(3) {
     background-color: #dddddd;
 }
 
-audio {
-    filter: sepia(20%) saturate(70%) grayscale(1) contrast(99%) invert(12%);
-}
 
 .btn-success {
     margin-right: 100px;
+}
+
+button {
+    background-color: transparent;
+    background-repeat: no-repeat;
+    border: none;
+    cursor: pointer;
+    overflow: hidden;
+    outline: none;
+}
+
+.button.play {
+    width: 74px;
+    height: 74px;
 }
