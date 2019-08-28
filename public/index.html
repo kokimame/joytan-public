@@ -34,7 +34,7 @@
       const storage = firebase.storage();
       const storageRef = storage.ref();
       const topProjectsRef = storageRef.child('projects');
-      const structureRef = storageRef.child('projects_structure_2.json');
+      const structureRef = storageRef.child('projects_structure.json');
       var structureData;
       structureRef.getDownloadURL().then(function(url) {
         $.getJSON(url, function(data) {
