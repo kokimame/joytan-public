@@ -39,7 +39,7 @@ function addProjectBtn(item, projectRef) {
           aria-valuemin="0" aria-valuemax="100" id="${availProgId}"></div>
       </div>
     </button>
-  <div class="collapse" id="${item["dirname"]}">
+  <div class="collapse" id="${item["dirname"]}" data-parent="#projectsTop">
     <div class="card card-body" id="${cardId}">
       <p>
         <button type="button" class="btn btn-success" id="${btnId}">Vote and next</button>
@@ -51,7 +51,7 @@ function addProjectBtn(item, projectRef) {
   </p>
   `;
 
-  document.getElementById('projects_top').appendChild(div);
+  document.getElementById('projectsTop').appendChild(div);
   document.getElementById(titleId).addEventListener("click", () => {
     if (document.getElementById(item["dirname"]).className == "collapse") {
       loadAudioBtn(projectRef, loadId, item["entries"]);
