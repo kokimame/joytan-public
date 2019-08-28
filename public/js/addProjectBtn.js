@@ -22,8 +22,9 @@ function addProjectBtn(item, projectRef) {
   <p>
     <button class="btn btn-outline-dark btn-block text-left" type="button" 
       data-toggle="collapse" data-target="#${item["dirname"]}" aria-expanded="false">
+      <i class="fa fa-chevron-down pull-right"></i>
       <div class"btn-title" id="${titleId}">
-        ${titleFixed}
+          ${titleFixed}
       </div>
       
       <div class="progress">
@@ -35,7 +36,7 @@ function addProjectBtn(item, projectRef) {
           aria-valuemin="0" aria-valuemax="100" id="${reviewProgId}"></div>
         <div class="progress-bar bg-info" role="progressbar" 
           style="width: 0%; height: 80%" aria-valuenow="30"
-           aria-valuemin="0" aria-valuemax="100" id="${availProgId}"></div>
+          aria-valuemin="0" aria-valuemax="100" id="${availProgId}"></div>
       </div>
     </button>
   <div class="collapse" id="${item["dirname"]}">
@@ -51,6 +52,11 @@ function addProjectBtn(item, projectRef) {
   `;
 
   document.getElementById('projects_top').appendChild(div);
+  document.getElementById(titleId).addEventListener("click", () => {
+    if (document.getElementById(item["dirname"]).className == "collapse") {
+      loadAudioBtn(projectRef, loadId, item["entries"]);
+    }
+  })
   document.getElementById(btnId).addEventListener("click", () => {
     loadAudioBtn(projectRef, loadId, item["entries"]);
   })

@@ -1,8 +1,8 @@
 function addAudioPlayer(wavRef, targetId, script) {
-  wavRef.getMetadata().then(function(data) {
+  wavRef.getMetadata().then((data) => {
     var date = data["timeCreated"].slice(0, 10)
     var path = data["fullPath"]
-    wavRef.getDownloadURL().then(function(url) {
+    wavRef.getDownloadURL().then((url) => {
       const div = document.createElement('div');
       div.className = 'row';
       div.innerHTML = `

@@ -30,7 +30,7 @@
   </script>
 
   <script type="text/javascript">
-    window.onload = function() {
+    window.onload = () => {
       const storage = firebase.storage();
       const storageRef = storage.ref();
       const topProjectsRef = storageRef.child('projects');
