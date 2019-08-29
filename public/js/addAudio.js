@@ -1,9 +1,11 @@
-function addAudioPlayer(wavRef, targetId, script) {
+function addAudioPlayer(wavRef, targetId, script, projectName) {
   wavRef.getMetadata().then((data) => {
     var date = data["timeCreated"].slice(0, 10);
     var path = data["fullPath"];
     var playerId = "".concat("player_", path);
     var btnId = "".concat("btn_", path);
+    const spinId = "".concat("spin_", projectName)
+    const loadBtnId = "".concat("loadBtn_", projectName)
 
     wavRef.getDownloadURL().then((url) => {
       const div = document.createElement('div');
@@ -32,6 +34,9 @@ function addAudioPlayer(wavRef, targetId, script) {
       `;
  
       document.getElementById(targetId).appendChild(div);
+      // Hide loader
+      $("#" + spinId).addClass("hide-loader");
+      document.getElementById(loadBtnId).style = "display: block";
  
       document.getElementById(playerId).addEventListener('ended', () => {
         document.getElementById(btnId).innerText = '▶️'
@@ -40,7 +45,6 @@ function addAudioPlayer(wavRef, targetId, script) {
       document.getElementById(btnId).addEventListener('click', () => {
         var player = document.getElementById(playerId)
         var button = document.getElementById(btnId)
-        console.log(player.paused)
         if (player.paused) {
           player.play()
           button.innerText = '⏸️️'

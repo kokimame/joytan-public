@@ -4,9 +4,10 @@ var openedStackLookup = {};
 
 function addProjectBtn(item, projectRef) {
   const div = document.createElement('div');
-  const btnId = "".concat("btn_", item["dirname"])
+  const btnId = "".concat("loadBtn_", item["dirname"])
   const cardId = "".concat("card_", item["dirname"])
-  const loadId = "".concat("load_", item["dirname"])
+  const audioId = "".concat("audio_", item["dirname"])
+  const spinId = "".concat("spin_", item["dirname"])
   const titleId = "".concat("title_", item["dirname"])
   const doneProgId = "".concat("done", titleId)
   const reviewProgId = "".concat("review", titleId)
@@ -19,7 +20,7 @@ function addProjectBtn(item, projectRef) {
 
   //🇯🇵🇫🇷🇩🇪🇬🇧🇺🇸🇷🇺🇰🇷🇮🇹🇸🇪🇪🇸🇹🇷
   div.innerHTML = `
-  <p>
+  <br />
     <button class="btn btn-outline-dark btn-block text-left" type="button" 
       data-toggle="collapse" data-target="#${item["dirname"]}" aria-expanded="false">
       <i class="fa fa-chevron-down pull-right"></i>
@@ -41,24 +42,29 @@ function addProjectBtn(item, projectRef) {
     </button>
   <div class="collapse" id="${item["dirname"]}" data-parent="#projectsTop">
     <div class="card card-body" id="${cardId}">
+      <div class="spinning" id="${spinId}">
+      </div>
       <p>
         <button type="button" class="btn btn-success" id="${btnId}">Vote and next</button>
       </p>
-      <div id="${loadId}">
+      <div id="${audioId}">
       </div>
     </div>
   </div>
-  </p>
   `;
 
   document.getElementById('projectsTop').appendChild(div);
   document.getElementById(titleId).addEventListener("click", () => {
     if (document.getElementById(item["dirname"]).className == "collapse") {
-      loadAudioBtn(projectRef, loadId, item["entries"]);
+      loadAudioBtn(projectRef, audioId, item["entries"]);
+      $("#" + spinId).removeClass("hide-loader");
+      document.getElementById(btnId).style = "display: none;"
     }
   })
   document.getElementById(btnId).addEventListener("click", () => {
-    loadAudioBtn(projectRef, loadId, item["entries"]);
+    loadAudioBtn(projectRef, audioId, item["entries"]);
+    $("#" + spinId).removeClass("hide-loader");
+    document.getElementById(btnId).style = "display: none;"
   })
 
   projectRef.listAll().then(res => {
@@ -106,7 +112,7 @@ function loadAudioBtn(projectRef, targetId, entries) {
                   if (wavRef.name.startsWith('n_d_') &&
                     !openedStackLookup[projectRef.name].includes(wavRef.fullPath)) {
                     var script = entries[parseInt(entryRef.name, 10) - 1][keyRef.name];
-                    addAudioPlayer(wavRef, targetId, script);
+                    addAudioPlayer(wavRef, targetId, script, projectRef.name);
                     openedStackLookup[projectRef.name].push(wavRef.fullPath);
                     loadCount += 1;
                     isNewlyAdded = true;
