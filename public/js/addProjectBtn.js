@@ -42,7 +42,10 @@ function addProjectBtn(item, projectRef) {
     </button>
   <div class="collapse" id="${item["dirname"]}" data-parent="#projectsTop">
     <div class="card card-body" id="${cardId}">
-      <div class="spinning" id="${spinId}">
+      <div id="${spinId}">
+      <font size="2">BETA: If this spins too long, please re-open the project.</font>
+        <div class="spinning">
+        </div>
       </div>
       <p>
         <button type="button" class="btn btn-success" id="${btnId}">Vote and next</button>
