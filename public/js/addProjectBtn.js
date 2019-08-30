@@ -5,6 +5,7 @@ var openedStackLookup = {};
 function addProjectBtn(item, projectRef) {
   const div = document.createElement('div');
   const btnId = "".concat("loadBtn_", item["dirname"])
+  const formId = "".concat("form_", item["dirname"])
   const cardId = "".concat("card_", item["dirname"])
   const audioId = "".concat("audio_", item["dirname"])
   const spinId = "".concat("spin_", item["dirname"])
@@ -47,27 +48,29 @@ function addProjectBtn(item, projectRef) {
         <div class="spinning">
         </div>
       </div>
-      <p>
-        <button type="button" class="btn btn-success" id="${btnId}">Vote and next</button>
-      </p>
+      <div id="${formId}">
+        <p>
+          <button type="button" class="btn btn-success" id="${btnId}">Vote and next</button>
+        </p>
+      </div>
       <div id="${audioId}">
       </div>
     </div>
   </div>
   `;
-
   document.getElementById('projectsTop').appendChild(div);
+
   document.getElementById(titleId).addEventListener("click", () => {
     if (document.getElementById(item["dirname"]).className == "collapse") {
       loadAudioBtn(projectRef, audioId, item["entries"]);
       $("#" + spinId).removeClass("hide-loader");
-      document.getElementById(btnId).style = "display: none;"
+      document.getElementById(formId).style = "display: none;"
     }
   })
   document.getElementById(btnId).addEventListener("click", () => {
     loadAudioBtn(projectRef, audioId, item["entries"]);
     $("#" + spinId).removeClass("hide-loader");
-    document.getElementById(btnId).style = "display: none;"
+    document.getElementById(formId).style = "display: none;"
   })
 
   projectRef.listAll().then(res => {

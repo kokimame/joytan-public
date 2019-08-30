@@ -5,7 +5,7 @@ function addAudioPlayer(wavRef, targetId, script, projectName) {
     var playerId = "".concat("player_", path);
     var btnId = "".concat("btn_", path);
     const spinId = "".concat("spin_", projectName)
-    const loadBtnId = "".concat("loadBtn_", projectName)
+    const formId = "".concat("form_", projectName)
 
     wavRef.getDownloadURL().then((url) => {
       const div = document.createElement('div');
@@ -36,7 +36,7 @@ function addAudioPlayer(wavRef, targetId, script, projectName) {
       document.getElementById(targetId).appendChild(div);
       // Hide loader
       $("#" + spinId).addClass("hide-loader");
-      document.getElementById(loadBtnId).style = "display: block";
+      document.getElementById(formId).style = "display: block";
  
       document.getElementById(playerId).addEventListener('ended', () => {
         document.getElementById(btnId).innerText = '▶️'
