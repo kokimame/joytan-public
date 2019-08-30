@@ -24,7 +24,6 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
   <script src="/js/addAudio.js"></script>
   <script src="/js/addProjectBtn.js"></script>
-  <script src="/js/startUp.js"></script>
   <link rel="stylesheet" href="css/main.css">
 
   </script>
@@ -36,9 +35,17 @@
       const topProjectsRef = storageRef.child('projects');
       const structureRef = storageRef.child('projects_structure.json');
       var structureData;
+
       structureRef.getDownloadURL().then(function(url) {
         $.getJSON(url, function(data) {
           loadProjects(data, topProjectsRef);
+        })
+      })
+    }
+    function loadProjects(structureJson, topRef) {
+      topRef.listAll().then(res => {
+        res.prefixes.forEach(projectRef => {
+          addProjectBtn(structureJson[projectRef.name], projectRef);
         })
       })
     }
