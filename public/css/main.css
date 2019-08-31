@@ -66,7 +66,24 @@ button {
     outline: none;
 }
 
-.button.play {
-    width: 74px;
-    height: 74px;
+.popover {
+    background: #a8a8a8;
+}
+.popover.bottom .arrow:after {
+    border-bottom-color: #a8a8a8;
+}
+.popover-content {
+}
+.popovermenu {
+    list-style: none;
+    padding: 0px;
+    margin: 0px;
+    height: 200px;
+    /* left: 50%; top: 50%; */
+    overflow-y: scroll;
+}
+.popovermenu li {
+}
+.popovermenu li a {
+    color: rgb(0, 0, 0);
 }

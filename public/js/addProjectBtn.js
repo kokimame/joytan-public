@@ -6,6 +6,8 @@ function addProjectBtn(item, projectRef) {
   const div = document.createElement('div');
   const btnId = "".concat("loadBtn_", item["dirname"])
   const formId = "".concat("form_", item["dirname"])
+  const pickId = "".concat("pick_", item["dirname"])
+  const popId = "".concat("pop_", item["dirname"])
   const cardId = "".concat("card_", item["dirname"])
   const audioId = "".concat("audio_", item["dirname"])
   const spinId = "".concat("spin_", item["dirname"])
@@ -51,6 +53,10 @@ function addProjectBtn(item, projectRef) {
       <div id="${formId}">
         <p>
           <button type="button" class="btn btn-success" id="${btnId}">Vote and next</button>
+          <button tabindex="0" class="btn btn-info" role="button" data-toggle="popover" 
+          data-trigger="focus" data-placement="bottom" data-style="mypops" id="${pickId}">Index</button>
+          <div id="${popId}" style="display: none;">
+          </div>
         </p>
       </div>
       <div id="${audioId}">
@@ -59,6 +65,14 @@ function addProjectBtn(item, projectRef) {
   </div>
   `;
   document.getElementById('projectsTop').appendChild(div);
+  document.getElementById(popId).appendChild(setPopupItems(item));
+
+  $("#" + pickId).popover({
+    html: true,
+    content: () => {
+        return $('#' + popId).html();
+    }
+  });
 
   document.getElementById(titleId).addEventListener("click", () => {
     if (document.getElementById(item["dirname"]).className == "collapse") {
@@ -91,6 +105,26 @@ function addProjectBtn(item, projectRef) {
       })
     })
   })
+}
+
+function setPopupItems(projectItem) {
+  var ul = document.createElement('ul');
+  var wantedKey = projectItem["wanted"]
+  var entries = projectItem["entries"]
+  ul.className = "popovermenu"
+
+  ul.innerHTML += `
+  <script type="text/javascript">
+    function linkClicked(text) {
+      console.log(text)
+    }
+  </script>
+  `
+
+  for(var i = 0; i < entries.length; i+=1) {
+    ul.innerHTML += `<li class="popLink" onclick="linkClicked(this.innerText)"><a href="#">${i+1}</a></li>`
+  }
+  return ul
 }
 
 function loadAudioBtn(projectRef, targetId, entries) {
