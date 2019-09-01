@@ -7,7 +7,6 @@ function addProjectBtn(item, projectRef) {
   const btnId = "".concat("loadBtn_", item["dirname"])
   const formId = "".concat("form_", item["dirname"])
   const pickId = "".concat("pick_", item["dirname"])
-  const popId = "".concat("pop_", item["dirname"])
   const cardId = "".concat("card_", item["dirname"])
   const audioId = "".concat("audio_", item["dirname"])
   const spinId = "".concat("spin_", item["dirname"])
@@ -25,9 +24,9 @@ function addProjectBtn(item, projectRef) {
   div.innerHTML = `
   <br />
     <button class="btn btn-outline-dark btn-block text-left" type="button" 
-      data-toggle="collapse" data-target="#${item["dirname"]}" aria-expanded="false">
+      data-toggle="collapse" data-target="#${item["dirname"]}" aria-expanded="false" id="${titleId}">
       <i class="fa fa-chevron-down pull-right"></i>
-      <div class"btn-title" id="${titleId}">
+      <div class"btn-title" >
           ${titleFixed}
       </div>
       
@@ -46,7 +45,6 @@ function addProjectBtn(item, projectRef) {
   <div class="collapse" id="${item["dirname"]}" data-parent="#projectsTop">
     <div class="card card-body" id="${cardId}">
       <div id="${spinId}">
-      <font size="2">BETA: If this spins too long, please re-open the project.</font>
         <div class="spinning">
         </div>
       </div>
@@ -61,6 +59,7 @@ function addProjectBtn(item, projectRef) {
     </div>
   </div>
   `;
+  // TODO: Audio auto-play
   document.getElementById('projectsTop').appendChild(div);
 
   var availProg = document.getElementById(availProgId);
@@ -100,8 +99,11 @@ function addProjectBtn(item, projectRef) {
     pickerIndexChanged();
   })
 
-  document.getElementById(titleId).addEventListener("click", () => {
-    if (picker.value > 0 && document.getElementById(item["dirname"]).className == "collapse") {
+  document.getElementById(titleId).addEventListener("click", (e) => {
+    if (picker.value <= 0) {
+      // Stop when picker is NOT ready! TODO: Probably there is a better way to do this.
+      e.stopPropagation();
+    } else if (document.getElementById(item["dirname"]).className == "collapse") {
       pickerIndexChanged();
     }
   })
