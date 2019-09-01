@@ -51,117 +51,77 @@ function addProjectBtn(item, projectRef) {
         </div>
       </div>
       <div id="${formId}">
-        <p>
-          <button type="button" class="btn btn-success" id="${btnId}">Vote and next</button>
-          <button tabindex="0" class="btn btn-info" role="button" data-toggle="popover" 
-          data-trigger="focus" data-placement="bottom" data-style="mypops" id="${pickId}">Index</button>
-          <div id="${popId}" style="display: none;">
-          </div>
-        </p>
+        <button type="button" class="btn btn-success" id="${btnId}">Vote and next</button>
+        <select class="form-control" id="${pickId}" style="width: 100px; display: inline-block;">
+        </select>
       </div>
+      <br />
       <div id="${audioId}">
       </div>
     </div>
   </div>
   `;
   document.getElementById('projectsTop').appendChild(div);
-  document.getElementById(popId).appendChild(setPopupItems(item));
 
-  $("#" + pickId).popover({
-    html: true,
-    content: () => {
-        return $('#' + popId).html();
-    }
-  });
-
-  document.getElementById(titleId).addEventListener("click", () => {
-    if (document.getElementById(item["dirname"]).className == "collapse") {
-      loadAudioBtn(projectRef, audioId, item["entries"]);
-      $("#" + spinId).removeClass("hide-loader");
-      document.getElementById(formId).style = "display: none;"
-    }
-  })
-  document.getElementById(btnId).addEventListener("click", () => {
-    loadAudioBtn(projectRef, audioId, item["entries"]);
-    $("#" + spinId).removeClass("hide-loader");
-    document.getElementById(formId).style = "display: none;"
-  })
-
+  var availProg = document.getElementById(availProgId);
+  var picker = document.getElementById(pickId);
   projectRef.listAll().then(res => {
     res.prefixes.forEach(entryRef => {
       entryRef.listAll().then(res => {
         res.prefixes.forEach(keyRef => {
-          keyRef.listAll().then(res => {
-            var availProg = document.getElementById(availProgId);
-            
+          keyRef.listAll().then(res => {            
             fileCountLookup[item["dirname"]] += res.prefixes.length;
             availRatio = (100 * fileCountLookup[item["dirname"]] / totalEntries)
             availProg.style.width = availRatio.toString() + "%";
             if (availRatio > 10) {
               availProg.innerText = "Available";
             }
+            var index = parseInt(entryRef.name, 10)
+            picker.innerHTML += `<option value="${index}">${index}</option>`
+
+            var selectList = $('#' + pickId + ' option');
+            selectList.sort(function(a,b){
+                return b.value - a.value;
+            });
+            $('#' + pickId).html(selectList);
           })
         })
       })
     })
   })
-}
 
-function setPopupItems(projectItem) {
-  var ul = document.createElement('ul');
-  var wantedKey = projectItem["wanted"]
-  var entries = projectItem["entries"]
-  ul.className = "popovermenu"
-
-  ul.innerHTML += `
-  <script type="text/javascript">
-    function linkClicked(text) {
-      console.log(text)
+  document.getElementById(titleId).addEventListener("click", () => {
+    if (picker.value > 0 && document.getElementById(item["dirname"]).className == "collapse") {
+      keyRef = projectRef.child(("00000" + picker.value).slice(-5)).child(item["wanted"])
+      loadAudioBtn(keyRef, audioId, item["entries"][picker.value - 1][item["wanted"]], item["dirname"]);
+      $("#" + spinId).removeClass("hide-loader");
+      document.getElementById(formId).style = "display: none;"
     }
-  </script>
-  `
-
-  for(var i = 0; i < entries.length; i+=1) {
-    ul.innerHTML += `<li class="popLink" onclick="linkClicked(this.innerText)"><a href="#">${i+1}</a></li>`
-  }
-  return ul
+  })
+  document.getElementById(btnId).addEventListener("click", () => {
+    keyRef = projectRef.child(("00000" + picker.value).slice(-5)).child(item["wanted"])
+    loadAudioBtn(keyRef, audioId, item["entries"][picker.value - 1][item["wanted"]], item["dirname"]);
+    $("#" + spinId).removeClass("hide-loader");
+    document.getElementById(formId).style = "display: none;"
+  })
 }
 
-function loadAudioBtn(projectRef, targetId, entries) {
+function loadAudioBtn(kayRef, targetId, script, projectName) {
   var loadCount = 0;
   const audioNumToShow = 4;
 
   removeAudioPlayers(targetId);
 
-  projectRef.listAll().then(res => {
-    res.prefixes.forEach(entryRef => {
-      entryRef.listAll().then(res => {
-        res.prefixes.forEach(keyRef => {
-          keyRef.listAll().then(res => {
-            res.prefixes.forEach(userRef => {
-              userRef.listAll().then(res => {
-                if (openedStackLookup[projectRef.name].length
-                  == fileCountLookup[projectRef.name]) {
-                  openedStackLookup[projectRef.name] = [];
-                }
-                for (var wavRef of res.items) {
-                  if (loadCount >= audioNumToShow) {
-                    console.log("Skip the loop");
-                    break;
-                  }
-                  if (wavRef.name.startsWith('n_d_') &&
-                    !openedStackLookup[projectRef.name].includes(wavRef.fullPath)) {
-                    var script = entries[parseInt(entryRef.name, 10) - 1][keyRef.name];
-                    addAudioPlayer(wavRef, targetId, script, projectRef.name);
-                    openedStackLookup[projectRef.name].push(wavRef.fullPath);
-                    loadCount += 1;
-                    isNewlyAdded = true;
-                  }
-                }
-              })
-            })
-          })
-        })
+  keyRef.listAll().then(res => {
+    res.prefixes.forEach(userRef => {
+      userRef.listAll().then(res => {
+        for (var wavRef of res.items) {
+          if (wavRef.name.startsWith('n_d_')) {
+            addAudioPlayer(wavRef, targetId, script, projectName);
+            loadCount += 1;
+            isNewlyAdded = true;
+          }
+        }
       })
     })
   })
