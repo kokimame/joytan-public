@@ -63,7 +63,7 @@ exports.denoiseAudio = functions.storage.object().onFinalize(async (object) => {
   console.log("Denoised audio created at", denoisedTempFilePath)
 
   await spawn(soxPath, [
-    "--norm=-10", denoisedTempFilePath, normedTempFilePath
+    "--norm=-8", denoisedTempFilePath, normedTempFilePath
   ], {capture : ['stdout', 'stderr']})
   .catch(err => {
     console.log(err)
