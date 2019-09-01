@@ -77,7 +77,7 @@ function addProjectBtn(item, projectRef) {
               availProg.innerText = "Available";
             }
             var index = parseInt(entryRef.name, 10)
-            picker.innerHTML += `<option value="${index}">${index}</option>`
+            picker.innerHTML += `<option value="${index}" onchange="pickerIndexChanged()">${index}</option>`
 
             var selectList = $('#' + pickId + ' option');
             selectList.sort(function(a,b){
@@ -90,36 +90,39 @@ function addProjectBtn(item, projectRef) {
     })
   })
 
+  function pickerIndexChanged() {
+    keyRef = projectRef.child(("00000" + picker.value).slice(-5)).child(item["wanted"])
+    startLoadingAudio(keyRef, audioId, item["entries"][picker.value - 1][item["wanted"]], item["dirname"]);
+    $("#" + spinId).removeClass("hide-loader");
+    document.getElementById(formId).style = "display: none;"
+  }
+  $('#' + pickId).change(() => {
+    pickerIndexChanged();
+  })
+
   document.getElementById(titleId).addEventListener("click", () => {
     if (picker.value > 0 && document.getElementById(item["dirname"]).className == "collapse") {
-      keyRef = projectRef.child(("00000" + picker.value).slice(-5)).child(item["wanted"])
-      loadAudioBtn(keyRef, audioId, item["entries"][picker.value - 1][item["wanted"]], item["dirname"]);
-      $("#" + spinId).removeClass("hide-loader");
-      document.getElementById(formId).style = "display: none;"
+      pickerIndexChanged();
     }
   })
   document.getElementById(btnId).addEventListener("click", () => {
-    keyRef = projectRef.child(("00000" + picker.value).slice(-5)).child(item["wanted"])
-    loadAudioBtn(keyRef, audioId, item["entries"][picker.value - 1][item["wanted"]], item["dirname"]);
-    $("#" + spinId).removeClass("hide-loader");
-    document.getElementById(formId).style = "display: none;"
+    picker.selectedIndex -= 1;
+    if (picker.selectedIndex < 0) {
+      picker.selectedIndex = picker.length - 1;
+    }
+    pickerIndexChanged();
   })
 }
 
-function loadAudioBtn(kayRef, targetId, script, projectName) {
-  var loadCount = 0;
-  const audioNumToShow = 4;
-
-  removeAudioPlayers(targetId);
+function startLoadingAudio(kayRef, appendId, script, projectName) {
+  removeAudioPlayers(appendId);
 
   keyRef.listAll().then(res => {
     res.prefixes.forEach(userRef => {
       userRef.listAll().then(res => {
         for (var wavRef of res.items) {
           if (wavRef.name.startsWith('n_d_')) {
-            addAudioPlayer(wavRef, targetId, script, projectName);
-            loadCount += 1;
-            isNewlyAdded = true;
+            addAudioPlayer(wavRef, appendId, script, projectName);
           }
         }
       })
