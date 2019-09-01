@@ -7,12 +7,6 @@ html, body {
     text-align: left !important;
  }
 
-.fa {
-  transition: .3s transform ease-in-out;
-}
-.collapsed .fa {
-  transform: rotate(90deg);
-}
 
 .spinning {
     border: 8px solid #f3f3f3; /* Light grey */
@@ -59,4 +53,24 @@ button {
     cursor: pointer;
     overflow: hidden;
     outline: none;
+}
+
+.fa.fa-chevron-down.pull-right {
+    transition: .3s transform ease-in-out;
+}
+.collapsed .fa {
+    transform: rotate(90deg);
+}
+
+.fa.icon {
+    font-size: 30px;
+    width: 50px;
+    text-align: center;
+    text-decoration: none;
+    color: black;
+}
+  
+  /* Add a hover effect if you want */
+.fa:hover {
+    opacity: 0.7;
 }
