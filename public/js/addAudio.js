@@ -12,24 +12,24 @@ function addPlayer(wavRef, targetId, script, projectName) {
       div.className = 'player-table';
       div.innerHTML = `
       <table class="bordered">
-      <td>
-        <i id="${btnId}" class="fa fa-play ml-2" style="font-size: 30px; width: 40px;"></i>
-      </td>
-      <td>
-        <div class="card-body text-center" style="display: inline-block;">
-          <h5>${script}</h5>
-          <audio id="${playerId}" preload="true" type="audio/wav">
-              <source src="${url}">
-          </audio>
-          <form style="display: inline-block;">
-            <input type="radio" name="review" value="okay"> OK  
-            <input type="radio" name="review" value="wrong"> Wrong  
-            <input type="radio" name="review" value="unclear"> Unclear  
-          </form>
-          <p style="font-size: 10px;">${date}</p>
-        </div>
-      </td>
-    </table>
+        <td>
+          <i id="${btnId}" class="fa fa-play ml-2" style="font-size: 30px; width: 20px; padding-left: 4px;"></i>
+        </td>
+        <td>
+          <div class="card-body text-center">
+            <h5>${script}</h5>
+            <audio id="${playerId}" preload="true" type="audio/wav">
+                <source src="${url}">
+            </audio>
+            <form style="display: inline-block;">
+              <input type="radio" name="review" value="okay"> OK  
+              <input type="radio" name="review" value="wrong"> Wrong  
+              <input type="radio" name="review" value="unclear"> Unclear  
+            </form>
+            <p style="font-size: 10px;">${date}</p>
+          </div>
+        </td>
+      </table>
       `;
  
       document.getElementById(targetId).appendChild(div);

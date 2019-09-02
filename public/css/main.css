@@ -26,10 +26,6 @@ html, body {
     display: none;
 }
 
-.audio-field {
-    overflow: hidden;
-}
-
 .player-table {
     display: inline-block;
     margin: 3px;
@@ -38,8 +34,14 @@ table {
     border-collapse: separate !important;
     border-spacing: 0;
 }
+
+.card-body.text-center {
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+
 .bordered {
-    background: #ffeeb8;
+    background: #d4d4d4;
     border: solid #ccc 1px;
     -moz-border-radius: 6px;
     -webkit-border-radius: 6px;
@@ -49,21 +51,11 @@ table {
     box-shadow: 0 3px 3px #ccc;
 }
 .bordered tr:hover {
-    background: #fff2c7;    
+    background: #e4e4e4;    
     -webkit-transition: all 0.1s ease-in-out;
     -moz-transition: all 0.1s ease-in-out;
     transition: all 0.1s ease-in-out;
 }
-.bordered td {
-    padding: 10px;
-    text-align: left;
-}
- 
-td:first {
-    width: 100px;
-    padding: 8px;
-}
-
 button {
     background-color: transparent;
     background-repeat: no-repeat;
@@ -92,54 +84,3 @@ button {
 .fa:hover {
     opacity: 0.7;
 }
-/*  --------------------------- */
-/* Audio element from somewhere */
-.view {
-    height: 100%; 
-}
-  
-.gradient-card {
-    /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(220, 66, 37, 0.5)), color-stop(100%, rgba(0, 47, 75, 0.5)));
-    /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top, rgba(0, 47, 75, 0.5) 0%, rgba(220, 66, 37, 0.5) 100%);
-    /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top, rgba(0, 47, 75, 0.5) 0%, rgba(220, 66, 37, 0.5) 100%);
-    /* Opera 11.10+ */
-    /* IE10+ */
-    background: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 47, 75, 0.5)), to(rgba(220, 66, 37, 0.5)));
-    background: linear-gradient(to bottom, rgba(0, 47, 75, 0.5) 0%, rgba(220, 66, 37, 0.5) 100%);
-    /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#002f4b', endColorstr='#00000000', GradientType=0);
-    /* IE6-9 */ 
-}
-    
-.card {
-    -webkit-border-radius: 10px;
-    border-radius: 10px; 
-}
-  
-.card .view {
-    -webkit-border-top-left-radius: 10px;
-    border-top-left-radius: 10px;
-    -webkit-border-top-right-radius: 10px;
-    border-top-right-radius: 10px; 
-}
-
-.card h5 a {
-    color: #0d47a1;
-}
-.card h5 a:hover {
-    color: #072f6b;
-}
-  
-#playhead {
-    width: 8px;
-    height: 8px;
-    -webkit-border-radius: 50%;
-    border-radius: 50%;
-    margin-top: -3px;
-    background: black;
-    cursor: pointer; 
-}
-  

@@ -54,7 +54,7 @@ function addProjectBtn(item, projectRef) {
         </select>
       </div>
       <br />
-      <div id="${audioId}" class="audio-field">
+      <div id="${audioId}">
       </div>
     </div>
   </div>
