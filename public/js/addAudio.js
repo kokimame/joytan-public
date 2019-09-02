@@ -11,26 +11,25 @@ function addPlayer(wavRef, targetId, script, projectName) {
       const div = document.createElement('div');
       div.className = 'playerTable';
       div.innerHTML = `
-      <table class="table">
-      <audio id="${playerId}" src="${url}" type="audio/wav></audio>
-        <col width="40px" />
-        <tr>
-          <td style="width: 20%"><font size="2">${date}</font></td>
-          <td>${script}</td>
-        </tr>
-        <tr>
-        <td>
-        </td>
-        <td>
-          <button id="${btnId}"><i class="fa fa-play ml-2" style="font-size: 30px;"></i></button>
+      <table class="bordered">
+      <td>
+        <i id="${btnId}" class="fa fa-play ml-2" style="font-size: 30px; width: 40px;"></i>
+      </td>
+      <td>
+        <div class="card-body text-center" style="display: inline-block;">
+          <h5>${script}</h5>
+          <audio id="${playerId}" preload="true" type="audio/wav">
+              <source src="${url}">
+          </audio>
           <form style="display: inline-block;">
             <input type="radio" name="review" value="okay"> OK  
             <input type="radio" name="review" value="wrong"> Wrong  
             <input type="radio" name="review" value="unclear"> Unclear  
           </form>
-        </td>
-      </tr>
-      </table>
+          <p style="font-size: 10px;">${date}</p>
+        </div>
+      </td>
+    </table>
       `;
  
       document.getElementById(targetId).appendChild(div);
@@ -39,7 +38,7 @@ function addPlayer(wavRef, targetId, script, projectName) {
       document.getElementById(formId).style = "display: block";
  
       document.getElementById(playerId).addEventListener('ended', () => {
-        document.getElementById(btnId).innerHTML = `<i class="fa fa-play ml-2" style="font-size: 30px;"></i>`
+        document.getElementById(btnId).className = "fa fa-play ml-2"
       })
       
       document.getElementById(btnId).addEventListener('click', () => {
@@ -48,10 +47,10 @@ function addPlayer(wavRef, targetId, script, projectName) {
 
         if (player.paused) {
           player.play()
-          button.innerHTML = `<i class="fa fa-pause ml-2" style="font-size: 30px;"></i>`
+          button.className = "fa fa-pause ml-2"
         } else if (!player.paused) {
           player.pause()
-          button.innerHTML = `<i class="fa fa-play ml-2" style="font-size: 30px;"></i>`
+          button.className = "fa fa-play ml-2"
         }
       }) 
     })
