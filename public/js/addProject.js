@@ -1,5 +1,8 @@
 var fileCountLookup = {};
 var openedStackLookup = {};
+var cardPallete = ["#a8e6cf", "#dcedc1", "#ffd3b6", "#ffaaa5", "#ff8b94",
+                   "#ebf4f6", "#bdeaee", "#90cdd6", "#fff6e9", "#ffefd7", 
+                   "#fffef9", "#e3f0ff", "#d2e7ff"];
 
 
 function addProjectBtn(item, projectRef) {
@@ -99,6 +102,7 @@ function addProjectBtn(item, projectRef) {
     currentIndex = picker.value - 1;
     script = item["entries"][currentIndex][item["wanted"]];
     projectName = item["dirname"];
+    randomColor = cardPallete[Math.floor(Math.random() * cardPallete.length)];
     appendAudio(audioId);
 
     $("#" + spinId).removeClass("hide-loader");
@@ -125,6 +129,7 @@ function addProjectBtn(item, projectRef) {
   })
   document.getElementById(voteBtnId).addEventListener("click", () => {
     removeAllPlayers(audioId);
+    picker.selectedIndex -= 1;
     if (picker.selectedIndex < 0) {
       picker.selectedIndex = picker.length - 1;
     }

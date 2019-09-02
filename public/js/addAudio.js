@@ -11,7 +11,7 @@ function addPlayer(wavRef, targetId, script, projectName) {
       const div = document.createElement('div');
       div.className = 'player-table';
       div.innerHTML = `
-      <table class="bordered">
+      <table class="bordered" style="background: ${randomColor};">
         <td style="padding-bottom: 25px;">
           <font size="2" style="padding-left: 10px;">${currentIndex + 1} </font><br />
           <i id="${btnId}" class="fa fa-play ml-2" style="font-size: 30px; width: 20px; padding-left: 4px;"></i>

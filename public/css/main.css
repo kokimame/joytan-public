@@ -40,9 +40,9 @@ table {
     padding-bottom: 4px;
 }
 
-.bordered {
+table {
     background: #d4d4d4;
-    border: solid #ccc 1px;
+    border: solid #ccc 2px;
     -moz-border-radius: 6px;
     -webkit-border-radius: 6px;
     border-radius: 6px;
@@ -50,8 +50,16 @@ table {
     -moz-box-shadow: 0 3px 3px #ccc;
     box-shadow: 0 3px 3px #ccc;
 }
-.bordered tr:hover {
-    background: #e4e4e4;    
+table:hover {
+    border: solid rgb(68, 68, 68) 2px;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    border-radius: 6px;
+
+    -webkit-box-shadow: 0 3px 3px #ccc;
+    -moz-box-shadow: 0 3px 3px #ccc;
+    box-shadow: 0 3px 3px #ccc;
+
     -webkit-transition: all 0.1s ease-in-out;
     -moz-transition: all 0.1s ease-in-out;
     transition: all 0.1s ease-in-out;
