@@ -4,7 +4,8 @@ var openedStackLookup = {};
 
 function addProjectBtn(item, projectRef) {
   const div = document.createElement('div');
-  const btnId = "".concat("loadBtn_", item["dirname"])
+  const loadBtnId = "".concat("loadBtn_", item["dirname"])
+  const voteBtnId = "".concat("voteBtn_", item["dirname"])
   const formId = "".concat("form_", item["dirname"])
   const pickId = "".concat("pick_", item["dirname"])
   const cardId = "".concat("card_", item["dirname"])
@@ -49,9 +50,10 @@ function addProjectBtn(item, projectRef) {
         </div>
       </div>
       <div id="${formId}">
-        <button type="button" class="btn btn-success" id="${btnId}">Vote and next</button>
+        <button type="button" class="btn btn-success" id="${loadBtnId}">Load</button>
         <select class="form-control" id="${pickId}" style="width: 100px; display: inline-block;">
         </select>
+        <button type="button" class="btn btn-success" id="${voteBtnId}" style="margin-left: 20px;">Vote and next</button>
       </div>
       <br />
       <div id="${audioId}">
@@ -64,6 +66,7 @@ function addProjectBtn(item, projectRef) {
 
   var availProg = document.getElementById(availProgId);
   var picker = document.getElementById(pickId);
+  var audioDiv = document.getElementById(audioId)
 
   projectRef.listAll().then(res => {
     res.prefixes.forEach(entryRef => {
@@ -109,12 +112,19 @@ function addProjectBtn(item, projectRef) {
     if (picker.value <= 0) {
       // Stop when picker is NOT ready! TODO: Probably there is a better way to do this.
       e.stopPropagation();
-    } else if (document.getElementById(item["dirname"]).className == "collapse") {
+    } else if (audioDiv.innerHTML.trim() == "" && document.getElementById(item["dirname"]).className == "collapse") {
       pickerIndexChanged();
     }
   })
-  document.getElementById(btnId).addEventListener("click", () => {
+  document.getElementById(loadBtnId).addEventListener("click", () => {
     picker.selectedIndex -= 1;
+    if (picker.selectedIndex < 0) {
+      picker.selectedIndex = picker.length - 1;
+    }
+    pickerIndexChanged();
+  })
+  document.getElementById(voteBtnId).addEventListener("click", () => {
+    removeAllPlayers(audioId);
     if (picker.selectedIndex < 0) {
       picker.selectedIndex = picker.length - 1;
     }
@@ -122,9 +132,7 @@ function addProjectBtn(item, projectRef) {
   })
 }
 
-function appendAudio(idToAppend) {
-  removeAllPlayers(idToAppend);
-  
+function appendAudio(idToAppend) {  
   keyRef.listAll().then(res => {
     res.prefixes.forEach(userRef => {
       userRef.listAll().then(res => {
