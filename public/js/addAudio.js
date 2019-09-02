@@ -22,7 +22,7 @@ function addPlayer(wavRef, targetId, script, projectName) {
         <td>
         </td>
         <td>
-          <button id="${btnId}">▶️</button>
+          <button id="${btnId}"><i class="fa fa-play ml-2" style="font-size: 30px;"></i></button>
           <form style="display: inline-block;">
             <input type="radio" name="review" value="okay"> OK  
             <input type="radio" name="review" value="wrong"> Wrong  
@@ -39,18 +39,19 @@ function addPlayer(wavRef, targetId, script, projectName) {
       document.getElementById(formId).style = "display: block";
  
       document.getElementById(playerId).addEventListener('ended', () => {
-        document.getElementById(btnId).innerText = '▶️'
+        document.getElementById(btnId).innerHTML = `<i class="fa fa-play ml-2" style="font-size: 30px;"></i>`
       })
       
       document.getElementById(btnId).addEventListener('click', () => {
         var player = document.getElementById(playerId)
         var button = document.getElementById(btnId)
+
         if (player.paused) {
           player.play()
-          button.innerText = '⏸️️'
+          button.innerHTML = `<i class="fa fa-pause ml-2" style="font-size: 30px;"></i>`
         } else if (!player.paused) {
           player.pause()
-          button.innerText = '▶️'
+          button.innerHTML = `<i class="fa fa-play ml-2" style="font-size: 30px;"></i>`
         }
       }) 
     })
