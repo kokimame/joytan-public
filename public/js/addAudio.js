@@ -9,7 +9,7 @@ function addPlayer(wavRef, targetId, script, projectName) {
 
     wavRef.getDownloadURL().then((url) => {
       const div = document.createElement('div');
-      div.className = 'playerTable';
+      div.className = 'player-table';
       div.innerHTML = `
       <table class="bordered">
       <td>

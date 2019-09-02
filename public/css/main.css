@@ -26,6 +26,14 @@ html, body {
     display: none;
 }
 
+.audio-field {
+    overflow: hidden;
+}
+
+.player-table {
+    display: inline-block;
+    margin: 3px;
+}
 table {
     border-collapse: separate !important;
     border-spacing: 0;
@@ -123,26 +131,6 @@ button {
 }
 .card h5 a:hover {
     color: #072f6b;
-}
-  
-#pButton {
-    float: left; 
-}
-  
-#timeline {
-    width: 90%;
-    height: 2px;
-    margin-top: 20px;
-    margin-left: 10px;
-    float: left;
-    -webkit-border-radius: 15px;
-    border-radius: 15px;
-    background: rgba(0, 0, 0, 0.3); 
-}
-  
-#pButton {
-    margin-top: 12px;
-    cursor: pointer; 
 }
   
 #playhead {
