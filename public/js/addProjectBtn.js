@@ -64,6 +64,7 @@ function addProjectBtn(item, projectRef) {
 
   var availProg = document.getElementById(availProgId);
   var picker = document.getElementById(pickId);
+
   projectRef.listAll().then(res => {
     res.prefixes.forEach(entryRef => {
       entryRef.listAll().then(res => {
@@ -79,7 +80,7 @@ function addProjectBtn(item, projectRef) {
             picker.innerHTML += `<option value="${index}" onchange="pickerIndexChanged()">${index}</option>`
 
             var selectList = $('#' + pickId + ' option');
-            selectList.sort(function(a,b){
+            selectList.sort((a, b) => {
                 return b.value - a.value;
             });
             $('#' + pickId).html(selectList);
@@ -90,8 +91,13 @@ function addProjectBtn(item, projectRef) {
   })
 
   function pickerIndexChanged() {
-    keyRef = projectRef.child(("00000" + picker.value).slice(-5)).child(item["wanted"])
-    startLoadingAudio(keyRef, audioId, item["entries"][picker.value - 1][item["wanted"]], item["dirname"]);
+    // Can be usable in the functions called later as well!?
+    keyRef = projectRef.child(("0000" + picker.value).slice(-5)).child(item["wanted"]);
+    currentIndex = picker.value - 1;
+    script = item["entries"][currentIndex][item["wanted"]];
+    projectName = item["dirname"];
+    appendAudio(audioId);
+
     $("#" + spinId).removeClass("hide-loader");
     document.getElementById(formId).style = "display: none;"
   }
@@ -116,15 +122,15 @@ function addProjectBtn(item, projectRef) {
   })
 }
 
-function startLoadingAudio(kayRef, appendId, script, projectName) {
-  removeAudioPlayers(appendId);
-
+function appendAudio(idToAppend) {
+  removeAllPlayers(idToAppend);
+  
   keyRef.listAll().then(res => {
     res.prefixes.forEach(userRef => {
       userRef.listAll().then(res => {
         for (var wavRef of res.items) {
           if (wavRef.name.startsWith('n_d_')) {
-            addAudioPlayer(wavRef, appendId, script, projectName);
+            addPlayer(wavRef, idToAppend, script, projectName);
           }
         }
       })

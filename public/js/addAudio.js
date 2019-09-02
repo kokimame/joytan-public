@@ -1,4 +1,4 @@
-function addAudioPlayer(wavRef, targetId, script, projectName) {
+function addPlayer(wavRef, targetId, script, projectName) {
   wavRef.getMetadata().then((data) => {
     var date = data["timeCreated"].slice(0, 10);
     var path = data["fullPath"];
@@ -57,7 +57,7 @@ function addAudioPlayer(wavRef, targetId, script, projectName) {
   })
 }
 
-function removeAudioPlayers(targetId) {
+function removeAllPlayers(targetId) {
   const node = document.getElementById(targetId);
   while (node.firstChild) {
     node.removeChild(node.firstChild);
