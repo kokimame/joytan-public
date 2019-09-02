@@ -22,9 +22,9 @@ function addPlayer(wavRef, targetId, script, projectName) {
                 <source src="${url}">
             </audio>
             <form style="display: inline-block;">
-              <input type="radio" name="review" value="okay"> OK  
-              <input type="radio" name="review" value="wrong"> Wrong  
-              <input type="radio" name="review" value="unclear"> Unclear  
+              <label><input type="radio" name="review" value="okay"> OK  </label>
+              <label><input type="radio" name="review" value="wrong"> Wrong  </label>
+              <label><input type="radio" name="review" value="unclear"> Unclear  </label>
             </form>
             <p style="font-size: 10px;">${date}</p>
           </div>
