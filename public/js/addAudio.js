@@ -4,8 +4,9 @@ function addPlayer(wavRef, targetId, script, projectName) {
     var path = data["fullPath"];
     var playerId = "".concat("player_", path);
     var btnId = "".concat("btn_", path);
-    const spinId = "".concat("spin_", projectName)
-    const formId = "".concat("form_", projectName)
+    const spinId = "".concat("spin_", projectName);
+    const controlId = "".concat("control_", projectName);
+    const voteClass = "".concat("vote_", projectName);
 
     wavRef.getDownloadURL().then((url) => {
       const div = document.createElement('div');
@@ -22,10 +23,10 @@ function addPlayer(wavRef, targetId, script, projectName) {
             <audio id="${playerId}" preload="true" type="audio/wav">
                 <source src="${url}">
             </audio>
-            <form style="display: inline-block;">
-              <label><input type="radio" name="review" value="okay"> OK  </label>
-              <label><input type="radio" name="review" value="wrong"> Wrong  </label>
-              <label><input type="radio" name="review" value="unclear"> Unclear  </label>
+            <form class="${voteClass}" style="display: inline-block;">
+              <label><input type="radio" name="vote" value="okay"> OK  </label>
+              <label><input type="radio" name="vote" value="wrong"> Wrong  </label>
+              <label><input type="radio" name="vote" value="unclear"> Unclear  </label>
             </form>
             <p style="font-size: 10px;">${date}</p>
           </div>
@@ -36,7 +37,7 @@ function addPlayer(wavRef, targetId, script, projectName) {
       document.getElementById(targetId).appendChild(div);
       // Hide loader
       $("#" + spinId).addClass("hide-loader");
-      document.getElementById(formId).style = "display: block";
+      document.getElementById(controlId).style = "display: block";
  
       document.getElementById(playerId).addEventListener('ended', () => {
         document.getElementById(btnId).className = "fa fa-play ml-2"
@@ -58,8 +59,15 @@ function addPlayer(wavRef, targetId, script, projectName) {
   })
 }
 
-function removeAllPlayers(targetId) {
-  const node = document.getElementById(targetId);
+function getVotes(voteClass) {
+  const voteForms = document.getElementsByClassName(voteClass);
+  for (var i = 0; i < voteForms.length; i++) {
+    console.log(voteForms[i]['vote'].value)
+  }
+}
+
+function removeAllPlayers(audioId) {
+  const node = document.getElementById(audioId);
   while (node.firstChild) {
     node.removeChild(node.firstChild);
   }

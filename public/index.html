@@ -41,8 +41,8 @@
       const structureRef = storageRef.child('projects_structure.json');
       var structureData;
 
-      structureRef.getDownloadURL().then(function(url) {
-        $.getJSON(url, function(data) {
+      structureRef.getDownloadURL().then((url) => {
+        $.getJSON(url, (data) => {
           loadProjects(data, topProjectsRef);
         })
       })
@@ -50,7 +50,7 @@
     function loadProjects(structureJson, topRef) {
       topRef.listAll().then(res => {
         res.prefixes.forEach(projectRef => {
-          addProjectBtn(structureJson[projectRef.name], projectRef);
+          addProject(structureJson[projectRef.name], projectRef);
         })
       })
     }

@@ -5,11 +5,12 @@ var cardPallete = ["#a8e6cf", "#dcedc1", "#ffd3b6", "#ffaaa5", "#ff8b94",
                    "#fffef9", "#e3f0ff", "#d2e7ff"];
 
 
-function addProjectBtn(item, projectRef) {
+function addProject(item, projectRef) {
   const div = document.createElement('div');
   const loadBtnId = "".concat("loadBtn_", item["dirname"])
   const voteBtnId = "".concat("voteBtn_", item["dirname"])
-  const formId = "".concat("form_", item["dirname"])
+  const controlId = "".concat("control_", item["dirname"])
+  const voteClass = "".concat("vote_", item["dirname"]);
   const pickId = "".concat("pick_", item["dirname"])
   const cardId = "".concat("card_", item["dirname"])
   const audioId = "".concat("audio_", item["dirname"])
@@ -52,7 +53,7 @@ function addProjectBtn(item, projectRef) {
         <div class="spinning">
         </div>
       </div>
-      <div id="${formId}">
+      <div id="${controlId}">
         <button type="button" class="btn btn-success" id="${loadBtnId}">Load</button>
         <select class="form-control" id="${pickId}" style="width: 100px; display: inline-block;">
         </select>
@@ -106,7 +107,7 @@ function addProjectBtn(item, projectRef) {
     appendAudio(audioId);
 
     $("#" + spinId).removeClass("hide-loader");
-    document.getElementById(formId).style = "display: none;"
+    document.getElementById(controlId).style = "display: none;"
   }
   $('#' + pickId).change(() => {
     pickerIndexChanged();
@@ -114,9 +115,12 @@ function addProjectBtn(item, projectRef) {
 
   document.getElementById(titleId).addEventListener("click", (e) => {
     if (picker.value <= 0) {
-      // Stop when picker is NOT ready! TODO: Probably there is a better way to do this.
+      // Stop when picker is NOT ready!
+      // TODO: Probably there is a better way to do this.
       e.stopPropagation();
     } else if (audioDiv.innerHTML.trim() == "" && document.getElementById(item["dirname"]).className == "collapse") {
+      // MAYBE: To prevent double loading which induce the unplayable player error
+      removeAllPlayers(audioId)
       pickerIndexChanged();
     }
   })
@@ -128,7 +132,9 @@ function addProjectBtn(item, projectRef) {
     pickerIndexChanged();
   })
   document.getElementById(voteBtnId).addEventListener("click", () => {
+    getVotes(voteClass);
     removeAllPlayers(audioId);
+
     picker.selectedIndex -= 1;
     if (picker.selectedIndex < 0) {
       picker.selectedIndex = picker.length - 1;
