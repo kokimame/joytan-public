@@ -24,10 +24,10 @@ function addPlayer(wavRef, targetId, script, projectName) {
             <audio id="${playerId}" preload="true" type="audio/wav">
                 <source src="${url}">
             </audio>
-            <form class="${voteClass}" style="display: inline-block;">
-              <label><input type="radio" name="vote" value="okay"> OK  </label>
-              <label><input type="radio" name="vote" value="wrong"> Wrong  </label>
-              <label><input type="radio" name="vote" value="unclear"> Unclear  </label>
+            <form class="${voteClass}" id="${path}" style="display: inline-block;">
+              <label><input type="radio" name="vote" value="5"> OK  </label>
+              <label><input type="radio" name="vote" value="1"> Wrong  </label>
+              <label><input type="radio" name="vote" value="0"> Unclear  </label>
             </form>
             <p style="font-size: 10px;">${date}</p>
           </div>
@@ -64,8 +64,26 @@ function addPlayer(wavRef, targetId, script, projectName) {
 function getVotes(voteClass) {
   const voteForms = document.getElementsByClassName(voteClass);
   for (var i = 0; i < voteForms.length; i++) {
-    console.log(voteForms[i]['vote'].value)
+    form = voteForms[i]
+    // When something selected in the 3 choice...
+    if (form["vote"].value) {
+      vote = parseInt(form["vote"].value)
+      database_target = form.id.replace(/\.[^/.]+$/, "")
+      writeVoteData(database_target, vote)
+    }
   }
+}
+
+function writeVoteData(target, vote) {
+  var voteData = {
+    vote: vote
+  }
+  var newKey = firebase.database().ref(target).push().key;
+  var updates = {}
+  updates[newKey] = voteData
+
+  console.log("newKey... ", vote, newKey)
+  firebase.database().ref(target).update(updates)
 }
 
 function removeAllPlayers(audioId) {
