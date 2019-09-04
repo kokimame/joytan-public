@@ -73,6 +73,17 @@ button {
     outline: none;
 }
 
+.btn-circle {
+    width: 55px;
+    height: 60px;
+    text-align: center;
+    margin-bottom: 60px;
+    padding: 0px 6px;
+    font-size: 12px;
+    line-height: 1.428571429;
+    border-radius: 25px;
+  }
+
 .fa.fa-chevron-down.pull-right {
     transition: .3s transform ease-in-out;
 }

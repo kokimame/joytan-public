@@ -58,11 +58,12 @@ function addProject(item, projectRef) {
         <button type="button" class="btn btn-success" id="${loadBtnId}">Load</button>
         <select class="form-control" id="${pickId}" style="width: 100px; display: inline-block;">
         </select>
-        <button type="button" class="btn btn-success" id="${voteBtnId}" style="margin-left: 20px;">Vote and next</button>
       </div>
       <br />
-      <div id="${audioId}">
+      <div id="${audioId}" style="display: inline-block;">
       </div>
+      <button type="button" id="${voteBtnId}" class="btn btn-info btn-circle"
+        style="display: inline-block;">Vote<br />& >><br />Next</button>
     </div>
   </div>
   `;
@@ -108,6 +109,7 @@ function addProject(item, projectRef) {
 
     $("#" + spinId).removeClass("hide-loader");
     document.getElementById(controlId).style = "display: none;"
+    document.getElementById(voteBtnId).style = "display: none;"
   }
   $('#' + pickId).change(() => {
     pickerIndexChanged();

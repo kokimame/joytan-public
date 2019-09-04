@@ -6,6 +6,7 @@ function addPlayer(wavRef, targetId, script, projectName) {
     var btnId = "".concat("btn_", path);
     const spinId = "".concat("spin_", projectName);
     const controlId = "".concat("control_", projectName);
+    const voteBtnId = "".concat("voteBtn_", projectName);
     const voteClass = "".concat("vote_", projectName);
 
     wavRef.getDownloadURL().then((url) => {
@@ -37,7 +38,8 @@ function addPlayer(wavRef, targetId, script, projectName) {
       document.getElementById(targetId).appendChild(div);
       // Hide loader
       $("#" + spinId).addClass("hide-loader");
-      document.getElementById(controlId).style = "display: block";
+      document.getElementById(controlId).style = "display: block;";
+      document.getElementById(voteBtnId).style = "display: inline-block;";
  
       document.getElementById(playerId).addEventListener('ended', () => {
         document.getElementById(btnId).className = "fa fa-play ml-2"
