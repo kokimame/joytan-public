@@ -69,6 +69,7 @@ function getVotes(voteClass) {
     if (form["vote"].value) {
       vote = parseInt(form["vote"].value)
       database_target = form.id.replace(/\.[^/.]+$/, "")
+      database_target = database_target.replace("projects/", "votes/")
       writeVoteData(database_target, vote)
     }
   }
@@ -81,8 +82,6 @@ function writeVoteData(target, vote) {
   var newKey = firebase.database().ref(target).push().key;
   var updates = {}
   updates[newKey] = voteData
-
-  console.log("newKey... ", vote, newKey)
   firebase.database().ref(target).update(updates)
 }
 
