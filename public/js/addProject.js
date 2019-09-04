@@ -7,29 +7,30 @@ var cardPallete = ["#a8e6cf", "#dcedc1", "#ffd3b6", "#ffaaa5", "#ff8b94",
 
 function addProject(item, projectRef) {
   const div = document.createElement('div');
-  const loadBtnId = "".concat("loadBtn_", item["dirname"])
-  const voteBtnId = "".concat("voteBtn_", item["dirname"])
-  const controlId = "".concat("control_", item["dirname"])
-  const voteClass = "".concat("vote_", item["dirname"]);
-  const pickId = "".concat("pick_", item["dirname"])
-  const cardId = "".concat("card_", item["dirname"])
-  const audioId = "".concat("audio_", item["dirname"])
-  const spinId = "".concat("spin_", item["dirname"])
-  const titleId = "".concat("title_", item["dirname"])
+  const projectName = item["dirname"]
+  const loadBtnId = "".concat("loadBtn_", projectName)
+  const voteBtnId = "".concat("voteBtn_", projectName)
+  const controlId = "".concat("control_", projectName)
+  const voteClass = "".concat("vote_", projectName);
+  const pickId = "".concat("pick_", projectName)
+  const cardId = "".concat("card_", projectName)
+  const audioId = "".concat("audio_", projectName)
+  const spinId = "".concat("spin_", projectName)
+  const titleId = "".concat("title_", projectName)
   const doneProgId = "".concat("done", titleId)
   const reviewProgId = "".concat("review", titleId)
   const availProgId = "".concat("avail", titleId)
   const totalEntries = item["entries"].length;
   var titleFixed = item["flags"] + item["title"]
 
-  fileCountLookup[item["dirname"]] = 0;
-  openedStackLookup[item["dirname"]] = [];
+  fileCountLookup[projectName] = 0;
+  openedStackLookup[projectName] = [];
 
   //🇯🇵🇫🇷🇩🇪🇬🇧🇺🇸🇷🇺🇰🇷🇮🇹🇸🇪🇪🇸🇹🇷
   div.innerHTML = `
   <br />
     <button class="btn btn-outline-dark btn-block text-left" type="button" 
-      data-toggle="collapse" data-target="#${item["dirname"]}" aria-expanded="false" id="${titleId}">
+      data-toggle="collapse" data-target="#${projectName}" aria-expanded="false" id="${titleId}">
       <i class="fa fa-chevron-down pull-right"></i>
       <div class"btn-title" >
           ${titleFixed}
@@ -47,7 +48,7 @@ function addProject(item, projectRef) {
           aria-valuemin="0" aria-valuemax="100" id="${availProgId}"></div>
       </div>
     </button>
-  <div class="collapse" id="${item["dirname"]}" data-parent="#projectsTop">
+  <div class="collapse" id="${projectName}" data-parent="#projectsTop">
     <div class="card card-body" id="${cardId}">
       <div id="${spinId}">
         <div class="spinning">
@@ -77,8 +78,8 @@ function addProject(item, projectRef) {
       entryRef.listAll().then(res => {
         res.prefixes.forEach(keyRef => {
           keyRef.listAll().then(res => {            
-            fileCountLookup[item["dirname"]] += res.prefixes.length;
-            availRatio = (100 * fileCountLookup[item["dirname"]] / totalEntries)
+            fileCountLookup[projectName] += res.prefixes.length;
+            availRatio = (100 * fileCountLookup[projectName] / totalEntries)
             availProg.style.width = availRatio.toString() + "%";
             if (availRatio > 10) {
               availProg.innerText = "Available";
@@ -102,9 +103,8 @@ function addProject(item, projectRef) {
     keyRef = projectRef.child(("0000" + picker.value).slice(-5)).child(item["wanted"]);
     currentIndex = picker.value - 1;
     script = item["entries"][currentIndex][item["wanted"]];
-    projectName = item["dirname"];
     randomColor = cardPallete[Math.floor(Math.random() * cardPallete.length)];
-    appendAudio(audioId);
+    appendAudio(audioId, item["dirname"]);
 
     $("#" + spinId).removeClass("hide-loader");
     document.getElementById(controlId).style = "display: none;"
@@ -118,7 +118,7 @@ function addProject(item, projectRef) {
       // Stop when picker is NOT ready!
       // TODO: Probably there is a better way to do this.
       e.stopPropagation();
-    } else if (audioDiv.innerHTML.trim() == "" && document.getElementById(item["dirname"]).className == "collapse") {
+    } else if (audioDiv.innerHTML.trim() == "" && document.getElementById(projectName).className == "collapse") {
       // MAYBE: To prevent double loading which induce the unplayable player error
       removeAllPlayers(audioId)
       pickerIndexChanged();
@@ -143,7 +143,7 @@ function addProject(item, projectRef) {
   })
 }
 
-function appendAudio(idToAppend) {  
+function appendAudio(idToAppend, projectName) {  
   keyRef.listAll().then(res => {
     res.prefixes.forEach(userRef => {
       userRef.listAll().then(res => {
