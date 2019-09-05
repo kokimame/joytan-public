@@ -11,6 +11,7 @@ function addProject(item, projectRef) {
   const loadBtnId = "".concat("loadBtn_", projectName)
   const voteBtnId = "".concat("voteBtn_", projectName)
   const controlId = "".concat("control_", projectName)
+  const autoBtnId = "".concat("auto_", projectName)
   const voteClass = "".concat("vote_", projectName);
   const pickId = "".concat("pick_", projectName)
   const cardId = "".concat("card_", projectName)
@@ -56,8 +57,9 @@ function addProject(item, projectRef) {
       </div>
       <div id="${controlId}">
         <button type="button" class="btn btn-success" id="${loadBtnId}">Load</button>
-        <select class="form-control" id="${pickId}" style="width: 100px; display: inline-block;">
+        <select class="form-control picker" id="${pickId}">
         </select>
+        <button type="button" class="btn btn-success auto-play" id="${autoBtnId}" value="off">Auto <a class="fa fa-volume-up"></a></button>
       </div>
       <br />
       <div id="${audioId}" style="display: inline-block;">
@@ -143,6 +145,32 @@ function addProject(item, projectRef) {
     }
     pickerIndexChanged();
   })
+  document.getElementById(autoBtnId).addEventListener('click', () => {
+    var autoBtn = document.getElementById(autoBtnId)
+    var playBtns = audioDiv.getElementsByClassName("fa fa-play ml-2");
+    var pauseBtns = audioDiv.getElementsByClassName("fa fa-pause ml-2");
+    if (autoBtn.value == "off" && playBtns.length > 0) {
+      autoBtn.value = "on"
+      autoBtn.innerHTML = `Auto <a class="fa fa-pause">`
+
+      // FIXME: Considerably messy...
+      // Stop currently playing audio because it activates multiple auto threads
+      var players = document.getElementsByClassName("card-player")
+      for (var i = 0; i < pauseBtns.length; i++) {
+        pauseBtns[i].className = "fa fa-play ml-2"
+      }
+      for (var i = 0; i < players.length; i++) {
+        if (!players[i].paused) {
+          players[i].load()
+        }
+      }
+
+      playBtns[0].click();
+    } else if (autoBtn.value == "on") {
+      autoBtn.value = "off"
+      autoBtn.innerHTML = `Auto <a class="fa fa-volume-up">`
+    }
+  })
 }
 
 function appendAudio(idToAppend, projectName) {  
@@ -157,4 +185,18 @@ function appendAudio(idToAppend, projectName) {
       })
     })
   })
+}
+function playNext(audioDiv, justEnded) {
+  var players = audioDiv.getElementsByClassName("fa fa-play ml-2");
+  var arrayOfId = [];
+  for (var i = 0; i < players.length; i++) {
+    arrayOfId.push(players[i].id)
+  }
+  var indexJustEnded = arrayOfId.indexOf(justEnded)
+  if (indexJustEnded < arrayOfId.length - 1) {
+    document.getElementById(arrayOfId[indexJustEnded + 1]).click()
+    return true;
+  } else {
+    return false;
+  }
 }

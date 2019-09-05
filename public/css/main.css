@@ -64,6 +64,15 @@ table:hover {
     -moz-transition: all 0.1s ease-in-out;
     transition: all 0.1s ease-in-out;
 }
+.picker {
+    width: 100px; 
+    display: inline-block;
+}
+
+.auto-play {
+    margin-left: 10px;
+}
+
 button {
     background-color: transparent;
     background-repeat: no-repeat;
