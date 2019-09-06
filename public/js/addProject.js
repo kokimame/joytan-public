@@ -1,5 +1,5 @@
 var fileCountLookup = {};
-var openedStackLookup = {};
+var openedIndexLookup = {};
 var cardPallete = ["#a8e6cf", "#dcedc1", "#ffd3b6", "#ffaaa5", "#ff8b94",
                    "#ebf4f6", "#bdeaee", "#90cdd6", "#fff6e9", "#ffefd7", 
                    "#fffef9", "#e3f0ff", "#d2e7ff"];
@@ -25,7 +25,7 @@ function addProject(item, projectRef) {
   var titleFixed = item["flags"] + item["title"]
 
   fileCountLookup[projectName] = 0;
-  openedStackLookup[projectName] = [];
+  openedIndexLookup[projectName] = [];
 
   //🇯🇵🇫🇷🇩🇪🇬🇧🇺🇸🇷🇺🇰🇷🇮🇹🇸🇪🇪🇸🇹🇷
   div.innerHTML = `
@@ -80,8 +80,7 @@ function addProject(item, projectRef) {
     res.prefixes.forEach(entryRef => {
       entryRef.listAll().then(res => {
         res.prefixes.forEach(keyRef => {
-          keyRef.listAll().then(res => {            
-            fileCountLookup[projectName] += res.prefixes.length;
+          keyRef.listAll().then(res => {
             availRatio = (100 * fileCountLookup[projectName] / totalEntries)
             availProg.style.width = availRatio.toString() + "%";
             if (availRatio > 10) {
@@ -105,10 +104,17 @@ function addProject(item, projectRef) {
     // Can be usable in the functions called later as well!?
     keyRef = projectRef.child(("0000" + picker.value).slice(-5)).child(item["wanted"]);
     currentIndex = picker.value - 1;
+    if (openedIndexLookup[projectName].includes(currentIndex)) {
+      return
+    } else {
+      openedIndexLookup[projectName].push(currentIndex)
+    }
     script = item["entries"][currentIndex][item["wanted"]];
     randomColor = cardPallete[Math.floor(Math.random() * cardPallete.length)];
     appendAudio(audioId, item["dirname"]);
+    /////////  //////////  ///////////  ////
 
+    // Show spinner and this will be removed in addPlayer.js
     $("#" + spinId).removeClass("hide-loader");
     document.getElementById(controlId).style = "display: none;"
     document.getElementById(voteBtnId).style = "display: none;"
@@ -138,6 +144,7 @@ function addProject(item, projectRef) {
   document.getElementById(voteBtnId).addEventListener("click", () => {
     getVotes(voteClass);
     removeAllPlayers(audioId);
+    openedIndexLookup[projectName] = [];
 
     picker.selectedIndex -= 1;
     if (picker.selectedIndex < 0) {
@@ -154,11 +161,12 @@ function addProject(item, projectRef) {
       autoBtn.innerHTML = `Auto <a class="fa fa-pause">`
 
       // FIXME: Considerably messy...
-      // Stop currently playing audio because it activates multiple auto threads
       var players = document.getElementsByClassName("card-player")
+      // Change Player with pause icon to the play icon
       for (var i = 0; i < pauseBtns.length; i++) {
         pauseBtns[i].className = "fa fa-play ml-2"
       }
+      // Stop currently playing audio because it activates multiple auto threads
       for (var i = 0; i < players.length; i++) {
         if (!players[i].paused) {
           players[i].load()
@@ -173,7 +181,10 @@ function addProject(item, projectRef) {
   })
 }
 
-function appendAudio(idToAppend, projectName) {  
+function appendAudio(idToAppend, projectName) {
+  const spinId = "".concat("spin_", projectName)
+
+  console.log(openedIndexLookup[projectName])  
   keyRef.listAll().then(res => {
     res.prefixes.forEach(userRef => {
       userRef.listAll().then(res => {
