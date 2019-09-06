@@ -1,5 +1,5 @@
 var fileCountLookup = {};
-var openedIndexLookup = {};
+var openIndexLookup = {};
 var cardPallete = ["#a8e6cf", "#dcedc1", "#ffd3b6", "#ffaaa5", "#ff8b94",
                    "#ebf4f6", "#bdeaee", "#90cdd6", "#fff6e9", "#ffefd7", 
                    "#fffef9", "#e3f0ff", "#d2e7ff"];
@@ -25,7 +25,7 @@ function addProject(item, projectRef) {
   var titleFixed = item["flags"] + item["title"]
 
   fileCountLookup[projectName] = 0;
-  openedIndexLookup[projectName] = [];
+  openIndexLookup[projectName] = [];
 
   //🇯🇵🇫🇷🇩🇪🇬🇧🇺🇸🇷🇺🇰🇷🇮🇹🇸🇪🇪🇸🇹🇷
   div.innerHTML = `
@@ -104,10 +104,12 @@ function addProject(item, projectRef) {
     // Can be usable in the functions called later as well!?
     keyRef = projectRef.child(("0000" + picker.value).slice(-5)).child(item["wanted"]);
     currentIndex = picker.value - 1;
-    if (openedIndexLookup[projectName].includes(currentIndex)) {
+    if (openIndexLookup[projectName].includes(currentIndex)) {
+      // If the new index is already opened, ignore it
+      // otherwise the id duplication error occurs.
       return
     } else {
-      openedIndexLookup[projectName].push(currentIndex)
+      openIndexLookup[projectName].push(currentIndex)
     }
     script = item["entries"][currentIndex][item["wanted"]];
     randomColor = cardPallete[Math.floor(Math.random() * cardPallete.length)];
@@ -135,6 +137,11 @@ function addProject(item, projectRef) {
     }
   })
   document.getElementById(loadBtnId).addEventListener("click", () => {
+    // If more than 10 entries are open, let users do the vote first.
+    if (openIndexLookup[projectName].length >= 10) {
+      alert("You are reviewing more than 10 entires. Please VOTE first and load audio :)")
+      return
+    }
     picker.selectedIndex -= 1;
     if (picker.selectedIndex < 0) {
       picker.selectedIndex = picker.length - 1;
@@ -144,7 +151,7 @@ function addProject(item, projectRef) {
   document.getElementById(voteBtnId).addEventListener("click", () => {
     getVotes(voteClass);
     removeAllPlayers(audioId);
-    openedIndexLookup[projectName] = [];
+    openIndexLookup[projectName] = [];
 
     picker.selectedIndex -= 1;
     if (picker.selectedIndex < 0) {
@@ -184,7 +191,6 @@ function addProject(item, projectRef) {
 function appendAudio(idToAppend, projectName) {
   const spinId = "".concat("spin_", projectName)
 
-  console.log(openedIndexLookup[projectName])  
   keyRef.listAll().then(res => {
     res.prefixes.forEach(userRef => {
       userRef.listAll().then(res => {
