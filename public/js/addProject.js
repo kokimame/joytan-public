@@ -77,6 +77,7 @@ function addProject(item, projectRef) {
   var audioDiv = document.getElementById(audioId)
 
   projectRef.listAll().then(res => {
+    fileCountLookup[projectName] = res.prefixes.length;
     res.prefixes.forEach(entryRef => {
       entryRef.listAll().then(res => {
         res.prefixes.forEach(keyRef => {
