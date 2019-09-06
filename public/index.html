@@ -15,18 +15,16 @@
   <script defer src="/__/firebase/6.4.1/firebase-storage.js"></script>
   <!-- initialize the SDK after all desired features are loaded -->
   <script defer src="/__/firebase/init.js"></script>
-
-  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
   
   <!-- JQuery -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-
   <!-- For popup? -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
 
   <!-- For accordion -->
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 
 
   <script src="/js/addPlayer.js"></script>
@@ -46,6 +44,12 @@
           loadProjects(data, topProjectsRef);
         })
       })
+      $("#modal-form").click(function(ev){
+        if(ev.target != this) {
+          return;
+        }
+        $('#modal-form').hide()
+      });
     }
     function loadProjects(structureJson, topRef) {
       topRef.listAll().then(res => {
@@ -73,6 +77,39 @@
         <a href="https://play.google.com/store/apps/details?id=com.joytan.rec" class="fa icon fa-android"></a>
         <a href="https://github.com/kokimame/joytan" class="fa icon fa-github"></a>
         <a href="https://twitter.com/JoytanApp" class="fa icon fa-twitter"></a>
+
+        <button class="btn btn-success" onclick="document.getElementById('modal-form').style.display='block'" 
+          style="width:auto;">Sign Up</button>
+
+        <div id="modal-form" class="modal">
+          <span onclick="document.getElementById('modal-form').style.display='none'" class="close" title="Close Modal">&times;</span>
+          <form class="modal-content" action="/action_page.php">
+            <div class="container">
+              <h1>Sign Up</h1>
+              <p>Please fill in this form to create an account.</p>
+              <hr>
+              <label for="email"><b>Email</b></label>
+              <input type="text" placeholder="Enter Email" name="email" required>
+        
+              <label for="psw"><b>Password</b></label>
+              <input type="password" placeholder="Enter Password" name="psw" required>
+        
+              <label for="psw-repeat"><b>Repeat Password</b></label>
+              <input type="password" placeholder="Repeat Password" name="psw-repeat" required>
+              
+              <label>
+                <input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me
+              </label>
+        
+              <p>By creating an account you agree to our <a href="#" style="color:dodgerblue">Terms & Privacy</a>.</p>
+        
+              <div class="clearfix">
+                <button class="modal-button cancel-btn" type="button" onclick="document.getElementById('modal-form').style.display='none'" >Cancel</button>
+                <button class="modal-button signup-btn"  type="submit">Sign Up</button>
+              </div>
+            </div>
+          </form>
+        </div>
 
         <hr />
         <div class="accordion" id="projectsTop">
