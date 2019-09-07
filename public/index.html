@@ -30,6 +30,7 @@
   <script src="/js/addPlayer.js"></script>
   <script src="/js/addProject.js"></script>
   <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/login.css">
 
   <script type="text/javascript">
     window.onload = () => {
@@ -84,10 +85,11 @@
         <div id="modal-form" class="modal">
           <span onclick="document.getElementById('modal-form').style.display='none'" class="close" title="Close Modal">&times;</span>
           <form class="modal-content" action="/action_page.php">
-            <div class="container">
-              <h1>Sign Up</h1>
-              <p>Please fill in this form to create an account.</p>
+            <div class="modal-container container">
+              <h2>Sign Up</h2>
+              <p>Have an account? <a href="">Log in!</a></p>
               <hr>
+              <p>Please fill in this form to create an account.</p>
               <label for="email"><b>Email</b></label>
               <input type="text" placeholder="Enter Email" name="email" required>
         
@@ -96,6 +98,9 @@
         
               <label for="psw-repeat"><b>Repeat Password</b></label>
               <input type="password" placeholder="Repeat Password" name="psw-repeat" required>
+
+              <label for="psw-repeat"><b>User name</b></label>
+              <input type="text" placeholder="Enter User Name" name="username" required>
               
               <label>
                 <input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me
@@ -110,7 +115,6 @@
             </div>
           </form>
         </div>
-
         <hr />
         <div class="accordion" id="projectsTop">
         </div>
