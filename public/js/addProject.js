@@ -3,6 +3,7 @@ var openIndexLookup = {};
 var cardPallete = ["#a8e6cf", "#dcedc1", "#ffd3b6", "#ffaaa5", "#ff8b94",
                    "#ebf4f6", "#bdeaee", "#90cdd6", "#fff6e9", "#ffefd7", 
                    "#fffef9", "#e3f0ff", "#d2e7ff"];
+const moreThanTenMessage = "You are reviewing more than 10 entires. Please VOTE first and load audio :)"
 
 
 function addProject(item, projectRef) {
@@ -102,8 +103,6 @@ function addProject(item, projectRef) {
   })
 
   function pickerIndexChanged() {
-    // Can be usable in the functions called later as well!?
-    keyRef = projectRef.child(("0000" + picker.value).slice(-5)).child(item["wanted"]);
     currentIndex = picker.value - 1;
     if (openIndexLookup[projectName].includes(currentIndex)) {
       // If the new index is already opened, ignore it
@@ -112,6 +111,9 @@ function addProject(item, projectRef) {
     } else {
       openIndexLookup[projectName].push(currentIndex)
     }
+
+    // Can be usable in the functions called later as well!?
+    keyRef = projectRef.child(("0000" + picker.value).slice(-5)).child(item["wanted"]);
     script = item["entries"][currentIndex][item["wanted"]];
     randomColor = cardPallete[Math.floor(Math.random() * cardPallete.length)];
     appendAudio(audioId, item["dirname"]);
@@ -122,7 +124,12 @@ function addProject(item, projectRef) {
     document.getElementById(controlId).style = "display: none;"
     document.getElementById(voteBtnId).style = "display: none;"
   }
-  $('#' + pickId).change(() => {
+  $('#' + pickId).change((e) => {
+    // If more than 10 entries are open, let users do the vote first.
+    if (openIndexLookup[projectName].length >= 10) {
+      alert(moreThanTenMessage)
+      return false
+    }
     pickerIndexChanged();
   })
 
@@ -140,7 +147,7 @@ function addProject(item, projectRef) {
   document.getElementById(loadBtnId).addEventListener("click", () => {
     // If more than 10 entries are open, let users do the vote first.
     if (openIndexLookup[projectName].length >= 10) {
-      alert("You are reviewing more than 10 entires. Please VOTE first and load audio :)")
+      alert(moreThanTenMessage)
       return
     }
     picker.selectedIndex -= 1;
