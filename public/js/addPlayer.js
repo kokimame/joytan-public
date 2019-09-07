@@ -11,12 +11,13 @@ function addPlayer(wavRef, targetId, script, projectName) {
     const voteClass = "".concat("vote_", projectName);
 
     wavRef.getDownloadURL().then((url) => {
+      var index = parseInt(wavRef.fullPath.split('/')[2])
       const div = document.createElement('div');
       div.className = 'player-table';
       div.innerHTML = `
       <table class="bordered" style="background: ${randomColor};">
         <td style="padding-bottom: 25px;">
-          <font size="2" style="padding-left: 10px;">${currentIndex + 1} </font><br />
+          <font size="2" style="padding-left: 10px;">${index} </font><br />
           <i id="${playBtnId}" class="fa fa-play ml-2" style="font-size: 30px; width: 20px; padding-left: 4px;"></i>
         </td>
         <td>
