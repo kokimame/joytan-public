@@ -3,6 +3,9 @@
 #login-modal {
     display: none;
 }
+#login-modal {
+    display: none;
+}
 
 #singup-modal {
     display: "block";
