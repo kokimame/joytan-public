@@ -45,11 +45,11 @@
           loadProjects(data, topProjectsRef);
         })
       })
-      $("#modal-form").click(function(ev){
+      $("#auth-form").click(function(ev){
         if(ev.target != this) {
           return;
         }
-        $('#modal-form').hide()
+        $('#auth-form').hide()
       });
     }
     function loadProjects(structureJson, topRef) {
@@ -59,23 +59,45 @@
         })
       })
 
-    var password = document.getElementById("password")
-    var confirmPwd = document.getElementById("confirm-password");
+    var password = document.getElementById("signup-psw")
+    var confirmPsw = document.getElementById("confirm-password");
 
     function validatePassword(){
-      // if (8 > password.value.length || password.value.length  > 15) {
-      //   password.setCustomValidity("Password length should be 8 to 15.")
-      // } else {
-      //   password.setCustomValidity('')
-      // }
-      if(password.value != confirmPwd.value) {
-        confirmPwd.setCustomValidity("Passwords Don't Match");
+      if(password.value != confirmPsw.value) {
+        confirmPsw.setCustomValidity("Passwords Don't Match");
       } else {
-        confirmPwd.setCustomValidity('');
+        confirmPsw.setCustomValidity('');
       }
     }
     password.onchange = validatePassword;
-    confirmPwd.onkeyup = validatePassword
+    confirmPsw.onkeyup = validatePassword
+    }
+
+    function createNewUser() {
+      var password = $("#signup-psw").val()
+      var email = $("#signup-email").val()
+      //Create User with Email and Password
+      firebase.auth().createUserWithEmailAndPassword(email, password).catch((error) => {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        console.log(errorCode);
+        console.log(errorMessage);
+      }).then(() => {
+        console.log("Created new User!")
+      });
+    }
+    function loginUser() {
+      var password = $("#login-psw").val()
+      var email = $("#login-email").val()
+      //Sign In User with Email and Password
+      firebase.auth().signInWithEmailAndPassword(email, password).catch((error) => {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        console.log(errorCode);
+        console.log(errorMessage);
+      });    
     }
   </script>
 
@@ -97,34 +119,35 @@
         <a href="https://github.com/kokimame/joytan" class="fa icon fa-github"></a>
         <a href="https://twitter.com/JoytanApp" class="fa icon fa-twitter"></a>
 
-        <button class="btn btn-success" onclick="document.getElementById('modal-form').style.display='block'" 
+        <button class="btn btn-success" onclick="document.getElementById('auth-form').style.display='block'" 
           style="width:auto;">Sign Up</button>
 
-        <div id="modal-form" class="modal">
-          <span onclick="document.getElementById('modal-form').style.display='none'" class="close" title="Close Modal">&times;</span>
-          <form class="modal-content" action="/action_page.php">
+        <div id="auth-form" class="modal">
+          <span onclick="document.getElementById('auth-form').style.display='none'" class="close" title="Close Modal">&times;</span>
+          <div class="modal-content">
             <div class="modal-container container">
               <div id="signup-modal">
                 <form>
                   <h2>Sign Up</h2>
                   <p>Have an account? <a href="#/" onclick="document.getElementById('signup-modal').style.display='none';
-                    document.getElementById('login-modal').style.display='block'">Log in!</a></p>
+                    document.getElementById('login-modal').style.display='block'"><b>Log in!</b></a></p>
                   <hr>
                   <p>Please fill in this form to create an account.</p>
                   <label for="email"><b>Email</b></label>
-                  <input type="text" placeholder="Enter Email" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" 
-                    title="For example, [a-Z]@[a-Z].domain" required>
+                  <input id="signup-email" type="text" placeholder="Enter Email" name="email"> 
+                    <!-- pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="For example, [a-Z]@[a-Z].domain" required> -->
             
                   <label for="psw"><b>Password</b></label>
-                  <input id="password" type="password" placeholder="Enter Password" name="psw"
-                    minlength="8" maxlength="15" required>
+                  <input id="signup-psw" type="password" placeholder="Enter Password" name="psw">
+                    <!-- minlength="8" maxlength="15" required> -->
             
                   <label for="psw-repeat"><b>Repeat Password</b></label>
-                  <input id="confirm-password" type="password" placeholder="Repeat Password" name="psw-repeat" required>
+                  <input id="confirm-password" type="password" placeholder="Repeat Password" name="psw-repeat">
+                   <!-- required> -->
     
                   <label for="psw-repeat"><b>User name</b></label>
-                  <input type="text" placeholder="Enter your Username" name="username" 
-                    minlength="3" maxlength="32" required>
+                  <input id="signup-uname" type="text" placeholder="Enter your Username" name="username"> 
+                    <!-- minlength="3" maxlength="32" required> -->
                   
                   <label>
                     <input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me
@@ -133,38 +156,38 @@
                   <p>By creating an account you agree to our <a href="#" style="color:dodgerblue">Terms & Privacy</a>.</p>
             
                   <div class="clearfix">
-                    <button class="modal-button cancel-btn" type="button" onclick="document.getElementById('modal-form').style.display='none'" >Cancel</button>
-                    <button class="modal-button signup-btn"  type="submit">Sign Up</button>
+                    <button class="modal-button cancel-btn" type="button" onclick="document.getElementById('auth-form').style.display='none'" >Cancel</button>
+                    <button class="modal-button signup-btn"  type="button" onclick="createNewUser()">Sign Up</button>
                   </div>
                 </form>
               </div>
               <div id="login-modal">
-                <form>
+                <form method="post">
                   <h2>Log in</h2>
                   <p>Don't have an account? <a href="#/" onclick="document.getElementById('login-modal').style.display='none';
-                    document.getElementById('signup-modal').style.display='block'">Sign up!</a></p>
+                    document.getElementById('signup-modal').style.display='block'"><b>Sign up!</b></a></p>
                   <hr>
                   <p>Please fill in this form to log in.</p>
                   <label for="email"><b>Email</b></label>
-                  <input type="text" placeholder="Enter Email" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" 
-                    title="For example, [a-Z]@[a-Z].domain" required>
+                  <input id="login-email" type="text" placeholder="Enter Email" name="email">
+                    <!-- pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="For example, [a-Z]@[a-Z].domain" required> -->
             
                   <label for="psw"><b>Password</b></label>
-                  <input type="password" placeholder="Enter Password" name="psw" 
-                    minlength="8" maxlength="15"required>
+                  <input id="login-psw" type="password" placeholder="Enter Password" name="psw" required>
+                    <!-- minlength="8" maxlength="15" required> -->
   
                   <label>
                     <input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me
                   </label>
             
                   <div class="clearfix">
-                    <button class="modal-button cancel-btn" type="button" onclick="document.getElementById('modal-form').style.display='none'" >Cancel</button>
-                    <button class="modal-button login-btn"  type="submit">Log in</button>
+                    <button class="modal-button cancel-btn" type="button" onclick="document.getElementById('auth-form').style.display='none'" >Cancel</button>
+                    <button class="modal-button login-btn" type="button" onclick="loginUser()">Log in</button>
                   </div>
                 </form>
               </div>
             </div>
-          </form>
+          </div>
         </div>
         <hr />
         <div class="accordion" id="projectsTop">
