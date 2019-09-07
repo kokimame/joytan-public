@@ -124,13 +124,17 @@ function addProject(item, projectRef) {
     document.getElementById(controlId).style = "display: none;"
     document.getElementById(voteBtnId).style = "display: none;"
   }
-  $('#' + pickId).change((e) => {
+  $('#' + pickId).on('focus', () => {
+    prevVal = $('#' + pickId).val()
+  }).change(() => {
     // If more than 10 entries are open, let users do the vote first.
     if (openIndexLookup[projectName].length >= 10) {
       alert(moreThanTenMessage)
+      $('#' + pickId).val(prevVal)
       return false
+    } else {
+      pickerIndexChanged();
     }
-    pickerIndexChanged();
   })
 
   document.getElementById(titleId).addEventListener("click", (e) => {
