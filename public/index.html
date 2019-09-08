@@ -49,19 +49,32 @@
       $("#auth-form").click(ev => {
         if(ev.target != document.getElementById("auth-form")) {
           return;
+        } else {
+          $("#auth-form").hide();
         }
-        $('#auth-form').hide()
       });
-    }
+
+      firebase.auth().onAuthStateChanged(user => {
+        if (user) {
+          console.log("user found")
+          $("#auth-button").html("Your Account")
+        } else {
+          $("#auth-button").html("Log in &bull; Sign up")
+        }
+      });
+    } // ^^^^^ onload ^^^^^
+    var password = document.getElementById("signup-psw")
+    var confirmPsw = document.getElementById("confirm-password");
+    password.onchange = validatePassword;
+    confirmPsw.onkeyup = validatePassword;
+
     function loadProjects(structureJson, topRef) {
       topRef.listAll().then(res => {
         res.prefixes.forEach(projectRef => {
           addProject(structureJson[projectRef.name], projectRef);
         })
       })
-
-    var password = document.getElementById("signup-psw")
-    var confirmPsw = document.getElementById("confirm-password");
+    };
 
     function validatePassword(){
       if(password.value != confirmPsw.value) {
@@ -69,9 +82,6 @@
       } else {
         confirmPsw.setCustomValidity('');
       }
-    }
-    password.onchange = validatePassword;
-    confirmPsw.onkeyup = validatePassword
     }
 
     function createNewUser() {
@@ -87,7 +97,6 @@
         throw error;
       }).then(() => {
         console.log("Created new User!")
-        document.getElementById('auth-button').innerText = "Your account";
         closeAuthForm();
       });
     }
@@ -104,7 +113,6 @@
         throw error;
       }).then(() => {
         console.log("Log in succeeded!")
-        document.getElementById('auth-button').innerHTML = "Your account"
         closeAuthForm();
       });
     }
@@ -112,7 +120,6 @@
       firebase.auth().signOut().then(function() {
         // Sign-out successful.
         console.log('User Logged Out!');
-        document.getElementById('auth-button').innerHTML = "Log in / Sign up"
         closeAuthForm();
       }).catch(error => {
         // An error happened.
@@ -154,6 +161,21 @@
       </div>
       `
     }
+    // Smarter way to change login/signup modal
+    function signupLoginTransition(nextModal) {
+      if (nextModal == "login") {
+        document.getElementById('signup-modal').style.display='none';
+        document.getElementById('login-modal').style.display='block';
+        // Copy draft email/psw to the next modal
+        var draftEmail = document.getElementById('signup-email').value;
+        var draftPsw = document.getElementById('signup-psw').value;
+        document.getElementById('login-email').value = draftEmail;
+        document.getElementById('login-psw').value = draftPsw;
+      } else if (nextModal == "signup") {
+        document.getElementById('login-modal').style.display='none';
+        document.getElementById('signup-modal').style.display='block';
+      }
+    }
   </script>
 
 </head>
@@ -175,7 +197,7 @@
         <a href="https://twitter.com/JoytanApp" class="fa icon fa-twitter"></a>
 
         <button id="auth-button" class="btn btn-secondary" onclick="handleAuthButton()" 
-          style="width:auto;">Log in / Sign up</button>
+          style="width:auto;"></button>
 
         <div id="auth-form" class="modal">
           <span onclick="closeAuthForm()" class="close" title="Close Modal">&times;</span>
@@ -184,8 +206,7 @@
               <div id="signup-modal">
                 <form>
                   <h2>Sign Up</h2>
-                  <p>Have an account? <a href="#/" onclick="document.getElementById('signup-modal').style.display='none';
-                    document.getElementById('login-modal').style.display='block'"><b>Log in!</b></a></p>
+                  <p>Have an account? <a href="#/" onclick="signupLoginTransition('login')"><b>Log in!</b></a></p>
                   <hr>
                   <p>Please fill in this form to create an account.</p>
                   <label for="email"><b>Email</b></label>
@@ -219,8 +240,7 @@
               <div id="login-modal">
                 <form>
                   <h2>Log in</h2>
-                  <p>Don't have an account? <a href="#/" onclick="document.getElementById('login-modal').style.display='none';
-                    document.getElementById('signup-modal').style.display='block'"><b>Sign up!</b></a></p>
+                  <p>Don't have an account? <a href="#/" onclick="signupLoginTransition('signup')"><b>Sign up!</b></a></p>
                   <hr>
                   <p>Please fill in this form to log in.</p>
                   <label for="email"><b>Email</b></label>
