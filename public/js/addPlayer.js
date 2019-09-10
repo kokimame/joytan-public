@@ -83,14 +83,20 @@ function addPlayer(wavRef, targetId, script, projectName) {
 
 function getVotes(voteClass) {
   const voteForms = document.getElementsByClassName(voteClass);
+  const user = firebase.auth().currentUser;
   for (var i = 0; i < voteForms.length; i++) {
     form = voteForms[i]
     // When something selected in the 3 choice...
     if (form["vote"].value) {
       vote = parseInt(form["vote"].value)
-      database_target = form.id.replace(/\.[^/.]+$/, "")
-      database_target = database_target.replace("projects/", "votes/")
-      writeVoteData(database_target, vote)
+      // Store vote results in the AUDIO FILE-oriented way
+      rtdbTarget = form.id.replace(/\.[^/.]+$/, "")
+      rtdbTarget = rtdbTarget.replace("projects/", "votes/")
+      writeVoteData(rtdbTarget, vote)
+      if (user) {
+        // Store vote results for the USER-oriented way
+        writeUserVoteData(user, rtdbTarget, vote)
+      }
     }
   }
 }
@@ -103,6 +109,17 @@ function writeVoteData(target, vote) {
   var updates = {}
   updates[newKey] = voteData
   firebase.database().ref(target).update(updates)
+}
+
+function writeUserVoteData(user, target, vote) {
+  var voteData = {
+    vote: vote,
+    ref: target
+  }
+  var newKey = firebase.database().ref("users").child(user.uid).push().key;
+  var updates = {}
+  updates[newKey] = voteData
+  firebase.database().ref("users/votes").child(user.uid).update(updates)
 }
 
 function removeAllPlayers(audioId) {

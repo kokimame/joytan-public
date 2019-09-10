@@ -56,11 +56,13 @@
 
       firebase.auth().onAuthStateChanged(user => {
         if (user) {
-          console.log("user found")
           $("#auth-button").html("Your Account")
+          $("#auth-button").show()
         } else {
           $("#auth-button").html("Log in &bull; Sign up")
+          $("#auth-button").show()
         }
+        // FIXME: Cannot move the show() outside of the if
       });
 
       document.getElementById('signup-form').onsubmit = e => {
@@ -148,7 +150,6 @@
     }
     function handleAuthButton() {
       var user = firebase.auth().currentUser;
-      console.log("User ...", user)
       if (user) {
         generateAccountPage(user);
         document.getElementById("login-modal").style.display = "none"
@@ -172,6 +173,7 @@
       <p>Thank you, ${user.displayName}, for your contribution!</p>
       <hr>
       <p>Your email address: ${user.email}</p>
+      <p>Your total votes: <span id="totalVoteCount"><b></b></span></p>
       <p>Our project is still in an early stage. Your participation and contribution mean a lot to us 😌🏖️.</p>
 
       <div class="clearfix">
@@ -180,6 +182,13 @@
         </center>
       </div>
       `
+      firebase.database().ref("users/votes").child(user.uid).once('value').then(snapshot => {
+        var totalVoteCount = 0
+        if (snapshot.val()) {
+          totalVoteCount = Object.keys(snapshot.val()).length
+        }
+        document.getElementById("totalVoteCount").innerText = totalVoteCount.toString()
+      })
     }
     // Smarter way to change login/signup modal
     function signupLoginTransition(nextModal) {
@@ -219,7 +228,7 @@
         <a href="https://twitter.com/JoytanApp" class="fa icon fa-twitter"></a>
 
         <button id="auth-button" class="btn btn-info" onclick="handleAuthButton()" 
-          style="width:auto;">Log in &bull; Sign up</button>
+          style="width:auto; display: none;"></button>
 
         <div id="auth-form" class="modal">
           <span onclick="closeAuthForm()" class="close" title="Close Modal">&times;</span>
