@@ -213,7 +213,7 @@ function appendAudio(idToAppend, projectName) {
     })
   })
 }
-function playNext(audioDiv, justEnded) {
+function playNext(audioDiv, justEnded, autoBtnId) {
   var players = audioDiv.getElementsByClassName("fa fa-play ml-2");
   var arrayOfId = [];
   for (var i = 0; i < players.length; i++) {
@@ -222,8 +222,10 @@ function playNext(audioDiv, justEnded) {
   var indexJustEnded = arrayOfId.indexOf(justEnded)
   if (indexJustEnded < arrayOfId.length - 1) {
     document.getElementById(arrayOfId[indexJustEnded + 1]).click()
-    return true;
   } else {
-    return false;
+    // Turn off the auto playing if there is nothing to play anymore
+    var autoBtn = document.getElementById(autoBtnId)
+    autoBtn.value = "off"
+    autoBtn.innerHTML = `Auto <a class="fa fa-volume-up">`
   }
 }

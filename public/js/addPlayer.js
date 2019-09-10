@@ -11,6 +11,7 @@ function addPlayer(wavRef, targetId, script, projectName) {
     const voteClass = "".concat("vote_", projectName);
 
     wavRef.getDownloadURL().then((url) => {
+      // Add extra assertion to prevent failed loadings
       var index = parseInt(wavRef.fullPath.split('/')[2])
       const div = document.createElement('div');
       div.className = 'player-table';
@@ -43,35 +44,38 @@ function addPlayer(wavRef, targetId, script, projectName) {
       document.getElementById(controlId).style = "display: block;";
       document.getElementById(voteBtnId).style = "display: inline-block;";
  
-      document.getElementById(playerId).addEventListener('ended', () => {
-        var isAuto = document.getElementById(autoBtnId).value
+      document.getElementById(playerId).addEventListener('pause', () => {
+        console.log("Pause audio ...", playerId)
+        var autoBtn = document.getElementById(autoBtnId)
         var audioDiv = document.getElementById(targetId)
-        document.getElementById(playBtnId).className = "fa fa-play ml-2"
-
-        if (isAuto == "on") {
-          var isNextPlayed = playNext(audioDiv, playBtnId);
-          if (!isNextPlayed) {
-            // Turn off the auto playing if there is nothing to play anymore
-            var autoBtn = document.getElementById(autoBtnId)
-            autoBtn.value = "off"
-            autoBtn.innerHTML = `Auto <a class="fa fa-volume-up">`
-          }
+        document.getElementById(playBtnId).classList.replace('fa-pause', 'fa-play')
+        if (autoBtn.value == "on") {
+          playNext(audioDiv, playBtnId, autoBtnId);
         }
       })
       
-      document.getElementById(playBtnId).addEventListener('click', (event) => {
-        var isAuto = document.getElementById(autoBtnId).value
-        if (isAuto == "on" && event['isTrusted']) {
+      document.getElementById(playBtnId).addEventListener('click', event => {
+        var autoBtn = document.getElementById(autoBtnId)
+        var player = document.getElementById(playerId)
+        var playerBtn = document.getElementById(playBtnId)
+
+        if (autoBtn.value == "on" && event['isTrusted'] && player.paused) {
           return
         }
-        var player = document.getElementById(playerId)
-        var button = document.getElementById(playBtnId)
-        if (player.paused) {
+        if (!player.paused) {
+          // Pause audio if it's playing.
+          if (autoBtn.value == "on") {
+            // While auto-playing, the current player clicked to pause
+            player.pause()
+          } else {
+            // Reload instead of pausing in the middle of audio
+            player.load()
+            playerBtn.classList.replace('fa-pause', 'fa-play')
+          }
+        } else {
+          // Play audio if it's paused.
           player.play()
-          button.className = "fa fa-pause ml-2"
-        } else if (!player.paused) {
-          player.load()
-          button.className = "fa fa-play ml-2"
+          playerBtn.classList.replace('fa-play', 'fa-pause')
         }
       }) 
     })
