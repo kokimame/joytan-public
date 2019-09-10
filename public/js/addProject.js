@@ -174,16 +174,15 @@ function addProject(item, projectRef) {
   document.getElementById(autoBtnId).addEventListener('click', () => {
     var autoBtn = document.getElementById(autoBtnId)
     var playBtns = audioDiv.getElementsByClassName("fa fa-play ml-2");
-    var pauseBtns = audioDiv.getElementsByClassName("fa fa-pause ml-2");
     if (autoBtn.value == "off" && playBtns.length > 0) {
       autoBtn.value = "on"
       autoBtn.innerHTML = `Auto <a class="fa fa-pause">`
 
       // FIXME: Considerably messy...
       var players = document.getElementsByClassName("card-player")
-      // Change Player with pause icon to the play icon
-      for (var i = 0; i < pauseBtns.length; i++) {
-        pauseBtns[i].className = "fa fa-play ml-2"
+      var pauseBtns = audioDiv.getElementsByClassName("fa fa-pause ml-2");
+      while(pauseBtns.length > 0) {
+        pauseBtns[0].classList.replace('fa-pause', 'fa-play');
       }
       // Stop currently playing audio because it activates multiple auto threads
       for (var i = 0; i < players.length; i++) {
@@ -191,7 +190,6 @@ function addProject(item, projectRef) {
           players[i].load()
         }
       }
-
       playBtns[0].click();
     } else if (autoBtn.value == "on") {
       autoBtn.value = "off"
