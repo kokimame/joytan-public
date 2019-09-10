@@ -116,10 +116,10 @@ function writeUserVoteData(user, target, vote) {
     vote: vote,
     ref: target
   }
-  var newKey = firebase.database().ref("users").child(user.uid).push().key;
+  var newKey = firebase.database().ref("users").child(user.uid).child("votes").push().key;
   var updates = {}
   updates[newKey] = voteData
-  firebase.database().ref("users/votes").child(user.uid).update(updates)
+  firebase.database().ref("users").child(user.uid).child("votes").update(updates)
 }
 
 function removeAllPlayers(audioId) {

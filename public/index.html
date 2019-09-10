@@ -182,7 +182,7 @@
         </center>
       </div>
       `
-      firebase.database().ref("users/votes").child(user.uid).once('value').then(snapshot => {
+      firebase.database().ref("users").child(user.uid).child("votes").once('value').then(snapshot => {
         var totalVoteCount = 0
         if (snapshot.val()) {
           totalVoteCount = Object.keys(snapshot.val()).length

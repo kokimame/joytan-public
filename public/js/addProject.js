@@ -42,7 +42,7 @@ function addProject(item, projectRef) {
         <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" 
           role="progressbar" style="width: 0%; height: 100%" aria-valuenow="10" 
           aria-valuemin="0" aria-valuemax="100" id="${doneProgId}"></div>
-        <div class="progress-bar" 
+        <div class="progress-bar bg-warning" 
           role="progressbar" style="width: 0%; height: 90%" aria-valuenow="10" 
           aria-valuemin="0" aria-valuemax="100" id="${reviewProgId}"></div>
         <div class="progress-bar bg-info" role="progressbar" 
@@ -72,35 +72,41 @@ function addProject(item, projectRef) {
   `;
   // TODO: Audio auto-play
   document.getElementById('projectsTop').appendChild(div);
+  updateProgressBar();
 
   var availProg = document.getElementById(availProgId);
+  var reviewProg = document.getElementById(reviewProgId);
   var picker = document.getElementById(pickId);
   var audioDiv = document.getElementById(audioId)
+  
+  function updateProgressBar() {
+    projectRef.listAll().then(res => {
+      fileCountLookup[projectName] = res.prefixes.length;
+      res.prefixes.forEach(entryRef => {
+        firebase.database().ref("votes").child(projectName).once('value').then(snapshot => {
+          var reviewRatio = 0
+          if (snapshot.val()) {
+            reviewRatio = 100 * Object.keys(snapshot.val()).length / totalEntries
+          }
+          reviewProg.style.width = reviewRatio.toString() + "%";
 
-  projectRef.listAll().then(res => {
-    fileCountLookup[projectName] = res.prefixes.length;
-    res.prefixes.forEach(entryRef => {
-      entryRef.listAll().then(res => {
-        res.prefixes.forEach(keyRef => {
-          keyRef.listAll().then(res => {
-            availRatio = (100 * fileCountLookup[projectName] / totalEntries)
-            availProg.style.width = availRatio.toString() + "%";
-            if (availRatio > 10) {
-              availProg.innerText = "Available";
-            }
-            var index = parseInt(entryRef.name, 10)
-            picker.innerHTML += `<option value="${index}" onchange="pickerIndexChanged()">${index}</option>`
-
-            var selectList = $('#' + pickId + ' option');
-            selectList.sort((a, b) => {
-                return b.value - a.value;
-            });
-            $('#' + pickId).html(selectList);
-          })
+          availRatio = (100 * fileCountLookup[projectName] / totalEntries) - reviewRatio
+          availProg.style.width = availRatio.toString() + "%";
+          if (availRatio > 10) {
+            availProg.innerText = "Available";
+          }
+          var index = parseInt(entryRef.name, 10)
+          picker.innerHTML += `<option value="${index}" onchange="pickerIndexChanged()">${index}</option>`
+    
+          var selectList = $('#' + pickId + ' option');
+          selectList.sort((a, b) => {
+              return b.value - a.value;
+          });
+          $('#' + pickId).html(selectList);
         })
       })
     })
-  })
+  }
 
   function pickerIndexChanged() {
     currentIndex = picker.value - 1;
@@ -170,6 +176,7 @@ function addProject(item, projectRef) {
       picker.selectedIndex = picker.length - 1;
     }
     pickerIndexChanged();
+    updateProgressBar();
   })
   document.getElementById(autoBtnId).addEventListener('click', () => {
     var autoBtn = document.getElementById(autoBtnId)
