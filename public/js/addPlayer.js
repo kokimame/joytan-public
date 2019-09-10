@@ -45,7 +45,6 @@ function addPlayer(wavRef, targetId, script, projectName) {
       document.getElementById(voteBtnId).style = "display: inline-block;";
  
       document.getElementById(playerId).addEventListener('pause', () => {
-        console.log("Pause audio ...", playerId)
         var autoBtn = document.getElementById(autoBtnId)
         var audioDiv = document.getElementById(targetId)
         document.getElementById(playBtnId).classList.replace('fa-pause', 'fa-play')
