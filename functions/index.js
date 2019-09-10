@@ -32,6 +32,7 @@ exports.denoiseAudio = functions.storage.object().onFinalize(async (object) => {
     return null;
   }
 
+  // Static executable of SoX built on Ubuntu 18.04.3 LTS (GNU/Linux 5.0.0-25-generic x86_64)
   const soxPath = [__dirname, 'sox'].join('/');
   const bucket = gcs.bucket(fileBucket);
   const tempFilePath = path.join(os.tmpdir(), fileName);
