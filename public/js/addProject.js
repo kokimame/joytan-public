@@ -206,8 +206,6 @@ function addProject(item, projectRef) {
 }
 
 function appendAudio(idToAppend, projectName) {
-  const spinId = "".concat("spin_", projectName)
-
   keyRef.listAll().then(res => {
     res.prefixes.forEach(userRef => {
       userRef.listAll().then(res => {
