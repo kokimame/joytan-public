@@ -118,9 +118,11 @@ function addProject(item, projectRef) {
       openIndexLookup[projectName].push(currentIndex)
     }
 
-    // Can be usable in the functions called later as well!?
+    // Maybe this is not an optimal way to pass parameters
+    // but this is very convinient for this specific part
     keyRef = projectRef.child(("0000" + picker.value).slice(-5)).child(item["wanted"]);
-    script = item["entries"][currentIndex][item["wanted"]];
+    entries = item["entries"]
+    currentWanted = item["wanted"]
     randomColor = cardPallete[Math.floor(Math.random() * cardPallete.length)];
     appendAudio(audioId, item["dirname"]);
     /////////  //////////  ///////////  ////
@@ -211,7 +213,7 @@ function appendAudio(idToAppend, projectName) {
       userRef.listAll().then(res => {
         for (var wavRef of res.items) {
           if (wavRef.name.startsWith('n_d_')) {
-            addPlayer(wavRef, idToAppend, script, projectName);
+            addPlayer(wavRef, idToAppend, projectName);
           }
         }
       })

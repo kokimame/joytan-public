@@ -1,4 +1,4 @@
-function addPlayer(wavRef, targetId, script, projectName) {
+function addPlayer(wavRef, targetId, projectName) {
   wavRef.getMetadata().then((data) => {
     const date = data["timeCreated"].slice(0, 10);
     const path = data["fullPath"];
@@ -23,7 +23,7 @@ function addPlayer(wavRef, targetId, script, projectName) {
         </td>
         <td>
           <div class="card-body text-center">
-            <h5>${script}</h5>
+            <h5>${entries[index - 1][currentWanted]}</h5>
             <audio class="card-player" id="${playerId}" preload="true" type="audio/wav">
                 <source src="${url}">
             </audio>
