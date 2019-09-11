@@ -173,6 +173,7 @@
       <p>Thank you, ${user.displayName}, for your contribution!</p>
       <hr>
       <p>Your email address: ${user.email}</p>
+      <p>Your total voice contribution: <span id="totalVoiceCount" style="font-size: 30px;"><b></b></span></p>
       <p>Your total votes: <span id="totalVoteCount" style="font-size: 30px;"><b></b></span></p>
       <p>Our project is still in an early stage. Your participation and contribution mean a lot to us 😌🏖️.</p>
 
@@ -182,6 +183,13 @@
         </center>
       </div>
       `
+      firebase.database().ref("users").child(user.uid).child("audio").once('value').then(snapshot => {
+        var totalVoteCount = 0
+        if (snapshot.val()) {
+          totalVoteCount = Object.keys(snapshot.val()).length
+        }
+        document.getElementById("totalVoiceCount").innerText = totalVoteCount.toString()
+      })
       firebase.database().ref("users").child(user.uid).child("votes").once('value').then(snapshot => {
         var totalVoteCount = 0
         if (snapshot.val()) {
