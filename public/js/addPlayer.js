@@ -41,8 +41,8 @@ function addPlayer(wavRef, targetId, projectName) {
       document.getElementById(targetId).appendChild(div);
       // Hide loader
       $("#" + spinId).addClass("hide-loader");
-      document.getElementById(controlId).style = "display: block;";
-      document.getElementById(voteBtnId).style = "display: inline-block;";
+      document.getElementById(controlId).style.display = "block";
+      document.getElementById(voteBtnId).style.display = "inline-block";
  
       document.getElementById(playerId).addEventListener('pause', () => {
         var autoBtn = document.getElementById(autoBtnId)

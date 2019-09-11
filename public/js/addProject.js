@@ -72,14 +72,14 @@ function addProject(item, projectRef) {
   `;
   // TODO: Audio auto-play
   document.getElementById('projectsTop').appendChild(div);
-  updateProgressBar();
+  updateProgressBar(true);
 
   var availProg = document.getElementById(availProgId);
   var reviewProg = document.getElementById(reviewProgId);
   var picker = document.getElementById(pickId);
   var audioDiv = document.getElementById(audioId)
   
-  function updateProgressBar() {
+  function updateProgressBar(toInitialize) {
     projectRef.listAll().then(res => {
       fileCountLookup[projectName] = res.prefixes.length;
       res.prefixes.forEach(entryRef => {
@@ -95,20 +95,23 @@ function addProject(item, projectRef) {
           if (availRatio > 10) {
             availProg.innerText = "Available";
           }
-          var index = parseInt(entryRef.name, 10)
-          picker.innerHTML += `<option value="${index}" onchange="pickerIndexChanged()">${index}</option>`
-    
-          var selectList = $('#' + pickId + ' option');
-          selectList.sort((a, b) => {
-              return b.value - a.value;
-          });
-          $('#' + pickId).html(selectList);
+          if (toInitialize) {
+            var index = parseInt(entryRef.name, 10)
+            picker.innerHTML += `<option value="${index}" onchange="pickerIndexChanged()">${index}</option>`
+      
+            var selectList = $('#' + pickId + ' option');
+            selectList.sort((a, b) => {
+                return b.value - a.value;
+            });
+            $('#' + pickId).html(selectList); 
+          }
         })
       })
     })
   }
 
   function pickerIndexChanged() {
+    console.log("picker index changed!")
     currentIndex = picker.value - 1;
     if (openIndexLookup[projectName].includes(currentIndex)) {
       // If the new index is already opened, ignore it
@@ -129,8 +132,8 @@ function addProject(item, projectRef) {
 
     // Show spinner and this will be removed in addPlayer.js
     $("#" + spinId).removeClass("hide-loader");
-    document.getElementById(controlId).style = "display: none;"
-    document.getElementById(voteBtnId).style = "display: none;"
+    document.getElementById(controlId).style.display = "none"
+    document.getElementById(voteBtnId).style.display = "none"
   }
   $('#' + pickId).on('focus', () => {
     prevVal = $('#' + pickId).val()
@@ -178,7 +181,7 @@ function addProject(item, projectRef) {
       picker.selectedIndex = picker.length - 1;
     }
     pickerIndexChanged();
-    updateProgressBar();
+    updateProgressBar(false);
   })
   document.getElementById(autoBtnId).addEventListener('click', () => {
     var autoBtn = document.getElementById(autoBtnId)
