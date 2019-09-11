@@ -111,7 +111,6 @@ function addProject(item, projectRef) {
   }
 
   function pickerIndexChanged() {
-    console.log("picker index changed!")
     currentIndex = picker.value - 1;
     if (openIndexLookup[projectName].includes(currentIndex)) {
       // If the new index is already opened, ignore it
