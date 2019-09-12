@@ -83,27 +83,29 @@ function addProject(item, projectRef) {
     projectRef.listAll().then(res => {
       fileCountLookup[projectName] = res.prefixes.length;
       res.prefixes.forEach(entryRef => {
+        if (toInitialize) {
+          var index = parseInt(entryRef.name, 10)
+          picker.innerHTML += `<option value="${index}" onchange="pickerIndexChanged()">${index}</option>`
+    
+          var selectList = $('#' + pickId + ' option');
+          selectList.sort((a, b) => {
+              return b.value - a.value;
+          });
+          $('#' + pickId).html(selectList); 
+        }
         firebase.database().ref("votes").child(projectName).once('value').then(snapshot => {
           var reviewRatio = 0
           if (snapshot.val()) {
+            var votedKeys = Object.keys(snapshot.val())
+            var index = parseInt(entryRef.name, 10)
             reviewRatio = 100 * Object.keys(snapshot.val()).length / totalEntries
           }
           reviewProg.style.width = reviewRatio.toString() + "%";
-
+  
           availRatio = (100 * fileCountLookup[projectName] / totalEntries) - reviewRatio
           availProg.style.width = availRatio.toString() + "%";
           if (availRatio > 10) {
             availProg.innerText = "Available";
-          }
-          if (toInitialize) {
-            var index = parseInt(entryRef.name, 10)
-            picker.innerHTML += `<option value="${index}" onchange="pickerIndexChanged()">${index}</option>`
-      
-            var selectList = $('#' + pickId + ' option');
-            selectList.sort((a, b) => {
-                return b.value - a.value;
-            });
-            $('#' + pickId).html(selectList); 
           }
         })
       })
@@ -131,6 +133,13 @@ function addProject(item, projectRef) {
 
     // Show spinner and this will be removed in addPlayer.js
     $("#" + spinId).removeClass("hide-loader");
+    // Remove the spin class in case of faild loading.
+    setTimeout(() => {
+      $("#" + spinId).addClass("hide-loader");
+      document.getElementById(controlId).style.display = "block";
+      document.getElementById(voteBtnId).style.display = "inline-block";
+      updateProgressBar()
+    }, 5000);
     document.getElementById(controlId).style.display = "none"
     document.getElementById(voteBtnId).style.display = "none"
   }
