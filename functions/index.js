@@ -1,5 +1,6 @@
 "use strict";
 const functions = require('firebase-functions');
+const admin = require("firebase-admin"); 
 const gcs = require('@google-cloud/storage')();
 const path = require('path');
 const os = require('os');
@@ -8,7 +9,9 @@ const ffmpeg = require('fluent-ffmpeg');
 const ffmpeg_static = require('ffmpeg-static');
 const normalize = require('ffmpeg-normalize');
 const spawn = require('child-process-promise').spawn;
+const adminUid = "3fG1zIUGn1hAf8JkDGd500uNuIi1"
 
+admin.initializeApp(functions.config().firebase);
 
 // Makes an ffmpeg command return a promise
 function promisifyCommand(command) {
@@ -16,6 +19,60 @@ function promisifyCommand(command) {
     command.on('end', resolve).on('error', reject).run();
   });
 }
+
+exports.adminVoteListener = functions.database.ref(`/users/${adminUid}/votes`).onUpdate(async (change, context) => {
+    console.log("adminVoteFunc called")
+    const beforeData = change.before.val();
+    const beforeKeys = Object.keys(beforeData)
+    const afterData = change.after.val();
+    const afterKeys = Object.keys(afterData)
+    const diffKeys = afterKeys.filter(x => !beforeKeys.includes(x))
+    console.log("context...", context)
+
+    if (!diffKeys.length === 1) {
+      console.log("Exception happened on adminVoterLister: Too many keys added once!")
+      return null;
+    }
+    const newKey = diffKeys[0]
+    if (afterData[newKey]["vote"] !== 5) {
+      const voteDir = path.dirname(afterData[newKey]["ref"])
+      const denoisedPath = afterData[newKey]["ref"].replace("votes/", "projects/") + ".wav"
+      const filePath = denoisedPath.replace("n_d_", "")
+      const destPath = "trash/" + filePath
+      const bucket = gcs.bucket("joytan-rec-16ba2.appspot.com")
+      const fileName = path.basename(filePath)
+      const tempFilePath = path.join(os.tmpdir(), fileName)
+
+      var voteRef = admin.database().ref(voteDir)
+      voteRef.remove().then(() => {
+        return true;
+      }).catch(err => {
+        console.log("ERROR: removing voteRef"  + err)
+      })
+
+      await bucket.file(filePath).download({destination: tempFilePath});
+
+      await bucket.upload(tempFilePath, {
+        destination: destPath,
+        metadata: {
+          contentType: "audio/x-wav"
+        }
+      });
+
+      await bucket.file(filePath).delete().then(() => {
+        return true
+      }).catch(err => {
+        console.log("Failed to delete audio @" + filePath + err)
+      })
+      await bucket.file(denoisedPath).delete().then(() => {
+        return true
+      }).catch(err => {
+        console.log("Failed to delete audio @" + denoisedPath + err)
+      })
+      fs.unlinkSync(tempFilePath)
+    }
+    return null;
+})
 
 exports.denoiseAudio = functions.storage.object().onFinalize(async (object) => {
   const fileBucket = object.bucket;
