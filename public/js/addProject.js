@@ -3,7 +3,7 @@ var openIndexLookup = {};
 var cardPallete = ["#a8e6cf", "#dcedc1", "#ffd3b6", "#ffaaa5", "#ff8b94",
                    "#ebf4f6", "#bdeaee", "#90cdd6", "#fff6e9", "#ffefd7", 
                    "#fffef9", "#e3f0ff", "#d2e7ff"];
-const moreThanTenMessage = "You are reviewing more than 10 entires. Please VOTE first and load audio :)"
+const moreThanWarning = "You are reviewing more than 50 entires. Please VOTE first and load audio :)"
 
 
 function addProject(item, projectRef) {
@@ -46,7 +46,7 @@ function addProject(item, projectRef) {
           role="progressbar" style="width: 0%; height: 90%" aria-valuenow="10" 
           aria-valuemin="0" aria-valuemax="100" id="${reviewProgId}"></div>
         <div class="progress-bar bg-info" role="progressbar" 
-          style="width: 0%; height: 80%" aria-valuenow="30"
+          style="width: 0%; height: 80%;" aria-valuenow="30"
           aria-valuemin="0" aria-valuemax="100" id="${availProgId}"></div>
       </div>
     </button>
@@ -76,6 +76,8 @@ function addProject(item, projectRef) {
 
   var availProg = document.getElementById(availProgId);
   var reviewProg = document.getElementById(reviewProgId);
+  reviewProg.style.color = "black";
+
   var picker = document.getElementById(pickId);
   var audioDiv = document.getElementById(audioId)
   
@@ -96,16 +98,17 @@ function addProject(item, projectRef) {
         firebase.database().ref("votes").child(projectName).once('value').then(snapshot => {
           var reviewRatio = 0
           if (snapshot.val()) {
-            var votedKeys = Object.keys(snapshot.val())
-            var index = parseInt(entryRef.name, 10)
             reviewRatio = 100 * Object.keys(snapshot.val()).length / totalEntries
           }
           reviewProg.style.width = reviewRatio.toString() + "%";
   
           availRatio = (100 * fileCountLookup[projectName] / totalEntries) - reviewRatio
           availProg.style.width = availRatio.toString() + "%";
-          if (availRatio > 10) {
+          if (availRatio > 5) {
             availProg.innerText = "Available";
+          }
+          if (reviewRatio > 5) {
+            reviewProg.innerText = "Reviewed";
           }
         })
       })
@@ -147,8 +150,8 @@ function addProject(item, projectRef) {
     prevVal = $('#' + pickId).val()
   }).change(() => {
     // If more than 10 entries are open, let users do the vote first.
-    if (openIndexLookup[projectName].length >= 10) {
-      alert(moreThanTenMessage)
+    if (openIndexLookup[projectName].length >= 50) {
+      alert(moreThanWarning)
       $('#' + pickId).val(prevVal)
       return false
     } else {
@@ -168,9 +171,9 @@ function addProject(item, projectRef) {
     }
   })
   document.getElementById(loadBtnId).addEventListener("click", () => {
-    // If more than 10 entries are open, let users do the vote first.
-    if (openIndexLookup[projectName].length >= 10) {
-      alert(moreThanTenMessage)
+    // If more than 50 entries are open, let users do the vote first.
+    if (openIndexLookup[projectName].length >= 50) {
+      alert(moreThanWarning)
       return
     }
     picker.selectedIndex -= 1;
