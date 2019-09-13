@@ -43,7 +43,7 @@ function addProject(item, projectRef) {
           role="progressbar" style="width: 0%; height: 100%" aria-valuenow="10" 
           aria-valuemin="0" aria-valuemax="100" id="${doneProgId}"></div>
         <div class="progress-bar bg-warning" 
-          role="progressbar" style="width: 0%; height: 90%" aria-valuenow="10" 
+          role="progressbar" style="width: 0%; height: 90%;" aria-valuenow="10" 
           aria-valuemin="0" aria-valuemax="100" id="${reviewProgId}"></div>
         <div class="progress-bar bg-info" role="progressbar" 
           style="width: 0%; height: 80%;" aria-valuenow="30"
@@ -102,13 +102,13 @@ function addProject(item, projectRef) {
           }
           reviewProg.style.width = reviewRatio.toString() + "%";
   
-          availRatio = (100 * fileCountLookup[projectName] / totalEntries) - reviewRatio
-          availProg.style.width = availRatio.toString() + "%";
+          availRatio = (100 * fileCountLookup[projectName] / totalEntries)
+          availProg.style.width = (availRatio - reviewRatio).toString() + "%";
           if (availRatio > 5) {
-            availProg.innerText = "Available";
+            availProg.innerText = fileCountLookup[projectName];
           }
-          if (reviewRatio > 5) {
-            reviewProg.innerText = "Reviewed";
+          if ((availRatio - reviewRatio) > 5) {
+            reviewProg.innerText = Object.keys(snapshot.val()).length;
           }
         })
       })
