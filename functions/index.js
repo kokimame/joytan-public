@@ -10,6 +10,7 @@ const ffmpeg_static = require('ffmpeg-static');
 const normalize = require('ffmpeg-normalize');
 const spawn = require('child-process-promise').spawn;
 const adminUid = "3fG1zIUGn1hAf8JkDGd500uNuIi1"
+const adminVotePath = `/users/${adminUid}/votes`
 
 admin.initializeApp(functions.config().firebase);
 
@@ -20,7 +21,7 @@ function promisifyCommand(command) {
   });
 }
 
-exports.adminVoteListener = functions.database.ref(`/users/${adminUid}/votes`).onUpdate(async (change, context) => {
+exports.adminVoteListener = functions.database.ref(adminVotePath).onUpdate(async (change, context) => {
     console.log("adminVoteFunc called")
     const beforeData = change.before.val();
     const beforeKeys = Object.keys(beforeData)
@@ -33,16 +34,38 @@ exports.adminVoteListener = functions.database.ref(`/users/${adminUid}/votes`).o
       console.log("Exception happened on adminVoterLister: Too many keys added once!")
       return null;
     }
-    const newKey = diffKeys[0]
-    if (afterData[newKey]["vote"] !== 5) {
-      const voteDir = path.dirname(afterData[newKey]["ref"])
-      const denoisedPath = afterData[newKey]["ref"].replace("votes/", "projects/") + ".wav"
+    const newData = diffKeys[0]
+    if (afterData[newData]["vote"] === 5) {
+      // projects/projectName ::: /entryNum/wantedKey/clientUid/wavName                      
+      const entryTop = afterData[newData]["ref"].replace("votes/", "projects/").split('/').slice(0, 3).join('/')
+      const clientUid = afterData[newData]["ref"].split('/')[4]
+      // Path under which stores production-ready entry info
+      const okPath = adminVotePath.replace('votes', 'ok')
+      const destPath = [okPath, entryTop].join('/')
+      console.log("afterData...", afterData[newData]["ref"])
+      console.log("okPath...", okPath)
+      console.log("entryTop... ", entryTop)
+      console.log("Add an entry to ", destPath)
+
+      var entryData = {
+        u: clientUid
+      }
+      var destRef = admin.database().ref(destPath)
+      var newKey = destRef.push().key
+      var updates = {}
+      updates[newKey] = entryData
+      destRef.update(updates)
+      
+    } else {
+      const voteDir = path.dirname(afterData[newData]["ref"])
+      const denoisedPath = afterData[newData]["ref"].replace("votes/", "projects/") + ".wav"
       const filePath = denoisedPath.replace("n_d_", "")
       const destPath = "trash/" + filePath
       const bucket = gcs.bucket("joytan-rec-16ba2.appspot.com")
       const fileName = path.basename(filePath)
       const tempFilePath = path.join(os.tmpdir(), fileName)
 
+      // Remove vote history in order to update the progress bar on Web
       var voteRef = admin.database().ref(voteDir)
       voteRef.remove().then(() => {
         return true;
