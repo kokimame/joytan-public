@@ -11,7 +11,7 @@
     display: "block";
 }
 
-#auth-button {
+.fab-button {
     position: fixed;
     right: 32px;
     bottom: 32px;
