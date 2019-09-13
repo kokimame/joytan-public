@@ -40,12 +40,8 @@ exports.adminVoteListener = functions.database.ref(adminVotePath).onUpdate(async
       const entryTop = afterData[newData]["ref"].replace("votes/", "projects/").split('/').slice(0, 3).join('/')
       const clientUid = afterData[newData]["ref"].split('/')[4]
       // Path under which stores production-ready entry info
-      const okPath = adminVotePath.replace('votes', 'ok')
+      const okPath = adminVotePath.replace('votes', 'done')
       const destPath = [okPath, entryTop].join('/')
-      console.log("afterData...", afterData[newData]["ref"])
-      console.log("okPath...", okPath)
-      console.log("entryTop... ", entryTop)
-      console.log("Add an entry to ", destPath)
 
       var entryData = {
         u: clientUid
