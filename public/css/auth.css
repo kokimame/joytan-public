@@ -11,6 +11,20 @@
     display: "block";
 }
 
+#auth-button {
+    position: fixed;
+    right: 32px;
+    bottom: 32px;
+    z-index: 2;
+    border:none;
+    outline:none;
+    color:#FFF;
+    font-size:16px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    transition:.3s;  
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
 /* Full-width input fields */
 input[type=text], input[type=password] {
     width: 100%;
