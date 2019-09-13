@@ -76,6 +76,7 @@ function addProject(item, projectRef) {
 
   var availProg = document.getElementById(availProgId);
   var reviewProg = document.getElementById(reviewProgId);
+  var doneProg = document.getElementById(doneProgId);
   reviewProg.style.color = "black";
 
   var picker = document.getElementById(pickId);
@@ -84,6 +85,35 @@ function addProject(item, projectRef) {
   function updateProgressBar(toInitialize) {
     projectRef.listAll().then(res => {
       fileCountLookup[projectName] = res.prefixes.length;
+
+      firebase.database().ref("votes").child(projectName).once('value').then(snapshotVote => {
+        firebase.database().ref("users/3fG1zIUGn1hAf8JkDGd500uNuIi1/done/projects").child(projectName).once('value').then(snapshotDone => {
+          var reviewRatio = 0
+          var doneRatio = 0
+          if (snapshotDone.val()) {
+            doneRatio = 100 * Object.keys(snapshotDone.val()).length / totalEntries
+          }
+          if (snapshotVote.val()) {
+            reviewRatio = 100 * Object.keys(snapshotVote.val()).length / totalEntries
+          }
+          availRatio = (100 * fileCountLookup[projectName] / totalEntries)
+
+          doneProg.style.width = doneRatio.toString() + "%";
+          reviewProg.style.width = (reviewRatio - doneRatio).toString() + "%";
+          availProg.style.width = (availRatio - reviewRatio - doneRatio).toString() + "%";
+
+          if (doneRatio > 5) {
+            doneProg.innerText = Object.keys(snapshotDone.val()).length;
+          }
+          if ((reviewRatio - doneRatio) > 5) {
+            reviewProg.innerText = Object.keys(snapshotVote.val()).length;
+          }
+          if ((availRatio - reviewRatio - doneRatio) > 5) {
+            availProg.innerText = fileCountLookup[projectName];
+          }
+        })
+      })
+
       res.prefixes.forEach(entryRef => {
         if (toInitialize) {
           var index = parseInt(entryRef.name, 10)
@@ -95,22 +125,6 @@ function addProject(item, projectRef) {
           });
           $('#' + pickId).html(selectList); 
         }
-        firebase.database().ref("votes").child(projectName).once('value').then(snapshot => {
-          var reviewRatio = 0
-          if (snapshot.val()) {
-            reviewRatio = 100 * Object.keys(snapshot.val()).length / totalEntries
-          }
-          reviewProg.style.width = reviewRatio.toString() + "%";
-  
-          availRatio = (100 * fileCountLookup[projectName] / totalEntries)
-          availProg.style.width = (availRatio - reviewRatio).toString() + "%";
-          if (availRatio > 5) {
-            availProg.innerText = fileCountLookup[projectName];
-          }
-          if ((availRatio - reviewRatio) > 5) {
-            reviewProg.innerText = Object.keys(snapshot.val()).length;
-          }
-        })
       })
     })
   }
@@ -141,7 +155,6 @@ function addProject(item, projectRef) {
       $("#" + spinId).addClass("hide-loader");
       document.getElementById(controlId).style.display = "block";
       document.getElementById(voteBtnId).style.display = "inline-block";
-      updateProgressBar()
     }, 5000);
     document.getElementById(controlId).style.display = "none"
     document.getElementById(voteBtnId).style.display = "none"
