@@ -1,0 +1,77 @@
+table {
+    background: #d4d4d4;
+    border: solid #ccc 2px;
+    border-collapse: separate !important;
+    border-spacing: 0;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    border-radius: 6px;
+    -webkit-box-shadow: 0 3px 3px #ccc;
+    -moz-box-shadow: 0 3px 3px #ccc;
+    box-shadow: 0 3px 3px #ccc;
+}
+table:hover {
+    border: solid rgb(68, 68, 68) 2px;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    border-radius: 6px;
+
+    -webkit-box-shadow: 0 3px 3px #ccc;
+    -moz-box-shadow: 0 3px 3px #ccc;
+    box-shadow: 0 3px 3px #ccc;
+
+    -webkit-transition: all 0.1s ease-in-out;
+    -moz-transition: all 0.1s ease-in-out;
+    transition: all 0.1s ease-in-out;
+}
+
+.player-table {
+    display: inline-block;
+    margin: 3px;
+}
+
+.player-table .main-script {
+    font-size: 20px;
+    font-style: bold;
+    margin-top: -5px;
+    margin-bottom: 2px;
+}
+
+
+.player-table .upper-note {
+    font-style: italic;
+    font-size: 12px;
+    margin-top: 0px;
+    color: rgb(92, 92, 92);
+}
+.player-table .lower-note {
+    font-size: 14px;
+    margin: 3px;
+}
+
+
+.player-table h1, h2, h3, h4, h5, h6 {
+    margin: 0px;
+}
+
+.player-table td {
+    padding-left: 4px;
+}
+
+.player-table .fa {
+    font-size: 30px;
+    width: 20px;
+}
+
+.player-table .date {
+    vertical-align: bottom;
+    display: table-cell;
+    font-size: 10px; 
+    padding-left: 5px;
+    color: rgb(92, 92, 92);
+}
+
+.card-body .text-center {
+    padding-top: 4px;
+    padding-bottom: 4px;
+}

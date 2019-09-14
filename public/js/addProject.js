@@ -144,6 +144,8 @@ function addProject(item, projectRef) {
     keyRef = projectRef.child(("0000" + picker.value).slice(-5)).child(item["wanted"]);
     entries = item["entries"]
     currentWanted = item["wanted"]
+    upperNote = item["upn"]
+    lowerNote = item["lon"]
     randomColor = cardPallete[Math.floor(Math.random() * cardPallete.length)];
     appendAudio(audioId, item["dirname"]);
     /////////  //////////  ///////////  ////

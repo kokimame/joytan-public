@@ -26,57 +26,11 @@ html, body {
     display: none;
 }
 
-.player-table {
-    display: inline-block;
-    margin: 3px;
-}
-table {
-    border-collapse: separate !important;
-    border-spacing: 0;
-}
-
-.card-body.text-center {
-    padding-top: 4px;
-    padding-bottom: 4px;
-}
-
-table {
-    background: #d4d4d4;
-    border: solid #ccc 2px;
-    -moz-border-radius: 6px;
-    -webkit-border-radius: 6px;
-    border-radius: 6px;
-    -webkit-box-shadow: 0 3px 3px #ccc;
-    -moz-box-shadow: 0 3px 3px #ccc;
-    box-shadow: 0 3px 3px #ccc;
-}
-table:hover {
-    border: solid rgb(68, 68, 68) 2px;
-    -moz-border-radius: 6px;
-    -webkit-border-radius: 6px;
-    border-radius: 6px;
-
-    -webkit-box-shadow: 0 3px 3px #ccc;
-    -moz-box-shadow: 0 3px 3px #ccc;
-    box-shadow: 0 3px 3px #ccc;
-
-    -webkit-transition: all 0.1s ease-in-out;
-    -moz-transition: all 0.1s ease-in-out;
-    transition: all 0.1s ease-in-out;
-}
 .picker {
     width: 100px; 
     display: inline-block;
 }
 
-.btn-vote {
-    width: 25%;
-    margin-left: 2px;
-}
-
-.auto-play {
-    margin-left: 10px;
-}
 button {
     background-color: transparent;
     background-repeat: no-repeat;
@@ -95,11 +49,21 @@ button {
     font-size: 12px;
     line-height: 1.428571429;
     border-radius: 25px;
-  }
+}
 
-.fa.fa-chevron-down.pull-right {
+.fa .fa-chevron-down .pull-right {
     transition: .3s transform ease-in-out;
 }
+
+.btn-vote {
+    width: 25%;
+    margin-left: 2px;
+}
+
+.auto-play {
+    margin-left: 10px;
+}
+
 .collapsed .fa {
     transform: rotate(90deg);
 }

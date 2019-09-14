@@ -1,6 +1,6 @@
 function addPlayer(wavRef, targetId, projectName) {
   wavRef.getMetadata().then((data) => {
-    const date = data["timeCreated"].slice(0, 10);
+    const date = data["timeCreated"].slice(0, 10).replace('-', '<br />');
     const path = data["fullPath"];
     const playerId = "".concat("player_", path);
     const playBtnId = "".concat("playBtn_", path);
@@ -13,26 +13,33 @@ function addPlayer(wavRef, targetId, projectName) {
     wavRef.getDownloadURL().then((url) => {
       // Add extra assertion to prevent failed loadings
       var index = parseInt(wavRef.fullPath.split('/')[2])
+      var upnString = entries[index - 1][upperNote]
+      var lonString = entries[index - 1][lowerNote]
+      upnString = (typeof upnString === 'undefined') ? "" : upnString
+      lonString = (typeof lonString === 'undefined') ? "" : lonString
+
       const div = document.createElement('div');
       div.className = 'player-table';
       div.innerHTML = `
       <table class="bordered" style="background: ${randomColor};">
-        <td style="padding-bottom: 25px;">
-          <font size="2" style="padding-left: 10px;">${index} </font><br />
-          <i id="${playBtnId}" class="fa fa-play ml-2" style="font-size: 30px; width: 20px; padding-left: 4px;"></i>
+        <td>
+          <font size="2">${index}</font><br />
+          <i id="${playBtnId}" class="fa fa-play ml-2"></i>
+          <p class="date">${date}</p>
         </td>
         <td>
           <div class="card-body text-center">
-            <h5>${entries[index - 1][currentWanted]}</h5>
+            <h1 class="upper-note">${upnString}</h1>
+            <p class="main-script">${entries[index - 1][currentWanted]}</p>
+            <h1 class="lower-note">${lonString}</h1>
             <audio class="card-player" id="${playerId}" preload="true" type="audio/wav">
                 <source src="${url}">
             </audio>
-            <form class="${voteClass}" id="${path}" style="display: inline-block;">
+            <form class="${voteClass}" id="${path}" style="display: inline-block; line-height: 10px;">
               <label><input type="radio" name="vote" value="5"> OK  </label>
               <label><input type="radio" name="vote" value="1"> Wrong  </label>
               <label><input type="radio" name="vote" value="0"> Unclear  </label>
             </form>
-            <p style="font-size: 10px;">${date}</p>
           </div>
         </td>
       </table>
