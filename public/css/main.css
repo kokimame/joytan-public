@@ -69,6 +69,11 @@ table:hover {
     display: inline-block;
 }
 
+.btn-vote {
+    width: 25%;
+    margin-left: 2px;
+}
+
 .auto-play {
     margin-left: 10px;
 }

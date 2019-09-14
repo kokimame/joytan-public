@@ -65,8 +65,8 @@ function addProject(item, projectRef) {
       <br />
       <div id="${audioId}" style="display: inline-block;">
       </div>
-      <button type="button" id="${voteBtnId}" class="btn btn-info btn-circle"
-        style="display: inline-block;">Vote<br />& >><br />Next</button>
+      <button type="button" id="${voteBtnId}" class="btn btn-secondary btn-vote"
+        style="display: inline-block;">Vote & Next</button>
     </div>
   </div>
   `;
