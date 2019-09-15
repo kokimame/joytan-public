@@ -75,6 +75,13 @@
           $("#auth-form").hide();
         }
       });
+      $("#about-view").click(ev => {
+        if(ev.target != document.getElementById("about-view")) {
+          return;
+        } else {
+          $("#about-view").hide();
+        }
+      });
 
       firebase.auth().onAuthStateChanged(user => {
         if (user) {
@@ -93,6 +100,12 @@
       document.getElementById('login-form').onsubmit = e => {
         e.preventDefault();
       }
+      document.getElementById('learn-more').onclick = e => {
+        e.preventDefault();
+        console.log("learn more")
+        $("#about-view").show();
+      }
+
     } // ^^^^^ onload ^^^^^
     function loadProjects(structureJson, topRef) {
       topRef.listAll().then(res => {
@@ -118,7 +131,6 @@
       var emailInput = document.getElementById("signup-email");
       var pswInput = document.getElementById("signup-psw");
       var unameInput = document.getElementById("signup-uname");
-      console.log("called create")
 
       // MAYBE Need a fix because this is NOT called on actual submit.
       if (!emailInput.checkValidity() ||
@@ -186,6 +198,7 @@
     }
     function closeAuthForm() {
       $("#auth-form").hide();
+      $("#about-view").hide();
     }
 
     function generateAccountPage(user) {
@@ -246,10 +259,11 @@
         <h2 class="mt-2">Joytan Public 
           <img src="https://kokimame.github.io/joytan/images/joytan.png" width="28" height="28" style="margin-bottom: 5px;" alt="">
           <a class="fa fa-users" style="color: darkgreen; margin-left: 5px;"></a></h2>
-        <p><b>Where we celebrate our special voice!</b> Please help us evaluate voice recordings for future language-teaching. 
+          <p><b>Where we celebrate our special voice!</b> Please help us evaluate voice recordings for future language-teaching. 
           Your voice recordings sent through 
           <a href="https://play.google.com/store/apps/details?id=com.joytan.rec">Joytan-REC</a> (Android app)
-           will immediately be available on this website!
+           will immediately be available on this website! 
+           <a href="" id="learn-more">Learn more</a>
         </p>
 
         <div class="g-ytsubscribe" data-channelid="UC0bLbtTI9uni3bNRPIJQAqA" data-layout="default" data-count="default"></div>
@@ -259,6 +273,38 @@
 
         <button id="auth-button" class="btn btn-info" onclick="handleAuthButton()" 
           style="display: none; float: right;"></button>
+
+        <div id="about-view" class="modal">
+          <span onclick="closeAuthForm()" class="close" title="Close Modal">&times;</span>
+          <div class="modal-content">
+            <div class="modal-container container">
+              <div id="about-modal">
+                <h2>About this website</h2>
+                <hr>
+                <p>
+                  Joytan-REC aims to collect pronunciations (a single word to a short sentence)
+                    from the crowd of language enthusiasts and make use of such voice recordings 
+                    to develop free and fun language learning services. 
+                </p>
+                <p>
+                  For instance, the voice recording you send through this app will be used in
+                    our YouTube channel (Joytan App) and an even more open platform where everyone 
+                    can freely download and use for educational purpose.
+                </p>
+                <p>
+                For now, your benefits of contributing this project are a bumper ad/promo 
+                (like your name, social account) or a short promotional movie at the beginning 
+                of our YouTube video in which your voice recordings are used.
+                  And of course, you will see more free and fun language learning videos from us 
+                  because your contribution will grow our channel and attract other contributors.
+                </p>
+                <center>
+                  <button class="btn btn-danger" type="button" onclick="closeAuthForm()" >Close</button>
+                </center>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <div id="auth-form" class="modal">
           <span onclick="closeAuthForm()" class="close" title="Close Modal">&times;</span>
@@ -289,12 +335,10 @@
                   <label>
                     <input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me
                   </label>
-            
-                  <p>By creating an account you agree to our <a href="#" style="color:dodgerblue">Terms & Privacy</a>.</p>
-            
+                        
                   <div class="clearfix">
                     <button class="modal-button cancel-btn" type="button" onclick="closeAuthForm()" >Cancel</button>
-                    <button class="modal-button signup-btn" type="submit" onclick="createNewUser()">Sign Up</button>
+                    <button class="modal-button signup-btn btn-success" type="submit" onclick="createNewUser()">Sign Up</button>
                   </div>
                 </form>
               </div>
@@ -318,7 +362,7 @@
             
                   <div class="clearfix">
                     <button class="modal-button cancel-btn" type="button" onclick="closeAuthForm()" >Cancel</button>
-                    <button class="modal-button login-btn" type="submit" onclick="loginUser()">Log in</button>
+                    <button class="modal-button login-btn btn-success" type="submit" onclick="loginUser()">Log in</button>
                   </div>
                 </form>
               </div>
