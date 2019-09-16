@@ -69,6 +69,11 @@
           loadProjects(data, topProjectsRef);
         })
       })
+
+      $(() => {
+        $("#about-view").load("about.html"); 
+        $("#stat-view").load("stat.html"); 
+      });
       // Close modal when clicking outside
       $("#auth-form").click(ev => {
         if(ev.target != document.getElementById("auth-form")) {
@@ -84,6 +89,14 @@
           $("#about-view").hide();
         }
       });
+      $("#stat-view").click(ev => {
+        if(ev.target != document.getElementById("stat-view")) {
+          return;
+        } else {
+          $("#stat-view").hide();
+        }
+      });
+
 
       firebase.auth().onAuthStateChanged(user => {
         if (user) {
@@ -104,8 +117,11 @@
       }
       document.getElementById('learn-more').onclick = e => {
         e.preventDefault();
-        console.log("learn more")
         $("#about-view").show();
+      }
+      document.getElementById('btn-stat').onclick = e => {
+        e.preventDefault();
+        $("#stat-view").show();
       }
 
     } // ^^^^^ onload ^^^^^
@@ -201,6 +217,7 @@
     function closeAuthForm() {
       $("#auth-form").hide();
       $("#about-view").hide();
+      $("#stat-view").hide();
     }
 
     function generateAccountPage(user) {
@@ -268,47 +285,17 @@
            <a href="" id="learn-more">Learn more</a>
         </p>
 
-        <div class="g-ytsubscribe" data-channelid="UC0bLbtTI9uni3bNRPIJQAqA" data-layout="default" data-count="default"></div>
         <a href="https://play.google.com/store/apps/details?id=com.joytan.rec" class="fa icon fa-android"></a>
         <a href="https://github.com/kokimame/joytan" class="fa icon fa-github"></a>
         <a href="https://twitter.com/JoytanApp" class="fa icon fa-twitter"></a>
-        <a href="" class="fa icon fa-chart-bar" style="margin-left: 8px; color: blue;"></a>
-        <a href="" class="fa icon fa-crown" style="color: orange;"></a>
+        <a id="btn-stat" href="" class="fa icon fa-chart-bar" style="color: rgb(81, 73, 131);"></a>
+        <div class="g-ytsubscribe" data-channelid="UC0bLbtTI9uni3bNRPIJQAqA" data-layout="default" data-count="default"></div>
 
         <button id="auth-button" class="btn btn-info" onclick="handleAuthButton()" 
           style="display: none; float: right;"></button>
 
-        <div id="about-view" class="modal">
-          <span onclick="closeAuthForm()" class="close" title="Close Modal">&times;</span>
-          <div class="modal-content">
-            <div class="modal-container container">
-              <div id="about-modal">
-                <h2>About this website</h2>
-                <hr>
-                <p>
-                  Joytan-REC aims to collect pronunciations (a single word to a short sentence)
-                    from the crowd of language enthusiasts and make use of such voice recordings 
-                    to develop free and fun language learning services. 
-                </p>
-                <p>
-                  For instance, the voice recording you send through this app will be used in
-                    our YouTube channel (Joytan App) and an even more open platform where everyone 
-                    can freely download and use for educational purpose.
-                </p>
-                <p>
-                For now, your benefits of contributing this project are a bumper ad/promo 
-                (like your name, social account) or a short promotional movie at the beginning 
-                of our YouTube video in which your voice recordings are used.
-                  And of course, you will see more free and fun language learning videos from us 
-                  because your contribution will grow our channel and attract other contributors.
-                </p>
-                <center>
-                  <button class="btn btn-danger" type="button" onclick="closeAuthForm()" >Close</button>
-                </center>
-              </div>
-            </div>
-          </div>
-        </div>
+        <div id="about-view" class="modal"></div>
+        <div id="stat-view" class="modal"></div>
 
         <div id="auth-form" class="modal">
           <span onclick="closeAuthForm()" class="close" title="Close Modal">&times;</span>
