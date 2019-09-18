@@ -85,7 +85,6 @@ function addProject(item, projectRef) {
   function updateProgressBar(toInitialize) {
     projectRef.listAll().then(res => {
       fileCountLookup[projectName] = res.prefixes.length;
-
       firebase.database().ref("votes").child(projectName).once('value').then(snapshotVote => {
         firebase.database().ref("users/3fG1zIUGn1hAf8JkDGd500uNuIi1/done/projects").child(projectName).once('value').then(snapshotDone => {
           var reviewRatio = 0
@@ -141,7 +140,7 @@ function addProject(item, projectRef) {
 
     // Maybe this is not an optimal way to pass parameters
     // but this is very convinient for this specific part
-    keyRef = projectRef.child(("0000" + picker.value).slice(-5)).child(item["wanted"]);
+    entryRef = projectRef.child(("0000" + picker.value).slice(-5));
     entries = item["entries"]
     currentWanted = item["wanted"]
     upperNote = item["upn"]
@@ -237,7 +236,7 @@ function addProject(item, projectRef) {
 }
 
 function appendAudio(idToAppend, projectName) {
-  keyRef.listAll().then(res => {
+  entryRef.listAll().then(res => {
     res.prefixes.forEach(userRef => {
       userRef.listAll().then(res => {
         for (var wavRef of res.items) {
