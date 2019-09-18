@@ -36,7 +36,7 @@ exports.adminVoteListener = functions.database.ref(adminVotePath).onUpdate(async
     }
     const newData = diffKeys[0]
     if (afterData[newData]["vote"] === 5) {
-      // projects/projectName ::: /entryNum/wantedKey/clientUid/wavName                      
+      // projects/projectName/entryNum ::: /clientUid/wavName                      
       const entryTop = afterData[newData]["ref"].replace("votes/", "projects/").split('/').slice(0, 3).join('/')
       const clientUid = afterData[newData]["ref"].split('/')[3]
       // Path under which stores production-ready entry info
