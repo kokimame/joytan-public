@@ -50,9 +50,12 @@
     left: 0;
     right: 0;
     z-index: 99;
-    height: 200px;
+    height: auto;
+    max-height: 200px;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
+    border: 1px solid transparent;
+    border-color: lightgray transparent transparent transparent;    
     overflow-y: scroll;
 }
   
