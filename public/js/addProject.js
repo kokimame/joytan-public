@@ -131,6 +131,10 @@ function addProject(item, projectRef) {
           selectedItem.setAttribute("class", "select-selected");
           selectedItem.innerHTML = picker.options[picker.selectedIndex].innerHTML;
 
+          // Remove all previous items for selection
+          while (cSelect.firstChild) {
+            cSelect.removeChild(cSelect.firstChild);
+          }
           cSelect.appendChild(selectedItem);
           /*for each element, create a new DIV that will contain the option list:*/
           selectables = document.createElement("div");
@@ -207,7 +211,6 @@ function addProject(item, projectRef) {
   }
 
   function pickerIndexChanged() {
-    console.log("pickerIndexChanged() called")
     currentIndex = picker.value - 1;
     selectedItem = document.getElementById(selectedId)
     selectedItem.innerHTML = picker.options[picker.selectedIndex].innerHTML;
