@@ -22,9 +22,9 @@ function addProject(item, projectRef) {
   const audioId = "".concat("audio_", projectName)
   const spinId = "".concat("spin_", projectName)
   const titleId = "".concat("title_", projectName)
-  const doneProgId = "".concat("done", titleId)
-  const reviewProgId = "".concat("review", titleId)
-  const availProgId = "".concat("avail", titleId)
+  const doneProgId = "".concat("done_", titleId)
+  const reviewProgId = "".concat("review_", titleId)
+  const availProgId = "".concat("avail_", titleId)
   const totalEntries = item["entries"].length;
   var titleFixed = item["flags"] + item["title"]
 
@@ -34,7 +34,7 @@ function addProject(item, projectRef) {
   //🇯🇵🇫🇷🇩🇪🇬🇧🇺🇸🇷🇺🇰🇷🇮🇹🇸🇪🇪🇸🇹🇷
   div.innerHTML = `
   <br />
-    <button class="btn btn-outline-dark btn-block text-left" type="button" 
+    <button class="btn btn-outline-dark btn-block text-left collapsed" type="button" 
       data-toggle="collapse" data-target="#${projectName}" aria-expanded="false" id="${titleId}">
       <i class="fa fa-chevron-down pull-right"></i>
       <div class"btn-title" >
@@ -267,7 +267,6 @@ function addProject(item, projectRef) {
     } else if (audioDiv.innerHTML.trim() == "" && document.getElementById(projectName).className == "collapse") {
       // MAYBE: To prevent double loading which induce the unplayable player error
       removeAllPlayers(audioId)
-
       pickerIndexChanged();
     }
   })

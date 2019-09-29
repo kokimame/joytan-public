@@ -46,10 +46,6 @@ button {
     border-radius: 25px;
 }
 
-.fa-chevron-down .pull-right {
-    transition: .3s transform ease-in-out;
-}
-
 .btn-vote {
     width: 120px;
     margin-left: 2px;
@@ -59,8 +55,12 @@ button {
     margin-left: 10px;
 }
 
-.collapsed .fa {
+.collapsed .fa-chevron-down {
+    transition: .3s transform ease-in-out;
     transform: rotate(90deg);
+}
+.fa-chevron-down {
+    transition: .3s transform ease-in-out;
 }
 
 .icon {
