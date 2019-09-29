@@ -71,6 +71,7 @@ button {
     color: black;
 }  
   /* Add a hover effect if you want */
-.fa.icon:hover {
+.icon:hover {
     opacity: 0.7;
+    text-decoration: none;
 }
