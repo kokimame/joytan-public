@@ -36,7 +36,7 @@ function addPlayer(wavRef, targetId, projectName) {
                 <source src="${url}">
             </audio>
             <form class="${voteClass}" id="${path}" style="display: inline-block; line-height: 10px;">
-              <label><input type="radio" name="vote" value="5"> <i class="fa fa-thumbs-up"></i>  </label> |
+              <label><input type="radio" name="vote" value="5"> <i class="fa fa-thumbs-up"></i>  </label>
               <label><input type="radio" name="vote" value="1"> Wrong  </label>
               <label><input type="radio" name="vote" value="0"> Unclear  </label>
             </form>
