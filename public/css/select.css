@@ -2,6 +2,8 @@
 .custom-select {
     position: relative;
     font-family: Arial;
+    padding: 0px 0px;
+    width: 70px;
 }
   
 .custom-select select {
@@ -9,10 +11,10 @@
 }
   
 .select-selected {
-    background-color: DodgerBlue;
+    background-color: lightgray;
 }
   
-  /*style the arrow inside the select element:*/
+/*style the arrow inside the select element:*/
 .select-selected:after {
     position: absolute;
     content: "";
@@ -32,10 +34,10 @@
   
   /*style the items (options), including the selected item:*/
 .select-items div,.select-selected {
-    color: #ffffff;
-    padding: 8px 16px;
+    color: black;
+    padding: 5px 10px;
     border: 1px solid transparent;
-    border-color: transparent transparent rgba(0, 0, 0, 0.1) transparent;
+    border-color: transparent transparent rgba(221, 143, 143, 0.1) transparent;
     cursor: pointer;
     user-select: none;
 }
@@ -43,11 +45,13 @@
 /*style items (options):*/
 .select-items {
     position: absolute;
-    background-color: DodgerBlue;
+    background-color: lightgray;
     top: 100%;
     left: 0;
     right: 0;
     z-index: 99;
+    height: 200px;
+    overflow-y: scroll;
 }
   
   /*hide the items when the select box is closed:*/

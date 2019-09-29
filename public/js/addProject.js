@@ -14,6 +14,7 @@ function addProject(item, projectRef) {
   const controlId = "".concat("control_", projectName)
   const autoBtnId = "".concat("auto_", projectName)
   const voteClass = "".concat("vote_", projectName);
+  const customSelectId = "".concat("cSelect_", projectName)
   const pickId = "".concat("pick_", projectName)
   const cardId = "".concat("card_", projectName)
   const audioId = "".concat("audio_", projectName)
@@ -58,8 +59,10 @@ function addProject(item, projectRef) {
       </div>
       <div id="${controlId}">
         <button type="button" class="btn btn-success" id="${loadBtnId}">Load</button>
-        <select class="form-control picker" id="${pickId}">
-        </select>
+        <div class="custom-select" id="${customSelectId}">
+          <select id="${pickId}">
+          </select>
+        </div>
         <button type="button" class="btn btn-success auto-play" id="${autoBtnId}" value="off">Auto <a class="fa fa-volume-up"></a></button>
       </div>
       <br />
@@ -87,29 +90,99 @@ function addProject(item, projectRef) {
       fileCountLookup[projectName] = res.prefixes.length;
       firebase.database().ref("votes").child(projectName).once('value').then(snapshotVote => {
         firebase.database().ref("users/3fG1zIUGn1hAf8JkDGd500uNuIi1/done/projects").child(projectName).once('value').then(snapshotDone => {
-          var reviewRatio = 0
+          var voteRatio = 0
           var doneRatio = 0
+          var doneEntries = null;
+          var voteEntries = null;
+
           if (snapshotDone.val()) {
-            doneRatio = 100 * Object.keys(snapshotDone.val()).length / totalEntries
+            doneEntries = Object.keys(snapshotDone.val());
+            doneRatio = 100 * doneEntries.length / totalEntries
           }
           if (snapshotVote.val()) {
-            reviewRatio = 100 * Object.keys(snapshotVote.val()).length / totalEntries
+            voteEntries = Object.keys(snapshotVote.val());
+            voteRatio = 100 * voteEntries.length / totalEntries
           }
           availRatio = (100 * fileCountLookup[projectName] / totalEntries)
 
           doneProg.style.width = doneRatio.toString() + "%";
-          reviewProg.style.width = (reviewRatio - doneRatio).toString() + "%";
-          availProg.style.width = (availRatio - reviewRatio - doneRatio).toString() + "%";
+          reviewProg.style.width = (voteRatio - doneRatio).toString() + "%";
+          availProg.style.width = (availRatio - voteRatio).toString() + "%";
+
+          console.log("avail/vote/done ... ", availRatio, voteRatio, doneRatio)
 
           if (doneRatio > 5) {
             doneProg.innerText = Object.keys(snapshotDone.val()).length;
           }
-          if ((reviewRatio - doneRatio) > 5) {
+          if ((voteRatio - doneRatio) > 5) {
             reviewProg.innerText = Object.keys(snapshotVote.val()).length;
           }
-          if ((availRatio - reviewRatio - doneRatio) > 5) {
+          if ((availRatio - voteRatio) > 5) {
             availProg.innerText = fileCountLookup[projectName];
           }
+
+          var selectElement, selectedItem, selectables;
+          /*look for any elements with the class "custom-select":*/
+          var cSelect = document.getElementById(customSelectId);
+          selectElement = cSelect.getElementsByTagName("select")[0];
+          /*for each element, create a new DIV that will act as the selected item:*/
+          selectedItem = document.createElement("DIV");
+          selectedItem.setAttribute("class", "select-selected");
+          selectedItem.innerHTML = selectElement.options[selectElement.selectedIndex].innerHTML;
+          cSelect.appendChild(selectedItem);
+          /*for each element, create a new DIV that will contain the option list:*/
+          selectables = document.createElement("DIV");
+          selectables.setAttribute("class", "select-items select-hide");
+          for (var j = 0; j < selectElement.length; j++) {
+            /*for each option in the original select element,
+            create a new DIV that will act as an option item:*/
+            var opt = document.createElement("DIV");
+            opt.innerHTML = selectElement.options[j].innerHTML;
+
+            var stringNum = ("0000" + parseInt(opt.innerText)).slice(-5);
+
+            // Update background color for status indication
+            if (doneEntries && doneEntries.indexOf(stringNum) != -1) {
+              opt.style.background = "#27BF54"
+            } 
+            else if (voteEntries && voteEntries.indexOf(stringNum) != -1) {
+              opt.style.background = "#F3B301"
+            }
+            selectedItem.style.background = opt.style.background
+
+            opt.addEventListener("click", function(e) {
+                /*when an item is clicked, update the original select box,
+                and the selected item:*/
+                var select = this.parentNode.parentNode.getElementsByTagName("select")[0];
+                var sibling = this.parentNode.previousSibling;
+                for (var i = 0; i < select.length; i++) {
+                  if (select.options[i].innerHTML == this.innerHTML) {
+                    // This index starts from 1
+                    select.selectedIndex = i + 1;
+                    // Update background color for status indication
+                    selectedItem.style.background = this.style.background
+                    sibling.innerHTML = this.innerHTML;
+                    var same = this.parentNode.getElementsByClassName("same-as-selected");
+                    for (var k = 0; k < same.length; k++) {
+                      same[k].removeAttribute("class");
+                    }
+                    this.setAttribute("class", "same-as-selected");
+                    break;
+                  }
+                }
+                sibling.click();
+            });
+            selectables.appendChild(opt);
+          }
+          cSelect.appendChild(selectables);
+          selectedItem.addEventListener("click", function(e) {
+            /*when the select box is clicked, close any other select boxes,
+            and open/close the current select box:*/
+            e.stopPropagation();
+            closeAllSelect(this);
+            this.nextSibling.classList.toggle("select-hide");
+            this.classList.toggle("select-arrow-active");
+          });
         })
       })
 
@@ -233,6 +306,28 @@ function addProject(item, projectRef) {
       autoBtn.innerHTML = `Auto <a class="fa fa-volume-up">`
     }
   })
+  function closeAllSelect(elmnt) {
+    /*a function that will close all select boxes in the document,
+    except the current select box:*/
+    var x, y, i, arrNo = [];
+    x = document.getElementsByClassName("select-items");
+    y = document.getElementsByClassName("select-selected");
+    for (i = 0; i < y.length; i++) {
+      if (elmnt == y[i]) {
+        arrNo.push(i)
+      } else {
+        y[i].classList.remove("select-arrow-active");
+      }
+    }
+    for (i = 0; i < x.length; i++) {
+      if (arrNo.indexOf(i)) {
+        x[i].classList.add("select-hide");
+      }
+    }
+  }
+  /*if the user clicks anywhere outside the select box,
+  then close all select boxes:*/
+  document.addEventListener("click", closeAllSelect);
 }
 
 function appendAudio(idToAppend, projectName) {
@@ -264,3 +359,4 @@ function playNext(audioDiv, justEnded, autoBtnId) {
     autoBtn.innerHTML = `Auto <a class="fa fa-volume-up">`
   }
 }
+
