@@ -46,7 +46,7 @@ button {
     border-radius: 25px;
 }
 
-.fa .fa-chevron-down .pull-right {
+.fa-chevron-down .pull-right {
     transition: .3s transform ease-in-out;
 }
 
@@ -63,7 +63,7 @@ button {
     transform: rotate(90deg);
 }
 
-.fa.icon {
+.icon {
     font-size: 30px;
     width: 50px;
     text-align: center;
