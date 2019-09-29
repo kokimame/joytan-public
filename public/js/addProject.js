@@ -109,16 +109,14 @@ function addProject(item, projectRef) {
           reviewProg.style.width = (voteRatio - doneRatio).toString() + "%";
           availProg.style.width = (availRatio - voteRatio).toString() + "%";
 
-          console.log("avail/vote/done ... ", availRatio, voteRatio, doneRatio)
-
-          if (doneRatio > 5) {
-            doneProg.innerText = Object.keys(snapshotDone.val()).length;
+          if (doneEntries && doneRatio > 5) {
+            doneProg.innerText = doneEntries.length;
           }
-          if ((voteRatio - doneRatio) > 5) {
-            reviewProg.innerText = Object.keys(snapshotVote.val()).length;
+          if (voteEntries && (voteRatio - doneRatio) > 5) {
+            reviewProg.innerText = voteEntries.length - doneEntries.length;
           }
           if ((availRatio - voteRatio) > 5) {
-            availProg.innerText = fileCountLookup[projectName];
+            availProg.innerText = fileCountLookup[projectName] - voteEntries.length;
           }
 
           var selectElement, selectedItem, selectables;
@@ -143,9 +141,11 @@ function addProject(item, projectRef) {
 
             // Update background color for status indication
             if (doneEntries && doneEntries.indexOf(stringNum) != -1) {
-              opt.style.background = "#27BF54"
+              // Dark Green for done entries
+              opt.style.background = "#08A93D"
             } 
             else if (voteEntries && voteEntries.indexOf(stringNum) != -1) {
+              // Yellow for reviewed entries
               opt.style.background = "#F3B301"
             }
             selectedItem.style.background = opt.style.background
