@@ -58,7 +58,7 @@ table:hover {
     padding-left: 4px;
 }
 
-.fa-play, .fa-pause {
+.player-table .fa-play, .player-table .fa-pause {
     font-size: 30px;
     width: 20px;
 }
