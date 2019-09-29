@@ -15,7 +15,9 @@ function addProject(item, projectRef) {
   const autoBtnId = "".concat("auto_", projectName)
   const voteClass = "".concat("vote_", projectName);
   const customSelectId = "".concat("cSelect_", projectName)
-  const pickId = "".concat("pick_", projectName)
+  // Rename to confusing picker/select tag
+  const pickerId = "".concat("picker_", projectName)
+  const selectedId = "".concat("selected_", projectName)
   const cardId = "".concat("card_", projectName)
   const audioId = "".concat("audio_", projectName)
   const spinId = "".concat("spin_", projectName)
@@ -60,7 +62,7 @@ function addProject(item, projectRef) {
       <div id="${controlId}">
         <button type="button" class="btn btn-success" id="${loadBtnId}">Load</button>
         <div class="custom-select" id="${customSelectId}">
-          <select id="${pickId}">
+          <select class="form-control picker" id="${pickerId}">
           </select>
         </div>
         <button type="button" class="btn btn-success auto-play" id="${autoBtnId}" value="off">Auto <a class="fa fa-volume-up"></a></button>
@@ -82,7 +84,7 @@ function addProject(item, projectRef) {
   var doneProg = document.getElementById(doneProgId);
   reviewProg.style.color = "black";
 
-  var picker = document.getElementById(pickId);
+  var picker = document.getElementById(pickerId);
   var audioDiv = document.getElementById(audioId)
   
   function updateProgressBar(toInitialize) {
@@ -119,23 +121,25 @@ function addProject(item, projectRef) {
             availProg.innerText = fileCountLookup[projectName] - voteEntries.length;
           }
 
-          var selectElement, selectedItem, selectables;
+          var selectedItem, selectables;
           /*look for any elements with the class "custom-select":*/
           var cSelect = document.getElementById(customSelectId);
-          selectElement = cSelect.getElementsByTagName("select")[0];
+          var picker = document.getElementById(pickerId);
           /*for each element, create a new DIV that will act as the selected item:*/
-          selectedItem = document.createElement("DIV");
+          selectedItem = document.createElement("div");
+          selectedItem.id = selectedId
           selectedItem.setAttribute("class", "select-selected");
-          selectedItem.innerHTML = selectElement.options[selectElement.selectedIndex].innerHTML;
+          selectedItem.innerHTML = picker.options[picker.selectedIndex].innerHTML;
+
           cSelect.appendChild(selectedItem);
           /*for each element, create a new DIV that will contain the option list:*/
-          selectables = document.createElement("DIV");
+          selectables = document.createElement("div");
           selectables.setAttribute("class", "select-items select-hide");
-          for (var j = 0; j < selectElement.length; j++) {
+          for (var j = 0; j < picker.length; j++) {
             /*for each option in the original select element,
             create a new DIV that will act as an option item:*/
-            var opt = document.createElement("DIV");
-            opt.innerHTML = selectElement.options[j].innerHTML;
+            var opt = document.createElement("div");
+            opt.innerHTML = picker.options[j].innerHTML;
 
             var stringNum = ("0000" + parseInt(opt.innerText)).slice(-5);
 
@@ -149,16 +153,16 @@ function addProject(item, projectRef) {
               opt.style.background = "#F3B301"
             }
             selectedItem.style.background = opt.style.background
+            picker.options[j].style.background = opt.style.background
+            
 
             opt.addEventListener("click", function(e) {
                 /*when an item is clicked, update the original select box,
                 and the selected item:*/
-                var select = this.parentNode.parentNode.getElementsByTagName("select")[0];
                 var sibling = this.parentNode.previousSibling;
-                for (var i = 0; i < select.length; i++) {
-                  if (select.options[i].innerHTML == this.innerHTML) {
-                    // This index starts from 1
-                    select.selectedIndex = i + 1;
+                for (var i = 0; i < picker.length; i++) {
+                  if (picker.options[i].innerText == this.innerText) {
+                    picker.selectedIndex = i;
                     // Update background color for status indication
                     selectedItem.style.background = this.style.background
                     sibling.innerHTML = this.innerHTML;
@@ -167,6 +171,7 @@ function addProject(item, projectRef) {
                       same[k].removeAttribute("class");
                     }
                     this.setAttribute("class", "same-as-selected");
+                    pickerIndexChanged();
                     break;
                   }
                 }
@@ -191,18 +196,23 @@ function addProject(item, projectRef) {
           var index = parseInt(entryRef.name, 10)
           picker.innerHTML += `<option value="${index}" onchange="pickerIndexChanged()">${index}</option>`
     
-          var selectList = $('#' + pickId + ' option');
+          var selectList = $('#' + pickerId + ' option');
           selectList.sort((a, b) => {
               return b.value - a.value;
           });
-          $('#' + pickId).html(selectList); 
+          $('#' + pickerId).html(selectList); 
         }
       })
     })
   }
 
   function pickerIndexChanged() {
+    console.log("pickerIndexChanged() called")
     currentIndex = picker.value - 1;
+    selectedItem = document.getElementById(selectedId)
+    selectedItem.innerHTML = picker.options[picker.selectedIndex].innerHTML;
+    selectedItem.style.background = picker.options[picker.selectedIndex].style.background;
+
     if (openIndexLookup[projectName].includes(currentIndex)) {
       // If the new index is already opened, ignore it
       // otherwise the id duplication error occurs.
@@ -233,13 +243,13 @@ function addProject(item, projectRef) {
     document.getElementById(controlId).style.display = "none"
     document.getElementById(voteBtnId).style.display = "none"
   }
-  $('#' + pickId).on('focus', () => {
-    prevVal = $('#' + pickId).val()
+  $('#' + pickerId).on('focus', () => {
+    prevVal = $('#' + pickerId).val()
   }).change(() => {
     // If more than 10 entries are open, let users do the vote first.
     if (openIndexLookup[projectName].length >= 50) {
       alert(moreThanWarning)
-      $('#' + pickId).val(prevVal)
+      $('#' + pickerId).val(prevVal)
       return false
     } else {
       pickerIndexChanged();
@@ -247,13 +257,14 @@ function addProject(item, projectRef) {
   })
 
   document.getElementById(titleId).addEventListener("click", (e) => {
-    if (picker.value <= 0) {
+    if (picker.value <= 0 || document.getElementById(selectedId) == null) {
       // Stop when picker is NOT ready!
       // TODO: Probably there is a better way to do this.
       e.stopPropagation();
     } else if (audioDiv.innerHTML.trim() == "" && document.getElementById(projectName).className == "collapse") {
       // MAYBE: To prevent double loading which induce the unplayable player error
       removeAllPlayers(audioId)
+
       pickerIndexChanged();
     }
   })
