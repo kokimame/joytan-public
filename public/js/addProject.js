@@ -60,17 +60,17 @@ function addProject(item, projectRef) {
         </div>
       </div>
       <div id="${controlId}">
-        <button type="button" class="btn btn-success" id="${loadBtnId}">Load</button>
+        <button type="button" class="btn btn-slim btn-success" id="${loadBtnId}">Load</button>
         <div class="custom-select" id="${customSelectId}">
           <select class="form-control picker" id="${pickerId}">
           </select>
         </div>
-        <button type="button" class="btn btn-success auto-play" id="${autoBtnId}" value="off">Auto <a class="fa fa-volume-up"></a></button>
+        <button type="button" class="btn btn-slim btn-success auto-play" id="${autoBtnId}" value="off">Auto <a class="fa fa-volume-up"></a></button>
       </div>
-      <br />
+      <hr style="margin-bottom: 12px;" />
       <div id="${audioId}" style="display: inline-block;">
       </div>
-      <button type="button" id="${voteBtnId}" class="btn btn-secondary btn-vote"
+      <button type="button" id="${voteBtnId}" class="btn btn-slim btn-secondary btn-vote"
         style="display: inline-block;">Vote & Next</button>
     </div>
   </div>
@@ -129,6 +129,7 @@ function addProject(item, projectRef) {
           selectedItem = document.createElement("div");
           selectedItem.id = selectedId
           selectedItem.setAttribute("class", "select-selected");
+          selectedItem.style = "padding: 0px 10px;"
           selectedItem.innerHTML = picker.options[picker.selectedIndex].innerHTML;
 
           // Remove all previous items for selection

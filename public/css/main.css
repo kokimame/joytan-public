@@ -12,9 +12,9 @@ html, body {
     border: 4px solid #f3f3f3; /* Light grey */
     border-top: 4px solid #3498db; /* Blue */
     border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    animation: spin 2s linear infinite;
+    width: 33px;
+    height: 33px;
+    animation: spin 1.5s linear infinite;
  }
 
 @keyframes spin {
@@ -34,16 +34,8 @@ button {
     overflow: hidden;
     outline: none;
 }
-
-.btn-circle {
-    width: 55px;
-    height: 60px;
-    text-align: center;
-    margin-bottom: 60px;
-    padding: 0px 6px;
-    font-size: 12px;
-    line-height: 1.428571429;
-    border-radius: 25px;
+.btn-slim {
+    padding: 0px 10px;
 }
 
 .btn-vote {
