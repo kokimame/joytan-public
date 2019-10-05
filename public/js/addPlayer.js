@@ -12,16 +12,24 @@ function addPlayer(wavRef, targetId, projectName) {
 
     wavRef.getDownloadURL().then((url) => {
       // Add extra assertion to prevent failed loadings
-      var index = parseInt(wavRef.fullPath.split('/')[2])
-      var upnString = entries[index - 1][upperNote]
-      var lonString = entries[index - 1][lowerNote]
-      upnString = (typeof upnString === 'undefined') ? "" : upnString
-      lonString = (typeof lonString === 'undefined') ? "" : lonString
+      var index = parseInt(wavRef.fullPath.split('/')[2]);
+      var strIndex = ("0000" + index).slice(-5);
+      var upnString = entries[index - 1][upperNote];
+      var lonString = entries[index - 1][lowerNote];
+      upnString = (typeof upnString === 'undefined') ? "" : upnString;
+      lonString = (typeof lonString === 'undefined') ? "" : lonString;
+;
+      color = "#D0D0D0" // Light gray by default;
 
+      if (doneLookup[projectName].indexOf(strIndex) != -1) {
+        color = "#cefdde";
+      } else if (votedLookup[projectName].indexOf(strIndex) != -1) {
+        color = "#fff1cc"
+      }
       const div = document.createElement('div');
       div.className = 'player-table';
       div.innerHTML = `
-      <table class="bordered" style="background: ${randomColor};">
+      <table class="bordered" style="background: ${color};">
         <td>
           <font size="2">${index}</font><br />
           <i id="${playBtnId}" class="fa fa-play ml-2"></i>

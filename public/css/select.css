@@ -4,13 +4,17 @@
     font-family: Arial;
     padding: 0px 0px;
     height: auto;
-    width: 220px;
+    width: auto;
 }
   
 .custom-select select {
     display: none; /*hide original SELECT element:*/
 }
-  
+
+.opt-idx {
+    padding: 0px 10px;
+}
+
 .select-selected {
     background-color: lightgray;
 }
