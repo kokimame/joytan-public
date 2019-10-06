@@ -57,17 +57,19 @@ function addProject(item, projectRef) {
     </button>
   <div class="collapse" id="${projectName}" data-parent="#projectsTop">
     <div class="card card-body" id="${cardId}">
-      <div id="${spinId}">
-        <div class="spinning">
+      <div class="load-control" style="height: 40px;">
+        <div id="${spinId}">
+          <div class="spinning">
+          </div>
         </div>
-      </div>
-      <div id="${controlId}">
-        <button type="button" class="btn btn-slim btn-success" id="${loadBtnId}">Load</button>
-        <div class="custom-select" id="${customSelectId}">
-          <select class="form-control" id="${baseSelectId}">
-          </select>
+        <div id="${controlId}">
+          <button type="button" class="btn btn-slim btn-success" id="${loadBtnId}">Load</button>
+          <div class="custom-select" id="${customSelectId}">
+            <select class="form-control" id="${baseSelectId}">
+            </select>
+          </div>
+          <button type="button" class="btn btn-slim btn-success auto-play" id="${autoBtnId}" value="off">Auto <a class="fa fa-volume-up"></a></button>
         </div>
-        <button type="button" class="btn btn-slim btn-success auto-play" id="${autoBtnId}" value="off">Auto <a class="fa fa-volume-up"></a></button>
       </div>
       <hr style="margin-bottom: 12px;" />
       <div id="${audioId}" style="display: inline-block;">

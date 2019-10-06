@@ -5,8 +5,11 @@ html, body {
 
 .text-left {
     text-align: left !important;
- }
+}
 
+.load-control {
+    height: 35px;
+}
 
 .spinning {
     border: 4px solid #f3f3f3; /* Light grey */
@@ -15,7 +18,7 @@ html, body {
     width: 33px;
     height: 33px;
     animation: spin 1.5s linear infinite;
- }
+}
 
 @keyframes spin {
     0% { transform: rotate(0deg); }

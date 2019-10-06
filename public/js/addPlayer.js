@@ -18,8 +18,7 @@ function addPlayer(wavRef, targetId, projectName) {
       var lonString = entries[index - 1][lowerNote];
       upnString = (typeof upnString === 'undefined') ? "" : upnString;
       lonString = (typeof lonString === 'undefined') ? "" : lonString;
-;
-      color = "#D0D0D0" // Light gray by default;
+      color = "#D0D0D0"; // Light gray by default;
 
       if (doneLookup[projectName].indexOf(strIndex) != -1) {
         color = "#cefdde";
