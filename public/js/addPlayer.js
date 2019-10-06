@@ -1,6 +1,6 @@
 function addPlayer(wavRef, targetId, projectName) {
   wavRef.getMetadata().then((data) => {
-    const date = data["timeCreated"].slice(0, 10).replace('-', '<br />');
+    const date = data["timeCreated"].slice(0, 10).replace('-', '<br />').replace('-', '.');
     const path = data["fullPath"];
     const playerId = "".concat("player_", path);
     const playBtnId = "".concat("playBtn_", path);
