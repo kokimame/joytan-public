@@ -4,19 +4,32 @@
     font-family: Arial;
     padding: 0px 0px;
     height: auto;
-    width: auto;
+    width: 150px;
 }
   
 .custom-select select {
     display: none; /*hide original SELECT element:*/
 }
 
+.multi-index {
+    width: 150px;
+    display: table;
+    box-sizing: border-box;
+}
+
 .opt-idx {
-    padding: 0px 10px;
+    width: 33.3%;
+    height: 24px;
+    float: left;
+    box-sizing: border-box;
 }
 
 .select-selected {
     background-color: lightgray;
+    text-align: center;
+    width: 150px;
+    display: table;
+    box-sizing: border-box;
 }
   
 /*style the arrow inside the select element:*/
@@ -40,7 +53,6 @@
   /*style the items (options), including the selected item:*/
 .select-items div,.select-selected {
     color: black;
-    padding: 5px 10px;
     border: 1px solid transparent;
     border-color: transparent transparent rgba(221, 143, 143, 0.1) transparent;
     cursor: pointer;
@@ -52,8 +64,6 @@
     position: absolute;
     background-color: lightgray;
     top: 100%;
-    left: 0;
-    right: 0;
     z-index: 99;
     height: auto;
     max-height: 200px;
@@ -61,7 +71,9 @@
     border-bottom-right-radius: 10px;
     border: 1px solid transparent;
     border-color: lightgray transparent transparent transparent;    
+    text-align: center;
     overflow-y: scroll;
+    overflow-x: hidden;
 }
   
   /*hide the items when the select box is closed:*/

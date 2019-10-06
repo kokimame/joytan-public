@@ -151,9 +151,6 @@ function addProject(item, projectRef) {
           var selectedItem = document.createElement("div");
           selectedItem.id = selectedId
           selectedItem.setAttribute("class", "select-selected");
-          // Cannot set this style using CSS
-          selectedItem.style = "padding: 0px 10px;"
-
           // Remove all previous items for selection
           while (cSelect.firstChild) {
             cSelect.removeChild(cSelect.firstChild);
@@ -168,7 +165,6 @@ function addProject(item, projectRef) {
             const idxId = "".concat(j.toString(), '_', projectName);
             const multiIndices = document.createElement("div");
             multiIndices.setAttribute("class", "multi-index")
-            multiIndices.style = "display: inline-block;";
             multiIndices.id = idxId;
             /*for each option in the original select element,
             create a new DIV that will act as an option item:*/
@@ -176,7 +172,7 @@ function addProject(item, projectRef) {
               if (j + k >= bSelect.length) {
                 break;
               }
-              var opt = document.createElement("span");
+              var opt = document.createElement("div");
               opt.setAttribute("class", "opt-idx");
               opt.innerHTML = bSelect.options[j + k].innerHTML;
 
@@ -265,9 +261,9 @@ function addProject(item, projectRef) {
         alert(moreThanWarning)
         return
       }
-      var spans = selected.getElementsByClassName('opt-idx');
-      for (var j = 0; j < spans.length; j++) {
-        createPlayers(parseInt(spans[j].innerText))
+      var divs = selected.getElementsByClassName('opt-idx');
+      for (var j = 0; j < divs.length; j++) {
+        createPlayers(parseInt(divs[j].innerText))
       }
     }
   })
