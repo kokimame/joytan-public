@@ -64,9 +64,17 @@ button {
     text-align: center;
     text-decoration: none;
     color: black;
-}  
+}
+
+.fa-android {
+    font-size: 28px;
+}
+.fa-desktop {
+    font-size: 24px;
+}
   /* Add a hover effect if you want */
 .icon:hover {
     opacity: 0.7;
+    color: black;
     text-decoration: none;
 }
