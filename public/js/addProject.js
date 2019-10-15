@@ -72,7 +72,7 @@ function addProject(item, projectRef) {
           <button type="button" class="btn btn-slim btn-success auto-play" id="${autoBtnId}" value="off">
             Auto <a class="fa fa-volume-up"></a></button>
           <button type="button" class="btn btn-slim btn-secondary" id="${forumId}" value="off">
-            Forum<a href="" class="far fa-comments forum-link"></a></button>
+            Forum<a class="far fa-comments forum-link"></a></button>
         </div>
       </div>
       <hr style="margin-bottom: 12px;" />
@@ -326,6 +326,11 @@ function addProject(item, projectRef) {
       }
     }
   })
+
+  document.getElementById(forumId).addEventListener('click', () => {
+    window.location.href = "forum.html#link1"
+  })
+
   document.getElementById(autoBtnId).addEventListener('click', () => {
     var autoBtn = document.getElementById(autoBtnId)
     var playBtns = audioDiv.getElementsByClassName("fa fa-play ml-2");
