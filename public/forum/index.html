@@ -48,6 +48,10 @@
 <meta name="msapplication-TileImage" content="../icons/ms-icon-144x144.png">
 <meta name="theme-color" content="#ffffff">
 
+<link rel="stylesheet" href="../css/main.css">
+<link rel="stylesheet" href="../css/forum.css">
+<script src="../js/addForum.js"></script>
+
 <script>
 function getUrlVars() {
     var vars = {};
@@ -58,15 +62,44 @@ function getUrlVars() {
 }
 
 window.onload = () => {
-    document.getElementById("testField").innerHTML = getUrlVars()["p"]
+    const storage = firebase.storage();
+    const storageRef = storage.ref();
+    const topProjectsRef = storageRef.child('projects');
+    const structureRef = storageRef.child('projects_structure.json');
+    const projectName = getUrlVars()["p"];
+
+    structureRef.getDownloadURL().then(url => {
+        $.getJSON(url, (data) => {
+            topProjectsRef.listAll().then(res => {
+                res.prefixes.forEach(projectRef => {
+                    if(projectRef.name == projectName) {
+                        projData = data[projectName]
+                        entries = projData["entries"]
+                        wantedKey = projData["wanted"]
+                        $("#title").text(projData["flags"] + projData["title"])
+
+                        for (var i = 0; i < entries.length; i++){
+                            addForum(entries[i], i.toString());
+                        }
+                    }
+                })
+            })
+        })
+    })
 }
 </script>
 
 </head>
 <body>
-<h1>Welcome to "Forum for Joytan App on YouTube"</h1>
-
-<div id="testField">
+<div class="row justify-content-center">
+    <div class="col-12">
+        <div class="container">
+            <h2>Welcome to "Forum for Joytan App on YouTube"</h2>
+            <p id="title"></p>
+            <div id="forum-accordion" class="accordion">
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
