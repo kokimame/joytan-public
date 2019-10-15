@@ -328,7 +328,7 @@ function addProject(item, projectRef) {
   })
 
   document.getElementById(forumId).addEventListener('click', () => {
-    window.location.href = "forum.html#link1"
+    window.location.href = "forum/?p=" + projectName
   })
 
   document.getElementById(autoBtnId).addEventListener('click', () => {
