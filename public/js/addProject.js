@@ -15,7 +15,6 @@ function addProject(item, projectRef) {
   const voteBtnId = "".concat("voteBtn_", projectName)
   const controlId = "".concat("control_", projectName)
   const autoBtnId = "".concat("auto_", projectName)
-  const forumId = "".concat("forum_", projectName)
   const voteClass = "".concat("vote_", projectName);
   const customSelectId = "".concat("cSelect_", projectName)
   const baseSelectId = "".concat("bSelect_", projectName)
@@ -71,8 +70,6 @@ function addProject(item, projectRef) {
           </div>
           <button type="button" class="btn btn-slim btn-success auto-play" id="${autoBtnId}" value="off">
             Auto <a class="fa fa-volume-up"></a></button>
-          <button type="button" class="btn btn-slim btn-secondary" id="${forumId}" value="off">
-            Forum<a href="" class="far fa-comments forum-link"></a></button>
         </div>
       </div>
       <hr style="margin-bottom: 12px;" />
