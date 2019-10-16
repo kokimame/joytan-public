@@ -6,14 +6,12 @@ function addForum(entryData, index) {
     const numbering = (parseInt(index) + 1).toString();
 
     div.innerHTML = `
-    <br />
-      <button class="btn btn-outline-dark btn-block text-left collapsed" type="button" 
-        data-toggle="collapse" data-target="#${collapseId}" aria-expanded="false" id="${toggleId}">
-        <i class="fa fa-chevron-down pull-right"></i>
+    <button class="btn btn-square btn-outline-dark btn-block text-left collapsed" type="button" 
+    data-toggle="collapse" data-target="#${collapseId}" aria-expanded="false" id="${toggleId}">
         <div class"btn-title" >
-            #${numbering} ${entryData[wantedKey]}
+            ${numbering}. ${entryData[wantedKey]}
         </div>
-      </button>
+    </button>
     <div class="collapse" id="${collapseId}" data-parent="#forum-accordion">
       <div class="card card-body" id="${boardId}">
     </div>

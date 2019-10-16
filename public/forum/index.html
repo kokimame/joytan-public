@@ -48,7 +48,6 @@
 <meta name="msapplication-TileImage" content="../icons/ms-icon-144x144.png">
 <meta name="theme-color" content="#ffffff">
 
-<link rel="stylesheet" href="../css/main.css">
 <link rel="stylesheet" href="../css/forum.css">
 <script src="../js/addForum.js"></script>
 
@@ -67,6 +66,7 @@ window.onload = () => {
     const topProjectsRef = storageRef.child('projects');
     const structureRef = storageRef.child('projects_structure.json');
     const projectName = getUrlVars()["p"];
+    const ytplayer = document.getElementById("youtube-player");
 
     structureRef.getDownloadURL().then(url => {
         $.getJSON(url, (data) => {
@@ -94,8 +94,13 @@ window.onload = () => {
 <div class="row justify-content-center">
     <div class="col-12">
         <div class="container">
-            <h2>Welcome to "Forum for Joytan App on YouTube"</h2>
-            <p id="title"></p>
+            <div style="text-align: center">
+                <h3>Welcome to "Joytan App Forum"</h3>
+                <iframe id="youtube-player" width="420" height="290"
+                    src="https://www.youtube.com/embed/W5B15bdxE5U">
+                </iframe>
+                <p id="title"></p>
+            </div>
             <div id="forum-accordion" class="accordion">
             </div>
         </div>
