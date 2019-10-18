@@ -24,7 +24,7 @@ function addForum(entryData, index) {
         <div class="form-div">
             <form action="/action_page.php">
 
-            <label for="comment">Comment</label>
+            <span>Comment</span>
             <textarea id="subject" name="subject" placeholder="Write something.." style="height:200px"></textarea>
         
             <input type="submit" value="Submit">
