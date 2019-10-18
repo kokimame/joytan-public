@@ -18,3 +18,24 @@
 .btn-square:hover .btn-title {
 	color: white;
 }
+
+
+input[type=text], select, textarea {
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 2px;
+  box-sizing: border-box;
+  resize: vertical;
+}
+
+input[type=submit] {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+input[type=submit]:hover {
+  background-color: #45a049;
+}

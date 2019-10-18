@@ -22,18 +22,12 @@ function addForum(entryData, index) {
     <div class="collapse" id="${collapseId}" data-parent="#forum-accordion">
       <div class="card card-body" id="${boardId}">
         <div class="form-div">
-            <form class="form" id="${formId}">
-            <p class="name">
-                <input name="name" type="text" class="validate[required,custom[onlyLetter],length[0,100]] feedback-input" placeholder="Name" id="name" />
-            </p>
-            <p class="text">
-                <textarea name="text" class="validate[required,length[6,300]] feedback-input" id="comment" placeholder="Comment"></textarea>
-            </p>
-            <div class="submit">
-                <input type="submit" value="SEND" class="button-blue"/>
-                <div class="ease"></div>
-            </div>
-            </form>
+            <form action="/action_page.php">
+
+            <label for="comment">Comment</label>
+            <textarea id="subject" name="subject" placeholder="Write something.." style="height:200px"></textarea>
+        
+            <input type="submit" value="Submit">
         </div>
     </div>
     `;
