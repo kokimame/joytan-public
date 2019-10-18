@@ -73,16 +73,25 @@ window.onload = () => {
             topProjectsRef.listAll().then(res => {
                 res.prefixes.forEach(projectRef => {
                     if(projectRef.name == projectName) {
-                        projData = data[projectName]
-                        entries = projData["entries"]
-                        wantedKey = projData["wanted"]
-                        upnKey = projData["upn"]
-                        lonKey = projData["lon"]
-                        $("#title").text(projData["flags"] + projData["title"])
+                        firebase.database().ref(projectName).once('value').then(urlData => {
+                            projData = data[projectName]
+                            entries = projData["entries"]
+                            wantedKey = projData["wanted"]
+                            upnKey = projData["upn"]
+                            lonKey = projData["lon"]
 
-                        for (var i = 0; i < entries.length; i++){
-                            addForum(entries[i], i.toString());
-                        }
+                            $("#title").text(projData["flags"] + projData["title"])
+                            if(urlData.val()) {
+                                $("#youtube-player").attr("src", urlData.val())
+                            }
+                            else {
+                                $("#youtube-player").attr("src", "https://i.ytimg.com/vi/Ste5Vd_icUw/hqdefault.jpg")
+                            }
+
+                            for (var i = 0; i < entries.length; i++){
+                                addForum(entries[i], i.toString());
+                            }
+                        });
                     }
                 })
             })
@@ -100,8 +109,7 @@ window.onload = () => {
                 <h3>Welcome to "Joytan App Forum"</h3>
                 <p style="font-size: 14px; text-align: right;">It's still in BETA nyan~~🐱</p>
                 <hr />
-                <iframe id="youtube-player" width="420" height="290"
-                    src="https://www.youtube.com/embed/W5B15bdxE5U">
+                <iframe id="youtube-player" width="420" height="290" scrolling="no">
                 </iframe>
                 <p id="title"></p>
             </div>
