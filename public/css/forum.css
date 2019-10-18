@@ -1,3 +1,6 @@
+.card {
+	padding: 10px;
+}
 .small-index {
 	position: absolute;
 	font-size: 10px;
@@ -22,6 +25,10 @@
 .td-note {
 	font-size: 10px;
 	text-align: center;
+}
+
+.commentor-name {
+  font-weight: bold;
 }
 
 input[type=text], select, textarea {

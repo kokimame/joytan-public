@@ -39,12 +39,20 @@ function addForum(entryData, index) {
     </button>
     <div class="collapse" id="${collapseId}" data-parent="#forum-accordion">
       <div class="card card-body" id="${boardId}">
+        <div class="comment">
+            <div class="commentor-name">
+            #1 Kohki Mametani
+            </div>
+            <div class="comment-text">
+            This is some comment written by an admin!
+            </div>
+        </div>
+        <hr />
         <div class="form-div">
             <form action="/action_page.php">
-
             <span>Comment</span>
-            <textarea id="subject" name="subject" placeholder="Write something.." style="height:200px"></textarea>
-        
+            <textarea id="subject" name="subject" 
+            placeholder="Write something.." style="height:150px"></textarea>
             <input type="submit" value="Submit">
         </div>
     </div>
