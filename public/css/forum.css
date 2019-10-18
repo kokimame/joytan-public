@@ -19,6 +19,10 @@
 	color: white;
 }
 
+.td-note {
+	font-size: 10px;
+	text-align: center;
+}
 
 input[type=text], select, textarea {
   width: 100%;

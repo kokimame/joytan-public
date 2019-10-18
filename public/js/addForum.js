@@ -5,6 +5,14 @@ function addForum(entryData, index) {
     const boardId = "board_" + index;
     const formId = "form_" + index;
     const numbering = (parseInt(index) + 1).toString();
+    var upperNote = "";
+    var lowerNote = "";
+    if (upnKey !== "") {
+        upperNote = entryData[upnKey];
+    }
+    if (lonKey !== "") {
+        lowerNote = entryData[lonKey];
+    }
 
     div.innerHTML = `
     <button class="btn btn-square btn-outline-dark btn-block text-left collapsed" type="button" 
@@ -14,9 +22,19 @@ function addForum(entryData, index) {
             ${numbering}
         </div>
         <table class="btn-title" >
-            <td>
-                ${entryData[wantedKey]}
+        <tr>
+            <td class="td-note">
+                ${upperNote}
             </td>
+        </tr>
+        <tr>
+            <td>${entryData[wantedKey]}</td>
+        </tr>
+        <tr>
+            <td class="td-note">
+                ${lowerNote}
+            </td>
+        </tr>
         </table>
     </button>
     <div class="collapse" id="${collapseId}" data-parent="#forum-accordion">
