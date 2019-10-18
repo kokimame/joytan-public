@@ -9,9 +9,15 @@ function addForum(entryData, index) {
     div.innerHTML = `
     <button class="btn btn-square btn-outline-dark btn-block text-left collapsed" type="button" 
     data-toggle="collapse" data-target="#${collapseId}" aria-expanded="false" id="${toggleId}">
-        <div class="btn-title" >
-            ${numbering}. ${entryData[wantedKey]}
+
+        <div class="small-index">
+            ${numbering}
         </div>
+        <table class="btn-title" >
+            <td>
+                ${entryData[wantedKey]}
+            </td>
+        </table>
     </button>
     <div class="collapse" id="${collapseId}" data-parent="#forum-accordion">
       <div class="card card-body" id="${boardId}">
