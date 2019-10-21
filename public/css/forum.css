@@ -25,9 +25,12 @@
 #iframe-wrapper {
   position: -webkit-sticky;
   position: sticky;
+  text-align: right;
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+  float: right;
   width: 64vw;
   height: 36vw;
-  text-align: right;
   top: 0;
   z-index: 5;
   resize: both;
@@ -39,6 +42,8 @@
   position: relative;
   height: 100%; 
   width: 100%;
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
 }
 
 .td-note {
