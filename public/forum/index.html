@@ -105,25 +105,30 @@ window.onload = () => {
 <div class="row justify-content-center">
     <div class="col-12">
         <div class="container">
-            <div style="text-align: center">
-                <h3>Welcome to "Joytan App Forum"</h3>
+            <div>
+                <div style="text-align: center">
+                    <h3>Welcome to "Joytan App Forum"</h3>
 
-                <a href="https://play.google.com/store/apps/details?id=com.joytan.rec" class="fa icon fa-android"></a>
-                <a href="https://github.com/kokimame/joytan-public" class="fa icon fa-github"></a>
-                <a href="https://kokimame.github.io/joytan/" class="fa icon fa-desktop"></a>
-                <a href="https://twitter.com/JoytanApp" class="fa icon fa-twitter"></a>
-                <a id="btn-stat" href="" class="fa icon fa-chart-line" style="color: rgb(81, 73, 131);"></a>
-                <div class="g-ytsubscribe" data-channelid="UC0bLbtTI9uni3bNRPIJQAqA" data-layout="default" data-count="default"></div>
-        
-                <p style="font-size: 14px; text-align: right;">It's still in BETA nyan~~🐱</p>
-                <hr />
-                <iframe id="youtube-player" width="420" height="290" scrolling="no">
-                </iframe>
-                <p id="title"></p>
-            </div>
-            <div id="forum-accordion" class="accordion">
-                <p style="font-size: 14px"><a href="https://joytan.pub"><i class="fa fa-external-link" style="font-size: 14px"></i> 
-                    Go to Joytan Public and review</a></p>
+                    <a href="https://play.google.com/store/apps/details?id=com.joytan.rec" class="fa icon fa-android"></a>
+                    <a href="https://github.com/kokimame/joytan-public" class="fa icon fa-github"></a>
+                    <a href="https://kokimame.github.io/joytan/" class="fa icon fa-desktop"></a>
+                    <a href="https://twitter.com/JoytanApp" class="fa icon fa-twitter"></a>
+                    <a id="btn-stat" href="" class="fa icon fa-chart-line" style="color: rgb(81, 73, 131);"></a>
+                    <div class="g-ytsubscribe" data-channelid="UC0bLbtTI9uni3bNRPIJQAqA" data-layout="default" data-count="default"></div>
+            
+                    <p style="font-size: 14px; text-align: right;">It's still in BETA nyan~~🐱</p>
+                    <div id="title"></div>
+                    <p style="font-size: 14px"><a href="https://joytan.pub"><i class="fa fa-external-link" style="font-size: 14px"></i> 
+                        Go to Joytan Public and review</a></p>
+                    <hr />
+                </div>
+
+                <div id="iframe-wrapper">
+                    <iframe id="youtube-player" scrolling="no" align="right">
+                    </iframe>
+                </div>
+                <div id="forum-accordion" class="accordion">
+                </div>
             </div>
         </div>
     </div>

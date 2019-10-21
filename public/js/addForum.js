@@ -4,6 +4,8 @@ function addForum(entryData, index) {
     const collapseId = "collapse_" + index;
     const boardId = "board_" + index;
     const formId = "form_" + index;
+    const submitId = "submit_" + index;
+    const textId = "text_" + index;
     const numbering = (parseInt(index) + 1).toString();
     var upperNote = "";
     var lowerNote = "";
@@ -49,15 +51,19 @@ function addForum(entryData, index) {
         </div>
         <hr />
         <div class="form-div">
-            <form action="/action_page.php">
             <span>Comment</span>
-            <textarea id="subject" name="subject" 
-            placeholder="Write something.." style="height:150px"></textarea>
-            <input type="submit" value="Submit">
+            <textarea id="${textId}" name="subject" 
+            placeholder="Edit/Delete feature is yet to be introduced...
+Only off-topic comments/spams will be removed." style="height:150px"></textarea>
+            <button class="btn btn-success" id="${submitId}">Submit</button>
         </div>
     </div>
     `;
     // TODO: Audio auto-play
     document.getElementById('forum-accordion').appendChild(div);
+
+    document.getElementById(submitId).addEventListener("click", () => {
+        console.log($("#" + textId).val())
+    })
 
 }
