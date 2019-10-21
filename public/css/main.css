@@ -73,14 +73,13 @@ button {
     font-size: 24px;
 }
 
-.forum-link {
-    color: white;
-    margin-left: 3px;
-}
-
-/* Add a hover effect if you want */
 .icon:hover {
     opacity: 0.7;
     color: black;
     text-decoration: none;
+}
+
+.forum-link {
+    color: white;
+    margin-left: 3px;
 }

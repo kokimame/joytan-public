@@ -51,3 +51,24 @@ input[type=submit] {
 input[type=submit]:hover {
   background-color: #45a049;
 }
+
+.icon {
+  font-size: 25px;
+  width: 35px;
+  text-align: center;
+  text-decoration: none;
+  color: black;
+}
+
+.fa-android {
+  font-size: 28px;
+}
+.fa-desktop {
+  font-size: 24px;
+}
+
+.icon:hover {
+  opacity: 0.7;
+  color: black;
+  text-decoration: none;
+}
