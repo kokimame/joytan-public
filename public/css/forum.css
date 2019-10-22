@@ -24,6 +24,9 @@
 
 #iframe-wrapper {
   position: -webkit-sticky;
+  position: -moz-sticky;
+  position: -ms-sticky;
+  position: -o-sticky;
   position: sticky;
   text-align: right;
   -webkit-transform: scaleX(-1);
@@ -34,8 +37,38 @@
   top: 0;
   z-index: 5;
   resize: both;
-  overflow: auto; 
-  padding: 6px;
+  overflow: hidden; 
+  padding: 10px;
+}
+
+#pos-style-btn {
+  position: relative;
+  top: 0;
+  left: 0;
+  z-index: 6;
+  display:block;
+  box-sizing:border-box;
+  width:20px;
+  height:20px;
+  border-width:3px;
+  border-style: solid;
+  box-shadow:0px 0px 5px 2px rgba(0,0,0,0.5);
+  transition: all 0.3s ease;
+  box-shadow:0px 0px 5px 2px rgba(0,0,0,0.5);
+  transition: all 0.3s ease;
+}
+
+.sticky-btn {
+  border-color:red;
+  border-radius:100%;
+  background: -webkit-linear-gradient(-45deg, transparent 0%, transparent 46%, white 46%,  white 56%,transparent 56%, transparent 100%), -webkit-linear-gradient(45deg, transparent 0%, transparent 46%, white 46%,  white 56%,transparent 56%, transparent 100%);
+  background-color:red;
+}
+.unsticky-btn {
+  border-color:#5cb85c;
+  border-radius:100%;
+  background: radial-gradient(circle, white, white);
+  background-color:#5cb85c;
 }
 
 #youtube-player {

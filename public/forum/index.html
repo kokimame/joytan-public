@@ -60,6 +60,10 @@ function getUrlVars() {
     return vars;
 }
 
+function changePositionStyle(id, newStyle) {
+    $(id).css({'position' : newStyle})
+}
+
 window.onload = () => {
     const storage = firebase.storage();
     const storageRef = storage.ref();
@@ -67,6 +71,18 @@ window.onload = () => {
     const structureRef = storageRef.child('projects_structure.json');
     const projectName = getUrlVars()["p"];
     const ytplayer = document.getElementById("youtube-player");
+    document.getElementById("pos-style-btn").addEventListener("click", () => {
+        if($("#pos-style-btn").hasClass("sticky-btn")) {
+            $("#pos-style-btn").addClass("unsticky-btn")
+            $("#pos-style-btn").removeClass("sticky-btn")
+            changePositionStyle("#iframe-wrapper", "relative");
+        }
+        else {
+            $("#pos-style-btn").addClass("sticky-btn")
+            $("#pos-style-btn").removeClass("unsticky-btn")
+            changePositionStyle("#iframe-wrapper", "sticky");
+        }
+    })
 
     structureRef.getDownloadURL().then(url => {
         $.getJSON(url, (data) => {
@@ -125,6 +141,7 @@ window.onload = () => {
                 </div>
 
                 <div id="iframe-wrapper">
+                    <a id="pos-style-btn" class="sticky-btn"></a>
                     <iframe id="youtube-player" scrolling="no" align="right">
                     </iframe>
                 </div>
