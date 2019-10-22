@@ -75,6 +75,7 @@ window.onload = () => {
                     if(projectRef.name == projectName) {
                         firebase.database().ref(projectName).once('value').then(urlData => {
                             projData = data[projectName]
+                            dirname = projData["dirname"]
                             entries = projData["entries"]
                             wantedKey = projData["wanted"]
                             upnKey = projData["upn"]
