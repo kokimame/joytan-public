@@ -62,6 +62,11 @@ Only off-topic comments/spams will be removed." style="height:150px"></textarea>
 
     document.getElementById(toggleId).addEventListener("click", () => {
         document.getElementById(boardId).innerHTML = ""
+        const user = firebase.auth().currentUser;
+        if (user) {
+            console.log(user.displayName)
+            $("#" + nameId).val(user.displayName);
+        }
         getComments(forumTarget, boardId)
     })
 
@@ -82,7 +87,6 @@ function getComments(reference, boardId) {
             var [cName, cText] = clientTextProc(
                 commentData["name"], commentData["text"]
             );
-            console.log(commentData)
             var commentHtml = `
             <div class="comment">
                 <div class="commentor-name">
