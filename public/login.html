@@ -1,0 +1,23 @@
+<form id="login-form" method="post">
+    <h2>Log in</h2>
+    <p>Don't have an account? 
+        <span class="font-href" onclick="signupLoginTransition('signup')">Sign up!</span></p>
+    <hr>
+    <p>Please fill in this form to log in.</p>
+    <label for="email"><b>Email</b></label>
+    <input id="login-email" class="auth-input" type="text" placeholder="Enter Email" name="email"
+        pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="For example, [a-Z]@[a-Z].domain" required>
+
+    <label for="psw"><b>Password</b></label>
+    <input id="login-psw" class="auth-input" type="password" placeholder="Enter Password" name="psw" required
+        minlength="8" maxlength="15" required>
+
+    <label>
+        <input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me
+    </label>
+
+    <div class="clearfix">
+        <button class="modal-button cancel-btn" type="button" onclick="closeAuthForm()" >Cancel</button>
+        <button class="modal-button login-btn btn-success" type="submit" onclick="loginUser()">Log in</button>
+    </div>
+</form>
