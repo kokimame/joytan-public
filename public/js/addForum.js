@@ -6,6 +6,7 @@ function addForum(entryData, index) {
     const submitId = "submit_" + index;
     const nameId = "name_" + index;
     const textId = "text_" + index;
+    const spinId = "spin_" + index;
     const forumTarget = `forum/${dirname}/${index}`
     const numbering = (parseInt(index) + 1).toString();
     var upperNote = "";
@@ -43,10 +44,14 @@ function addForum(entryData, index) {
       <div class="card card-body">
         <div id="${boardId}" class="comment">
         </div>
+        <div id="${spinId}">
+            <div class="spinning"></div>
+        </div>
         <div class="form-div">
             <div>
                 <div>Name</div>
-                <input id="${nameId}" type="text" name="usrname" placeholder="Name">
+                <input id="${nameId}" type="text" 
+                name="username" placeholder="Name">
             </div>
             <div>Comment</div>
             <textarea id="${textId}" name="subject" 
@@ -61,34 +66,40 @@ Only off-topic comments/spams will be removed." style="height:150px"></textarea>
     document.getElementById('forum-accordion').appendChild(div);
 
     document.getElementById(toggleId).addEventListener("click", () => {
-        document.getElementById(boardId).innerHTML = ""
         const user = firebase.auth().currentUser;
         if (user) {
-            console.log(user.displayName)
             $("#" + nameId).val(user.displayName);
         }
-        getComments(forumTarget, boardId)
+        // document.getElementById(boardId).innerHTML = ""
+        $("#" + spinId).removeClass("hide-loader");
+        getComments(forumTarget, boardId, spinId)
     })
 
     document.getElementById(submitId).addEventListener("click", () => {
+        $("#" + spinId).removeClass("hide-loader");
         var commentName = $("#" + nameId).val()
         var commentText = $("#" + textId).val()
         writeCommentData(forumTarget, commentName, commentText)
+        $("#" + textId).val("")
+        getComments(forumTarget, boardId, spinId)
     })
 }
 
-function getComments(reference, boardId) {
+function getComments(reference, boardId, spinId) {
     firebase.database().ref(reference).once('value').then(comments => {
         var commentDatas = comments.val();
         var cCounter = 0; 
         for (var cRef in commentDatas){
             cCounter += 1;
+            if ($("#" + cRef).length !== 0) {
+                continue;
+            }
             commentData = commentDatas[cRef];
             var [cName, cText] = clientTextProc(
                 commentData["name"], commentData["text"]
             );
             var commentHtml = `
-            <div class="comment">
+            <div id="${cRef}" class="comment">
                 <div class="commentor-name">
                 #${cCounter} ${cName}
                 </div>
@@ -97,6 +108,7 @@ function getComments(reference, boardId) {
             </div>`
             document.getElementById(boardId).innerHTML += commentHtml
         }
+        $("#" + spinId).addClass("hide-loader")
     })
 }
 

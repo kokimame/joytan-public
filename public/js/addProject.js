@@ -241,7 +241,7 @@ function addProject(item, projectRef) {
     appendAudio(audioId, item["dirname"]);
     /////////  //////////  ///////////  ////
 
-    // Show spinner and this will be removed in addPlayer.js
+    // Show spinner and the spinner will be removed in addPlayer.js
     $("#" + spinId).removeClass("hide-loader");
     // Remove the spin class in case of faild loading.
     setTimeout(() => {
