@@ -93,8 +93,18 @@ hr {
 	text-align: center;
 }
 
+.space-between {
+  display: flex;
+  justify-content: space-between;
+}
+
+.date-since {
+  font-size: 12px;
+  margin-top: 6px;
+}
+
 .commentor-name {
-  font-weight: bold;
+  display: inline-block;
 }
 
 .comment-text {
