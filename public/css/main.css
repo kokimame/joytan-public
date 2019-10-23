@@ -44,9 +44,6 @@ button {
     overflow: hidden;
     outline: none;
 }
-.btn-slim {
-    padding: 0px 10px;
-}
 
 .btn-vote {
     width: 120px;

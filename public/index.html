@@ -41,6 +41,7 @@
   <link rel="stylesheet" href="css/auth.css">
   <link rel="stylesheet" href="css/select.css">
   <link rel="stylesheet" href="css/table.css">
+  <link rel="stylesheet" href="css/shared.css">
 
   <link rel="apple-touch-icon" sizes="57x57" href="icons/apple-icon-57x57.png">
   <link rel="apple-touch-icon" sizes="60x60" href="icons/apple-icon-60x60.png">
@@ -344,11 +345,11 @@
                   <hr>
                   <p>Please fill in this form to create an account.</p>
                   <label for="signup-email"><b>Email</b></label>
-                  <input id="signup-email" type="text" placeholder="Enter Email" name="signup-email"
+                  <input id="signup-email" class="auth-input" type="text" placeholder="Enter Email" name="signup-email"
                     pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="For example, [a-Z]@[a-Z].domain" required>
             
                   <label for="signup-psw"><b>Password</b></label>
-                  <input id="signup-psw" type="password" placeholder="Enter Password" name="signup-psw" onchange="validatePassword()"
+                  <input id="signup-psw" class="auth-input" type="password" placeholder="Enter Password" name="signup-psw" onchange="validatePassword()"
                     minlength="8" maxlength="15" required>
             
                   <label for="confirm-password"><b>Repeat Password</b></label>

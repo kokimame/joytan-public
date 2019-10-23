@@ -122,7 +122,7 @@ hr {
   border-radius: 3px;
 }
 
-input[type=text] {
+.comment-name-input {
   width: 50%;
   border: 1px solid #ccc;
   border-radius: 2px;
@@ -130,7 +130,7 @@ input[type=text] {
   resize: vertical;
 }
 
-textarea {
+.comment-textarea {
   width: 100%;
   border: 1px solid #ccc;
   border-radius: 2px;

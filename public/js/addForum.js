@@ -51,12 +51,12 @@ function addForum(entryData, index) {
         <div class="form-div">
             <div>
                 <div>Name</div>
-                <input id="${nameId}" type="text" maxlength="32"
-                name="username" placeholder="Name">
+                <input id="${nameId}" class="comment-name-input" 
+                    type="text" maxlength="32" name="username" placeholder="Name"></input>
             </div>
             <div>Comment <span id="${charCntId}">0/500</span>
             </div>
-            <textarea id="${textId}" name="subject" maxlength='500'
+            <textarea id="${textId}" class="comment-textarea" name="subject" maxlength='500'
             placeholder="Edit/Delete feature is yet to be introduced...
 Only off-topic comments/spams will be removed." style="height:150px"></textarea>
             <button class="btn btn-success btn-submit" id="${submitId}">
