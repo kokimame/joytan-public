@@ -11,6 +11,13 @@ html, body {
     height: 35px;
 }
 
+#uname-input {
+    border-radius: 2px;
+}
+.bold-line {
+    font-weight: bold;
+  }  
+
 .spinning {
     border: 4px solid #f3f3f3; /* Light grey */
     border-top: 4px solid #3498db; /* Blue */

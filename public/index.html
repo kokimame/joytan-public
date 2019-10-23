@@ -101,7 +101,6 @@
         }
       });
 
-
       firebase.auth().onAuthStateChanged(user => {
         if (user) {
           $("#auth-button").html(`Account <i class="fa fa-user" />`)
@@ -228,9 +227,22 @@
       var accountDiv = document.getElementById("account-modal");
       accountDiv.innerHTML = `
       <h2>Your Account</h2>
-      <p>Thank you, ${user.displayName}, for your contribution!</p>
+      <p>Thank you for your contribution!</p>
       <hr>
-      <p>Your email address: ${user.email}</p>
+      <p>Your username: 
+        <span id="uname-display" >
+          <span id="current-uname" class="bold-line">${user.displayName}</span> 
+          <i id="uname-edit-btn" class="fas fa-edit"></i>
+        </span>
+        <span id="uname-edit" style="display: none;">
+          <input id="uname-input" value="${user.displayName}"></input>
+          <button id="uname-edit-ok" 
+            class="btn btn-success btn-slim">OK</button>
+          <button id="uname-edit-cancel" 
+            class="btn btn-secondary btn-slim">Cancel</button>
+        </span>
+      </p>
+      <p>Your email address: <span class="bold-line">${user.email}</span></p>
       <p>Your total voice contribution: <span id="totalAudioCount" style="font-size: 30px;"><b></b></span></p>
       <p>Your total votes: <span id="totalVoteCount" style="font-size: 30px;"><b></b></span></p>
       <p>Our project is still in an early stage. Your participation and contribution mean a lot to us 😌🏖️.</p>
@@ -254,6 +266,25 @@
           totalVoteCount = Object.keys(snapshot.val()).length
         }
         document.getElementById("totalVoteCount").innerText = totalVoteCount.toString()
+      })
+
+      $("#uname-edit-btn").click(ev => {
+        $("#uname-display").hide();
+        $("#uname-edit").show();
+      })
+      $("#uname-edit-ok").click(ev => {
+        var newName = $("#uname-input").val();
+        user.updateProfile({
+          displayName: newName
+        }).then(() => {
+          $("#current-uname").text(newName);
+          $("#uname-edit").hide();
+          $("#uname-display").show();
+        })
+      })
+      $("#uname-edit-cancel").click(ev => {
+        $("#uname-edit").hide();
+        $("#uname-display").show();
       })
     }
     // Smarter way to change login/signup modal!
