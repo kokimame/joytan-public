@@ -12,6 +12,10 @@ hr {
   margin: 5px;
 }
 
+.tight-line {
+  font-size: 14px;
+  margin: 3px;
+}
 .btn-title {
 	position: relative;
 }

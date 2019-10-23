@@ -97,7 +97,7 @@ window.onload = () => {
                             upnKey = projData["upn"]
                             lonKey = projData["lon"]
 
-                            $("#title").text(projData["flags"] + projData["title"])
+                            $("#project-title").text(projData["flags"] + projData["title"])
                             if(urlData.val()) {
                                 $("#youtube-player").attr("src", urlData.val())
                             }
@@ -134,10 +134,10 @@ window.onload = () => {
                     <div class="g-ytsubscribe" data-channelid="UC0bLbtTI9uni3bNRPIJQAqA" data-layout="default" data-count="default"></div>
             
                     <p style="font-size: 14px; text-align: right;">It's still in BETA nyan~~🐱</p>
-                    <div id="title"></div>
-                    <p style="font-size: 14px"><a href="https://joytan.pub"><i class="fa fa-external-link" style="font-size: 14px"></i> 
-                        Go to Joytan Public and review</a></p>
                     <hr />
+                    <div class="tight-line"><a href="https://joytan.pub"><i class="fa fa-external-link" style="font-size: 14px"></i> 
+                        Go to Joytan Public and review</a></div>
+                    <div id="project-title"></div>
                 </div>
 
                 <div id="iframe-wrapper">

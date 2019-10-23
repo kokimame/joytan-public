@@ -70,7 +70,6 @@ Only off-topic comments/spams will be removed." style="height:150px"></textarea>
         if (user) {
             $("#" + nameId).val(user.displayName);
         }
-        // document.getElementById(boardId).innerHTML = ""
         $("#" + spinId).removeClass("hide-loader");
         getComments(forumTarget, boardId, spinId)
     })
