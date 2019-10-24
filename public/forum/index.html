@@ -140,6 +140,18 @@ window.onload = () => {
                             for (var i = 0; i < entries.length; i++){
                                 addForum(entries[i], i.toString());
                             }
+
+                            firebase.database().ref(`forum/${projectName}`).once('value').then(indexData => {
+                                var commentLookup = indexData.val();
+                                for (var index in commentLookup) {
+                                    var commentCntId = "comment_cnt_" + index;
+                                    commentLookup[index].length
+                                    document.getElementById(commentCntId).innerHTML = 
+                                        `<span style="font-size: 16px"><i class="fa fa-comment"></i></span>
+                                            <span style="font-size: 4px; margin: 0px 2px;">&#10005;</span>${Object.keys(commentLookup[index]).length}`
+                                }
+                            })
+
                         });
                     }
                 })

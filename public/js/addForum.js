@@ -8,6 +8,7 @@ function addForum(entryData, index) {
     const textId = "text_" + index;
     const spinId = "spin_" + index;
     const charCntId = "char_" + index;
+    const commentCntId = "comment_cnt_" + index;
     const forumTarget = `forum/${dirname}/${index}`
     const numbering = (parseInt(index) + 1).toString();
     var upperNote = "";
@@ -23,7 +24,7 @@ function addForum(entryData, index) {
     <button class="btn btn-square btn-outline-dark btn-block text-left collapsed" type="button" 
     data-toggle="collapse" data-target="#${collapseId}" aria-expanded="false" id="${toggleId}">
         <div class="small-index">
-            ${numbering}
+            ${numbering} <span id="${commentCntId}"></span>
         </div>
         <table class="btn-title" >
         <tr>
