@@ -15,6 +15,7 @@ function addProject(item, projectRef) {
   const voteBtnId = "".concat("voteBtn_", projectName)
   const controlId = "".concat("control_", projectName)
   const autoBtnId = "".concat("auto_", projectName)
+  const forumId = "".concat("forum_", projectName)
   const voteClass = "".concat("vote_", projectName);
   const customSelectId = "".concat("cSelect_", projectName)
   const baseSelectId = "".concat("bSelect_", projectName)
