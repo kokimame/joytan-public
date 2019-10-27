@@ -134,7 +134,8 @@ window.onload = () => {
                                 $("#youtube-player").attr("src", urlData.val())
                             }
                             else {
-                                $("#youtube-player").attr("src", "https://i.ytimg.com/vi/Ste5Vd_icUw/hqdefault.jpg")
+                                $("#iframe-wrapper").hide()
+                                $("#coming-soon").show()
                             }
 
                             for (var i = 0; i < entries.length; i++){
@@ -148,7 +149,7 @@ window.onload = () => {
                                     commentLookup[index].length
                                     document.getElementById(commentCntId).innerHTML = 
                                         `<span style="font-size: 16px"><i class="fa fa-comment"></i></span>
-                                            <span style="font-size: 4px; margin: 0px 2px;">&#10005;</span>${Object.keys(commentLookup[index]).length}`
+                                            <span style="font-size: 12px; margin: 0px 2px;">&#10005;</span>${Object.keys(commentLookup[index]).length}`
                                 }
                             })
 
@@ -192,6 +193,9 @@ window.onload = () => {
                     <a id="pos-style-btn" class="sticky-btn"></a>
                     <iframe id="youtube-player" scrolling="no" align="right">
                     </iframe>
+                </div>
+                <div id="coming-soon">
+                    Video coming soon!
                 </div>
                 <div id="auth-form" class="modal">
                 <span onclick="closeAuthForm()" class="close" title="Close Modal">&times;</span>

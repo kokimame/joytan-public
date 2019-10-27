@@ -88,6 +88,14 @@ hr {
   transform: scaleX(-1);
 }
 
+#coming-soon {
+  text-align: center;
+  font-size: 18px;
+  margin: 4px;
+  font-weight: bolder;
+  display: none;
+}
+
 .td-note {
 	font-size: 10px;
 	text-align: center;
