@@ -70,6 +70,8 @@ function addProject(item, projectRef) {
           </div>
           <button type="button" class="btn btn-slim btn-success auto-play" id="${autoBtnId}" value="off">
             Auto <a class="fa fa-volume-up"></a></button>
+          <button type="button" class="btn btn-slim btn-secondary" id="${forumId}" value="off">
+            Forum<a class="far fa-comments forum-link"></a></button>
         </div>
       </div>
       <hr style="margin-bottom: 12px;" />
@@ -238,7 +240,7 @@ function addProject(item, projectRef) {
     appendAudio(audioId, item["dirname"]);
     /////////  //////////  ///////////  ////
 
-    // Show spinner and this will be removed in addPlayer.js
+    // Show spinner and the spinner will be removed in addPlayer.js
     $("#" + spinId).removeClass("hide-loader");
     // Remove the spin class in case of faild loading.
     setTimeout(() => {
@@ -323,6 +325,11 @@ function addProject(item, projectRef) {
       }
     }
   })
+
+  document.getElementById(forumId).addEventListener('click', () => {
+    window.location.href = "forum/?p=" + projectName
+  })
+
   document.getElementById(autoBtnId).addEventListener('click', () => {
     var autoBtn = document.getElementById(autoBtnId)
     var playBtns = audioDiv.getElementsByClassName("fa fa-play ml-2");

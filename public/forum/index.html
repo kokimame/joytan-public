@@ -1,0 +1,289 @@
+<html>
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Joytan Forum</title>
+
+<!-- update the version number as needed -->
+<script defer src="/__/firebase/6.4.1/firebase-app.js"></script>
+<!-- include only the Firebase features as you need -->
+<script defer src="/__/firebase/6.4.1/firebase-auth.js"></script>
+<script defer src="/__/firebase/6.4.1/firebase-database.js"></script>
+<script defer src="/__/firebase/6.4.1/firebase-messaging.js"></script>
+<script defer src="/__/firebase/6.4.1/firebase-storage.js"></script>
+<!-- initialize the SDK after all desired features are loaded -->
+<script defer src="/__/firebase/init.js"></script>
+
+<!-- JQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<!-- For popup? -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+
+<!-- For accordion -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.10.2/css/all.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.10.2/css/v4-shims.css">
+
+<!-- YouTube sub counter  -->
+<script src="https://apis.google.com/js/platform.js"></script>
+
+<link rel="apple-touch-icon" sizes="57x57" href="../icons/apple-icon-57x57.png">
+<link rel="apple-touch-icon" sizes="60x60" href="../icons/apple-icon-60x60.png">
+<link rel="apple-touch-icon" sizes="72x72" href="../icons/apple-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="76x76" href="../icons/apple-icon-76x76.png">
+<link rel="apple-touch-icon" sizes="114x114" href="../icons/apple-icon-114x114.png">
+<link rel="apple-touch-icon" sizes="120x120" href="../icons/apple-icon-120x120.png">
+<link rel="apple-touch-icon" sizes="144x144" href="../icons/apple-icon-144x144.png">
+<link rel="apple-touch-icon" sizes="152x152" href="../icons/apple-icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="../icons/apple-icon-180x180.png">
+<link rel="icon" type="image/png" sizes="192x192"  href="../icons/android-icon-192x192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../icons/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="96x96" href="../icons/favicon-96x96.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../icons/favicon-16x16.png">
+<link rel="manifest" href="../icons/manifest.json">
+<meta name="msapplication-TileColor" content="#ffffff">
+<meta name="msapplication-TileImage" content="../icons/ms-icon-144x144.png">
+<meta name="theme-color" content="#ffffff">
+
+<link rel="stylesheet" href="../css/forum.css">
+<link rel="stylesheet" href="../css/auth.css">
+<link rel="stylesheet" href="../css/shared.css">
+<script src="../js/addForum.js"></script>
+<script src="../js/authHelpers.js"></script>
+
+
+<script>
+function getUrlVars() {
+    var vars = {};
+    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+        vars[key] = value;
+    });
+    return vars;
+}
+
+function changePositionStyle(id, newStyle) {
+    $(id).css({'position' : newStyle})
+}
+
+window.onload = () => {
+    const storage = firebase.storage();
+    const storageRef = storage.ref();
+    const topProjectsRef = storageRef.child('projects');
+    const structureRef = storageRef.child('projects_structure.json');
+    const projectName = getUrlVars()["p"];
+    const ytplayer = document.getElementById("youtube-player");
+    document.getElementById("pos-style-btn").addEventListener("click", () => {
+        if($("#pos-style-btn").hasClass("sticky-btn")) {
+            $("#pos-style-btn").addClass("unsticky-btn")
+            $("#pos-style-btn").removeClass("sticky-btn")
+            changePositionStyle("#iframe-wrapper", "relative");
+        }
+        else {
+            $("#pos-style-btn").addClass("sticky-btn")
+            $("#pos-style-btn").removeClass("unsticky-btn")
+            changePositionStyle("#iframe-wrapper", "sticky");
+        }
+    })
+
+    $(() => {
+        // $("#about-view").load("about.html");
+    });
+      // Close modal when clicking outside
+    $("#auth-form").click(ev => {
+        if(ev.target != document.getElementById("auth-form")) {
+            return;
+        } else {
+            $("#auth-form").hide();
+        }
+    });
+    firebase.auth().onAuthStateChanged(user => {
+        if (user) {
+            $("#auth-button").html(`Account <i class="fa fa-user" />`)
+            $("#auth-button").show()
+        } else {
+            $("#auth-button").html("Log in &bull; Sign up")
+            $("#auth-button").show()
+        }
+    });
+
+    document.getElementById('signup-form').onsubmit = e => {
+        e.preventDefault();
+    }
+    document.getElementById('login-form').onsubmit = e => {
+        e.preventDefault();
+    }
+
+    structureRef.getDownloadURL().then(url => {
+        $.getJSON(url, (data) => {
+            topProjectsRef.listAll().then(res => {
+                res.prefixes.forEach(projectRef => {
+                    if(projectRef.name == projectName) {
+                        firebase.database().ref(projectName).once('value').then(urlData => {
+                            projData = data[projectName]
+                            dirname = projData["dirname"]
+                            entries = projData["entries"]
+                            wantedKey = projData["wanted"]
+                            upnKey = projData["upn"]
+                            lonKey = projData["lon"]
+
+                            $("#project-title").text(projData["flags"] + projData["title"])
+                            if(urlData.val()) {
+                                $("#youtube-player").attr("src", urlData.val())
+                            }
+                            else {
+                                $("#iframe-wrapper").hide()
+                                $("#coming-soon").show()
+                            }
+
+                            for (var i = 0; i < entries.length; i++){
+                                addForum(entries[i], i.toString());
+                            }
+
+                            firebase.database().ref(`forum/${projectName}`).once('value').then(indexData => {
+                                var commentLookup = indexData.val();
+                                for (var index in commentLookup) {
+                                    var commentCntId = "comment_cnt_" + index;
+                                    commentLookup[index].length
+                                    document.getElementById(commentCntId).innerHTML = 
+                                        `<span style="font-size: 16px"><i class="fa fa-comment"></i></span>
+                                            <span style="font-size: 12px; margin: 0px 2px;">&#10005;</span>${Object.keys(commentLookup[index]).length}`
+                                }
+                            })
+
+                        });
+                    }
+                })
+            })
+        })
+    })
+}
+</script>
+
+</head>
+<body>
+<div class="row justify-content-center">
+    <div class="col-12">
+        <div class="container">
+            <div>
+                <div style="text-align: center">
+                    <h3>Welcome to "Joytan App Forum"</h3>
+
+                    <a href="https://play.google.com/store/apps/details?id=com.joytan.rec" class="fa icon fa-android"></a>
+                    <a href="https://github.com/kokimame/joytan-public" class="fa icon fa-github"></a>
+                    <a href="https://kokimame.github.io/joytan/" class="fa icon fa-desktop"></a>
+                    <a href="https://twitter.com/JoytanApp" class="fa icon fa-twitter"></a>
+                    <a id="btn-stat" href="" class="fa icon fa-chart-line" style="color: rgb(81, 73, 131);"></a>
+                    <div class="g-ytsubscribe" data-channelid="UC0bLbtTI9uni3bNRPIJQAqA" data-layout="default" data-count="default"></div>
+            
+                    <p style="font-size: 14px; text-align: right;">It's still in BETA nyan~~🐱</p>
+                    <hr />
+                    <div class="tight-line space-between">
+                        <button id="auth-button" class="btn btn-info btn-slim" onclick="handleAuthButton()" 
+                        style="display: none; float: left;"></button>
+                        <div id="project-title"></div>
+                        <a href="https://joytan.pub"><i class="fa fa-external-link" style="font-size: 14px"></i>
+                        Go to Joytan Public and review</a>
+                    </div>
+                </div>
+
+                <div id="iframe-wrapper">
+                    <a id="pos-style-btn" class="sticky-btn"></a>
+                    <iframe id="youtube-player" scrolling="no" align="right">
+                    </iframe>
+                </div>
+                <div id="coming-soon">
+                    Video coming soon!
+                </div>
+                <div id="auth-form" class="modal">
+                <span onclick="closeAuthForm()" class="close" title="Close Modal">&times;</span>
+                <div class="modal-content">
+                  <div class="modal-container container">
+                    <div id="signup-modal">
+                      <form id="signup-form" method="post">
+                        <h2>Sign Up</h2>
+                        <p>Have an account? <span class="font-href" onclick="signupLoginTransition('login')">Log in!</span></p>
+                        <hr>
+                        <p>Please fill in this form to create an account.</p>
+                        <label for="signup-email"><b>Email</b></label>
+                        <input id="signup-email" class="auth-input" type="text" placeholder="Enter Email" name="signup-email"
+                          pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="For example, [a-Z]@[a-Z].domain" required>
+                  
+                        <label for="signup-psw"><b>Password</b></label>
+                        <input id="signup-psw" class="auth-input" type="password" placeholder="Enter Password" name="signup-psw" onchange="validatePassword()"
+                          minlength="8" maxlength="15" required>
+                  
+                        <label for="confirm-password"><b>Repeat Password</b></label>
+                        <input id="confirm-password" class="auth-input" type="password" placeholder="Repeat Password" name="psw-repeat" onkeyup="validatePassword()"
+                         required>
+          
+                        <label for="signup-uname"><b>User name</b></label>
+                        <input id="signup-uname" class="auth-input" type="text" placeholder="Enter your Username" name="signup-uname"
+                          minlength="3" maxlength="32" required>
+                        
+                        <label>
+                          <input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me
+                        </label>
+                              
+                        <div class="clearfix">
+                          <button class="modal-button cancel-btn" type="button" onclick="closeAuthForm()" >Cancel</button>
+                          <button class="modal-button signup-btn btn-success" type="submit" onclick="createNewUser()">Sign Up</button>
+                        </div>
+                      </form>
+                    </div>
+                    <div id="login-modal">
+                      <form id="login-form" method="post">
+                        <h2>Log in</h2>
+                        <p>Don't have an account? 
+                            <span class="font-href" onclick="signupLoginTransition('signup')">Sign up!</span></p>
+                        <hr>
+                        <p>Please fill in this form to log in.</p>
+                        <label for="email"><b>Email</b></label>
+                        <input id="login-email" class="auth-input" type="text" placeholder="Enter Email" name="email"
+                          pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="For example, [a-Z]@[a-Z].domain" required>
+                  
+                        <label for="psw"><b>Password</b></label>
+                        <input id="login-psw" class="auth-input" type="password" placeholder="Enter Password" name="psw" required
+                          minlength="8" maxlength="15" required>
+        
+                        <label>
+                          <input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me
+                        </label>
+                  
+                        <div class="clearfix">
+                          <button class="modal-button cancel-btn" type="button" onclick="closeAuthForm()" >Cancel</button>
+                          <button class="modal-button login-btn btn-success" type="submit" onclick="loginUser()">Log in</button>
+                        </div>
+                      </form>
+                    </div>
+                    <div id="account-modal">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+                <div id="forum-accordion" class="accordion">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var firebaseConfig = {
+        apiKey: "AIzaSyBr9SLxhKfyxzsbVmCVcn-J_QCgHQOqrOY",
+        authDomain: "joytan-rec-16ba2.firebaseapp.com",
+        databaseURL: "https://joytan-rec-16ba2.firebaseio.com",
+        projectId: "joytan-rec-16ba2",
+        storageBucket: "joytan-rec-16ba2.appspot.com",
+        messagingSenderId: "950782104164",
+        appId: "1:950782104164:web:adccd0fa64ae91ac"
+    };
+    firebase.initializeApp(firebaseConfig);
+</script>
+
+</body>
+
+</html>
