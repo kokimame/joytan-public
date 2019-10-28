@@ -9,6 +9,7 @@ function addForum(entryData, index) {
     const spinId = "spin_" + index;
     const charCntId = "char_" + index;
     const commentCntId = "comment_cnt_" + index;
+    const commentAllId = "comment_all_" + index;
     const forumTarget = `forum/${dirname}/${index}`
     const numbering = (parseInt(index) + 1).toString();
     var upperNote = "";
@@ -81,7 +82,7 @@ Only off-topic comments/spams will be removed." style="height:150px"></textarea>
             $("#" + nameId).val(user.displayName);
         }
         $("#" + spinId).removeClass("hide-loader");
-        getComments(forumTarget, boardId, spinId)
+        getComments(forumTarget, boardId, spinId, commentCntId, commentAllId)
     })
 
     document.getElementById(submitId).addEventListener("click", () => {
@@ -93,14 +94,18 @@ Only off-topic comments/spams will be removed." style="height:150px"></textarea>
             alert(isValidatedOrMsg);
         } else {
             $("#" + spinId).removeClass("hide-loader");
-            writeCommentData(forumTarget, commentName, commentText)
+            var commentKey = writeCommentData(forumTarget, commentName, commentText)
+            const user = firebase.auth().currentUser;
+            if (user) {
+                saveUserComment(user, dirname, commentKey)
+            }
             $("#" + textId).val("")
-            getComments(forumTarget, boardId, spinId)
+            getComments(forumTarget, boardId, spinId, commentCntId, commentAllId)
         }
     })
 }
 
-function getComments(reference, boardId, spinId) {
+function getComments(reference, boardId, spinId, commentCntId, commentAllId) {
     firebase.database().ref(reference).once('value').then(comments => {
         var commentDatas = comments.val();
         var cCounter = 0; 
@@ -127,6 +132,17 @@ function getComments(reference, boardId, spinId) {
                 <hr class="comment-separator" />
             </div>`
             document.getElementById(boardId).innerHTML += commentHtml
+
+            // Counter span was not added in the index.html and need to initialize
+            if (cCounter <= 1) {
+                document.getElementById(commentCntId).innerHTML = 
+                `<span style="font-size: 16px"><i class="fa fa-comment"></i></span>
+                    <span style="font-size: 12px; margin: 0px 2px;">&#10005;</span>
+                    <span id="${commentAllId}">${cCounter}</span>`
+            } else {
+                document.getElementById(commentAllId).innerText = cCounter;
+            }
+            
         }
         $("#" + spinId).addClass("hide-loader")
     })
@@ -148,6 +164,19 @@ function writeCommentData(target, name, text) {
     var newKey = firebase.database().ref(target).push().key;
     var updates = {}
     updates[newKey] = commentData
+    firebase.database().ref(target).update(updates)
+
+    return newKey
+}
+
+function saveUserComment(user, dirname, commentKey) {
+    var data = {
+        k: commentKey
+    }
+    var target = `users/${user.uid}/comment/${dirname}`
+    var updates = {}
+    var newKey = firebase.database().ref(target).push().key;
+    updates[newKey] = data
     firebase.database().ref(target).update(updates)
 }
 
