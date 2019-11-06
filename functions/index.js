@@ -22,13 +22,11 @@ function promisifyCommand(command) {
 }
 
 exports.adminVoteListener = functions.database.ref(adminVotePath).onUpdate(async (change, context) => {
-    console.log("adminVoteFunc called")
     const beforeData = change.before.val();
     const beforeKeys = Object.keys(beforeData)
     const afterData = change.after.val();
     const afterKeys = Object.keys(afterData)
     const diffKeys = afterKeys.filter(x => !beforeKeys.includes(x))
-    console.log("context...", context)
 
     if (!diffKeys.length === 1) {
       console.log("Exception happened on adminVoterLister: Too many keys added once!")
@@ -100,11 +98,9 @@ exports.denoiseAudio = functions.storage.object().onFinalize(async (object) => {
   const contentType = object.contentType;
 
   if (!contentType.startsWith('audio')) {
-    console.log("This is not an audio")
     return null;
   }
   if (fileName.startsWith('n_') || fileName.startsWith('d_')) {
-    console.log("This file is already processed");
     return null;
   }
 
@@ -120,7 +116,6 @@ exports.denoiseAudio = functions.storage.object().onFinalize(async (object) => {
   const normedStorageFilePath = path.join(path.dirname(filePath), normedTempFileName);
 
   await bucket.file(filePath).download({destination: tempFilePath});
-  console.log("Audio uploaded locally to ", tempFilePath);
 
   await spawn(soxPath, [
     tempFilePath, "-n", "noiseprof", noiseProfPath
@@ -128,8 +123,6 @@ exports.denoiseAudio = functions.storage.object().onFinalize(async (object) => {
   .catch(err => {
     console.log(err)
   })
-  console.log("Noise profile created at", noiseProfPath)
-
 
   await spawn(soxPath, [
     tempFilePath, denoisedTempFilePath, "noisered", noiseProfPath, "0.1"
@@ -137,7 +130,6 @@ exports.denoiseAudio = functions.storage.object().onFinalize(async (object) => {
   .catch(err => {
     console.log(err)
   })
-  console.log("Denoised audio created at", denoisedTempFilePath)
 
   await spawn(soxPath, [
     "--norm=-8", denoisedTempFilePath, normedTempFilePath
@@ -145,7 +137,6 @@ exports.denoiseAudio = functions.storage.object().onFinalize(async (object) => {
   .catch(err => {
     console.log(err)
   });
-  console.log('Normed audio created at', normedTempFilePath);
 
   await bucket.upload(normedTempFilePath, {
     destination: normedStorageFilePath,
@@ -153,11 +144,12 @@ exports.denoiseAudio = functions.storage.object().onFinalize(async (object) => {
       contentType: "audio/x-wav"
     }
   });
-  console.log('Normed audio uploaded to ', normedStorageFilePath);
-
   // Once the audio has been uploaded delete the local file to free up disk space
   fs.unlinkSync(tempFilePath);
   fs.unlinkSync(normedTempFilePath);
 
-  return console.log('Temporary files removed.', normedTempFilePath)
+  const senderInfo = normedStorageFilePath.split("/").slice(1, 4)
+  console.log(`Added ${senderInfo[1]} in ${senderInfo[0]} by ${senderInfo[2]}`)
+
+  return null;
 });
