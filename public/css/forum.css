@@ -108,6 +108,12 @@ hr {
   margin-top: 6px;
 }
 
+.comment-control {
+  float: right;
+  font-size: 14px;
+  margin-top: -8px;
+}
+
 .commentor-name {
   display: inline-block;
 }
@@ -121,7 +127,7 @@ hr {
   margin: 8px;
 }
 
-.form-div {
+.comment-form {
   background-color: lightgray;
   padding: 5px;
   border-radius: 3px;

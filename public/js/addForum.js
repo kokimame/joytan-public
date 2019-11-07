@@ -10,7 +10,7 @@ function addForum(entryData, index) {
     const charCntId = "char_" + index;
     const commentCntId = "comment_cnt_" + index;
     const commentAllId = "comment_all_" + index;
-    const forumTarget = `forum/${dirname}/${index}`
+    const targetForum = `forum/${dirname}/${index}`
     const numbering = (parseInt(index) + 1).toString();
     var upperNote = "";
     var lowerNote = "";
@@ -50,7 +50,7 @@ function addForum(entryData, index) {
         <div id="${spinId}">
             <div class="spinning"></div>
         </div>
-        <div class="form-div">
+        <div class="comment-form">
             <div>
                 <div>Name</div>
                 <input id="${nameId}" class="comment-name-input" 
@@ -82,25 +82,30 @@ Only off-topic comments/spams will be removed." style="height:150px"></textarea>
             $("#" + nameId).val(user.displayName);
         }
         $("#" + spinId).removeClass("hide-loader");
-        getComments(forumTarget, boardId, spinId, commentCntId, commentAllId)
+        getComments(targetForum, boardId, spinId, commentCntId, commentAllId)
     })
 
     document.getElementById(submitId).addEventListener("click", () => {
         var commentName = $("#" + nameId).val()
         var commentText = $("#" + textId).val()
         var isValidatedOrMsg = validateComment(commentText);
-        console.log(isValidatedOrMsg)
         if (isValidatedOrMsg !== true) {
             alert(isValidatedOrMsg);
         } else {
             $("#" + spinId).removeClass("hide-loader");
-            var commentKey = writeCommentData(forumTarget, commentName, commentText)
             const user = firebase.auth().currentUser;
             if (user) {
+                var commentKey = writeCommentData(
+                    targetForum, user.uid, commentName, commentText
+                )
                 saveUserComment(user, dirname, commentKey)
+            } else {
+                writeCommentData(
+                    targetForum, "", commentName, commentText
+                )
             }
             $("#" + textId).val("")
-            getComments(forumTarget, boardId, spinId, commentCntId, commentAllId)
+            getComments(targetForum, boardId, spinId, commentCntId, commentAllId)
         }
     })
 }
@@ -118,9 +123,10 @@ function getComments(reference, boardId, spinId, commentCntId, commentAllId) {
             var [cName, cText] = clientTextProc(
                 commentData["name"], commentData["text"]
             );
+            var commentUid = commentData["uid"]
             var dateSince = timeSince(commentData["date"])
             var commentHtml = `
-            <div id="${cRef}" class="comment-form">
+            <div id="${cRef}" class="comment-main">
                 <div class="space-between">
                     <div class="commentor-name">
                     <span style="font-size: 14px;">#${cCounter}</span>
@@ -129,9 +135,21 @@ function getComments(reference, boardId, spinId, commentCntId, commentAllId) {
                     <span class="date-since">${dateSince}</span>
                 </div>
                 <div class="comment-text">${cText}</div>
-                <hr class="comment-separator" />
-            </div>`
+                <span class="comment-control"></span>
+            </div>
+            <hr class="comment-separator" />
+            `
             document.getElementById(boardId).innerHTML += commentHtml
+
+            const user = firebase.auth().currentUser;
+            if (user && user.uid == commentData["uid"]) {
+                console.log("Found my comment")
+                $(`#${cRef} .comment-control`).html(`
+                <i class="fas fa-edit clickable-font" 
+                   style="padding-right: 3px"></i>
+                <i class="fas fa-trash clickable-font"></i>
+                `)
+            }
 
             // Counter span was not added in the index.html and need to initialize
             if (cCounter <= 1) {
@@ -155,10 +173,11 @@ function clientTextProc(name, text) {
     return [name, text]
 }
 
-function writeCommentData(target, name, text) {
+function writeCommentData(target, uid, name, text) {
     var commentData = {
       text: text,
       name: name,
+      uid: uid,
       date: Date.now()
     }
     var newKey = firebase.database().ref(target).push().key;
