@@ -111,10 +111,10 @@ hr {
 .comment-control {
   float: right;
   font-size: 14px;
-  margin-top: -8px;
+  margin-top: -10px;
 }
 
-.commentor-name {
+.commentor-info {
   display: inline-block;
 }
 

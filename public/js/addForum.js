@@ -59,8 +59,7 @@ function addForum(entryData, index) {
             <div>Comment <span id="${charCntId}">0/500</span>
             </div>
             <textarea id="${textId}" class="comment-textarea" name="subject" maxlength='500'
-            placeholder="Edit/Delete feature is yet to be introduced...
-Only off-topic comments/spams will be removed." style="height:150px"></textarea>
+            placeholder="Edit feature is currently under development." style="height:150px"></textarea>
             <button class="btn btn-success btn-submit" id="${submitId}">
             Submit</button>
         </div>
@@ -82,7 +81,7 @@ Only off-topic comments/spams will be removed." style="height:150px"></textarea>
             $("#" + nameId).val(user.displayName);
         }
         $("#" + spinId).removeClass("hide-loader");
-        getComments(targetForum, boardId, spinId, commentCntId, commentAllId)
+        loadComments(targetForum, boardId, spinId, commentCntId, commentAllId)
     })
 
     document.getElementById(submitId).addEventListener("click", () => {
@@ -96,43 +95,54 @@ Only off-topic comments/spams will be removed." style="height:150px"></textarea>
             const user = firebase.auth().currentUser;
             if (user) {
                 var commentKey = writeCommentData(
-                    targetForum, user.uid, commentName, commentText
+                    index, dirname, user.uid, commentName, commentText, 0
                 )
-                saveUserComment(user, dirname, commentKey)
             } else {
                 writeCommentData(
-                    targetForum, "", commentName, commentText
+                    index, dirname, "", commentName, commentText, 0
                 )
             }
             $("#" + textId).val("")
-            getComments(targetForum, boardId, spinId, commentCntId, commentAllId)
+            loadComments(targetForum, boardId, spinId, commentCntId, commentAllId)
         }
     })
 }
 
-function getComments(reference, boardId, spinId, commentCntId, commentAllId) {
+function rewriteCommentId(cRef, state) {
+    $(`#${cRef} .space-between .comment-name`).html(`Deleted by User`)
+    $(`#${cRef} .space-between .comment-date`).html(timeSince(Date.now()))
+    $(`#${cRef} .comment-text`).html(``)
+    $(`#${cRef} .comment-control`).html(``)
+}
+
+function loadComments(reference, boardId, spinId, commentCntId, commentAllId) {
     firebase.database().ref(reference).once('value').then(comments => {
         var commentDatas = comments.val();
-        var cCounter = 0; 
+        var commentCntExc = 0;  // Comment counter excluding deleted comments
+        var commentCntInc = 0; // Comment counter including deleted comments
         for (var cRef in commentDatas){
-            cCounter += 1;
             if ($("#" + cRef).length !== 0) {
                 continue;
             }
             commentData = commentDatas[cRef];
+            if (commentData["s"] == 0) {
+                commentCntExc += 1;
+                commentCntInc += 1;
+            } else {
+                commentCntInc += 1;
+            }
             var [cName, cText] = clientTextProc(
-                commentData["name"], commentData["text"]
+                commentData["n"], commentData["t"], commentData["s"]
             );
-            var commentUid = commentData["uid"]
-            var dateSince = timeSince(commentData["date"])
+            var dateSince = timeSince(commentData["d"])
             var commentHtml = `
             <div id="${cRef}" class="comment-main">
                 <div class="space-between">
-                    <div class="commentor-name">
-                    <span style="font-size: 14px;">#${cCounter}</span>
-                    <span style="font-weight: bold;">${cName}</span>
+                    <div class="commentor-info">
+                    <span style="font-size: 14px;">#${commentCntInc}</span>
+                    <span class="comment-name">${cName}</span>
                     </div>
-                    <span class="date-since">${dateSince}</span>
+                    <span class="comment-date">${dateSince}</span>
                 </div>
                 <div class="comment-text">${cText}</div>
                 <span class="comment-control"></span>
@@ -142,61 +152,103 @@ function getComments(reference, boardId, spinId, commentCntId, commentAllId) {
             document.getElementById(boardId).innerHTML += commentHtml
 
             const user = firebase.auth().currentUser;
-            if (user && user.uid == commentData["uid"]) {
-                console.log("Found my comment")
+            if (user && user.uid == commentData["u"]) {
+                const databaseKey = commentData["k"]
+                const savedUserKey = commentData["sk"]
+                const editBtnId = `${cRef}_${commentCntExc}_edit`
+                const trashBtnId = `${cRef}_${commentCntExc}_trash`
                 $(`#${cRef} .comment-control`).html(`
-                <i class="fas fa-edit clickable-font" 
-                   style="padding-right: 3px"></i>
-                <i class="fas fa-trash clickable-font"></i>
+                <!--- <i id="${editBtnId}"
+                      class="fas fa-edit clickable-font" 
+                      style="padding-right: 3px"></i> --->
+                <i id="${trashBtnId}" class="far fa-trash-alt clickable-font"></i>
                 `)
+                $(`#${editBtnId}`).click(ev => {
+                    console.log(`${editBtnId} clicked`)
+                })
+                $(`#${trashBtnId}`).click(ev => {
+                    rewriteCommentId(cRef, 1)
+                    deleteCommentData(reference, databaseKey)
+                    deleteUserComment(user.uid, dirname, savedUserKey)
+                })
             }
 
             // Counter span was not added in the index.html and need to initialize
-            if (cCounter <= 1) {
+            if (commentCntInc <= 1) {
                 document.getElementById(commentCntId).innerHTML = 
                 `<span style="font-size: 16px"><i class="fa fa-comment"></i></span>
                     <span style="font-size: 12px; margin: 0px 2px;">&#10005;</span>
-                    <span id="${commentAllId}">${cCounter}</span>`
+                    <span id="${commentAllId}">${commentCntInc}</span>`
             } else {
-                document.getElementById(commentAllId).innerText = cCounter;
+                document.getElementById(commentAllId).innerText = commentCntInc;
             }
-            
         }
         $("#" + spinId).addClass("hide-loader")
     })
 }
 
-function clientTextProc(name, text) {
-    if (name == "") {
-        name = "Anonymous writer"
+function clientTextProc(name, text, state) {
+    if (state == 1) {
+        name = "Deleted by User"
+    }
+    else if (state == 0 && name == "") {
+        name = "<b>Anonymous writer</b>"
+    }
+    else {
+        name = `<b>${name}</b>`
     }
     return [name, text]
 }
 
-function writeCommentData(target, uid, name, text) {
-    var commentData = {
-      text: text,
-      name: name,
-      uid: uid,
-      date: Date.now()
-    }
-    var newKey = firebase.database().ref(target).push().key;
+function writeCommentData(index, dirname, uid, name, text, state) {
     var updates = {}
-    updates[newKey] = commentData
+    const target = `forum/${dirname}/${index}`
+    const databaseKey = firebase.database().ref(target).push().key;
+    const savedUserKey = saveUserComment(uid, dirname, databaseKey)
+    const commentData = {
+        t: text,
+        n: name,
+        u: uid,
+        d: Date.now(),
+        s: state,
+        k: databaseKey,
+        sk: savedUserKey
+      }
+    updates[databaseKey] = commentData
     firebase.database().ref(target).update(updates)
-
-    return newKey
+    return databaseKey
 }
 
-function saveUserComment(user, dirname, commentKey) {
-    var data = {
-        k: commentKey
-    }
-    var target = `users/${user.uid}/comment/${dirname}`
+function deleteCommentData(target, key) {
     var updates = {}
-    var newKey = firebase.database().ref(target).push().key;
-    updates[newKey] = data
+    const deletedData = {
+        t: "",
+        n: "",
+        u: "",
+        d: Date.now(),
+        s: 1,
+        k: ""
+    }
+    updates[key] = deletedData
     firebase.database().ref(target).update(updates)
+}
+
+function saveUserComment(uid, dirname, databaseKey) {
+    var data = {
+        k: databaseKey
+    }
+    var target = `users/${uid}/comment/${dirname}`
+    var updates = {}
+    var savedUserKey = firebase.database().ref(target).push().key
+    updates[savedUserKey] = data
+    firebase.database().ref(target).update(updates)
+    return savedUserKey
+}
+
+function deleteUserComment(uid, dirname, savedUserKey) {
+    var target = `users/${uid}/comment/${dirname}/${savedUserKey}`
+    console.log("Delete user data at ", target)
+    firebase.database().ref(target).remove()
 }
 
 function validateComment(text) {
