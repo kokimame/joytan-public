@@ -94,7 +94,7 @@ function addForum(entryData, index) {
             $("#" + spinId).removeClass("hide-loader");
             const user = firebase.auth().currentUser;
             if (user) {
-                var commentKey = writeCommentData(
+                writeCommentData(
                     index, dirname, user.uid, commentName, commentText, 0
                 )
             } else {
@@ -115,28 +115,31 @@ function rewriteCommentId(cRef, state) {
     $(`#${cRef} .comment-control`).html(``)
 }
 
+// Use global variable to keep a relation 
+// between a trash button and [databaseKey, savedUserKey] 
+// to be removed.
+// This is a (temporary) workaround for event assignment in a loop
+// and the care regarding closure.
+var trashBtnLookup = {}
+
 function loadComments(reference, boardId, spinId, commentCntId, commentAllId) {
+
     firebase.database().ref(reference).once('value').then(comments => {
         var commentDatas = comments.val();
-        var commentCntExc = 0;  // Comment counter excluding deleted comments
+        // var commentCntExc = 0;  // Comment counter excluding deleted comments
         var commentCntInc = 0; // Comment counter including deleted comments
-        for (var cRef in commentDatas){
-            if ($("#" + cRef).length !== 0) {
+        for (var databaseKey in commentDatas){
+            commentCntInc += 1;
+            if ($("#" + databaseKey).length !== 0) {
                 continue;
             }
-            commentData = commentDatas[cRef];
-            if (commentData["s"] == 0) {
-                commentCntExc += 1;
-                commentCntInc += 1;
-            } else {
-                commentCntInc += 1;
-            }
+            commentData = commentDatas[databaseKey];
             var [cName, cText] = clientTextProc(
                 commentData["n"], commentData["t"], commentData["s"]
             );
             var dateSince = timeSince(commentData["d"])
             var commentHtml = `
-            <div id="${cRef}" class="comment-main">
+            <div id="${databaseKey}" class="comment-main">
                 <div class="space-between">
                     <div class="commentor-info">
                     <span style="font-size: 14px;">#${commentCntInc}</span>
@@ -153,24 +156,18 @@ function loadComments(reference, boardId, spinId, commentCntId, commentAllId) {
 
             const user = firebase.auth().currentUser;
             if (user && user.uid == commentData["u"]) {
-                const databaseKey = commentData["k"]
-                const savedUserKey = commentData["sk"]
-                const editBtnId = `${cRef}_${commentCntExc}_edit`
-                const trashBtnId = `${cRef}_${commentCntExc}_trash`
-                $(`#${cRef} .comment-control`).html(`
+                var savedUserKey = commentData["sk"]
+                var editBtnId = `${databaseKey}_edit`
+                var trashBtnId = `${databaseKey}_trash`
+
+                $(`#${databaseKey} .comment-control`).html(`
                 <!--- <i id="${editBtnId}"
                       class="fas fa-edit clickable-font" 
                       style="padding-right: 3px"></i> --->
                 <i id="${trashBtnId}" class="far fa-trash-alt clickable-font"></i>
                 `)
-                $(`#${editBtnId}`).click(ev => {
-                    console.log(`${editBtnId} clicked`)
-                })
-                $(`#${trashBtnId}`).click(ev => {
-                    rewriteCommentId(cRef, 1)
-                    deleteCommentData(reference, databaseKey)
-                    deleteUserComment(user.uid, dirname, savedUserKey)
-                })
+                
+                trashBtnLookup[trashBtnId] = [user.uid, databaseKey, savedUserKey]
             }
 
             // Counter span was not added in the index.html and need to initialize
@@ -183,6 +180,19 @@ function loadComments(reference, boardId, spinId, commentCntId, commentAllId) {
                 document.getElementById(commentAllId).innerText = commentCntInc;
             }
         }
+
+        // FIXME: Could be done in a better way
+        // This is a (temporary) workaround for 
+        // the use of event handler (a closure) in a loop!
+        for (let trashBtnId of Object.keys(trashBtnLookup)) {
+            $(`#${trashBtnId}`).click(() => {
+                [uid, databaseKey, savedUserKey] = trashBtnLookup[trashBtnId]
+                rewriteCommentId(databaseKey, 1)
+                deleteCommentData(reference, databaseKey)
+                deleteUserComment(uid, dirname, savedUserKey)
+            })
+        }
+
         $("#" + spinId).addClass("hide-loader")
     })
 }
@@ -211,7 +221,6 @@ function writeCommentData(index, dirname, uid, name, text, state) {
         u: uid,
         d: Date.now(),
         s: state,
-        k: databaseKey,
         sk: savedUserKey
       }
     updates[databaseKey] = commentData
@@ -222,12 +231,12 @@ function writeCommentData(index, dirname, uid, name, text, state) {
 function deleteCommentData(target, key) {
     var updates = {}
     const deletedData = {
-        t: "",
-        n: "",
-        u: "",
-        d: Date.now(),
-        s: 1,
-        k: ""
+        t: "",          // Text
+        n: "",          // Commentor's Name
+        u: "",          // Commentor's UID
+        d: Date.now(),  // Date
+        s: 1,           // State
+        sk: "",         // savedUserKey
     }
     updates[key] = deletedData
     firebase.database().ref(target).update(updates)
@@ -247,7 +256,6 @@ function saveUserComment(uid, dirname, databaseKey) {
 
 function deleteUserComment(uid, dirname, savedUserKey) {
     var target = `users/${uid}/comment/${dirname}/${savedUserKey}`
-    console.log("Delete user data at ", target)
     firebase.database().ref(target).remove()
 }
 
