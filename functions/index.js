@@ -103,6 +103,10 @@ exports.denoiseAudio = functions.storage.object().onFinalize(async (object) => {
   if (fileName.startsWith('n_') || fileName.startsWith('d_')) {
     return null;
   }
+  if (filePath.startsWith("trash/")) {
+    console.log("Ignore audio in trash")
+    return null;
+  }
 
   // Static executable of SoX built on Ubuntu 18.04.3 LTS (GNU/Linux 5.0.0-25-generic x86_64)
   const soxPath = [__dirname, 'sox'].join('/');
