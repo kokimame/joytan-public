@@ -83,6 +83,7 @@ function closeAuthForm() {
   $("#auth-form").hide();
   $("#about-view").hide();
   $("#stat-view").hide();
+  $("#quiz-view").hide();
 }
 
 function generateAccountPage(user) {
