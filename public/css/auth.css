@@ -13,15 +13,16 @@
 }
   
 /* Modal Content/Box */
-.modal-content {
+.modal-container {
     background-color: #fefefe;
     margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
-    border: 1px solid #888;
+    border: 5px solid #888;
+    border-radius: 10px;
     width: 90%; /* Could be more or less, depending on screen size */
 }
 
-.modal-container {
-    margin: 2% 5%; /* 5% from the top, 15% from the bottom and centered */    
+.modal-contents {
+    margin: 2% 2%; /* 5% from the top, 15% from the bottom and centered */    
 }
 
 /* Login/Sign Up form */
