@@ -1,0 +1,71 @@
+#q-target {
+    font-size: 26px;
+    /* font-weight: bolder; */
+    text-align: center;
+}
+
+.q-choices {
+    text-align: center;
+}
+
+.four-choices {
+    width: 100%;
+    height: 50px;
+    table-layout: fixed;
+}
+
+.four-choices td {
+    width: 50%;
+    height: 50%;
+}
+
+.n-choice {
+    cursor: pointer;
+    text-align: center;
+    margin: 3px;
+    width: 100%;
+    height: 100%;
+}
+
+.bordered {
+    background: #d4d4d4;
+    border: solid #ccc 2px;
+    border-collapse: separate !important;
+    border-spacing: 0;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    border-radius: 6px;
+    -webkit-box-shadow: 0 3px 3px #ccc;
+    -moz-box-shadow: 0 3px 3px #ccc;
+    box-shadow: 0 3px 3px #ccc;
+}
+
+td .upn {
+    height: 0px;
+    font-style: italic;
+    font-size: 12px;
+    margin-top: 0px;
+    color: rgb(92, 92, 92);
+}
+td .lon {
+    height: 0px;
+    font-size: 14px;
+    margin: 3px;
+}
+
+td .main-script {
+    font-size: 20px;
+    margin-top: -5px;
+    margin-bottom: 2px;
+}
+
+.wrapword {
+    white-space: -moz-pre-wrap !important;  /* Mozilla, since 1999 */
+    white-space: -webkit-pre-wrap; /*Chrome & Safari */ 
+    white-space: -pre-wrap;        /* Opera 4-6 */
+    white-space: -o-pre-wrap;      /* Opera 7 */
+    white-space: pre-wrap;         /* CSS3 */
+    word-wrap: break-word;         /* Internet Explorer 5.5+ */
+    word-break: break-all;
+    white-space: normal;
+}
