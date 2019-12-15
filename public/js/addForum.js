@@ -1,111 +1,103 @@
-function addForum(entryData, index) {
-    const div = document.createElement('div');
-    const toggleId = "toggle_" + index;
-    const collapseId = "collapse_" + index;
-    const boardId = "board_" + index;
-    const submitId = "submit_" + index;
-    const nameId = "name_" + index;
-    const textId = "text_" + index;
-    const spinId = "spin_" + index;
-    const charCntId = "char_" + index;
-    const commentCntId = "comment_cnt_" + index;
-    const commentAllId = "comment_all_" + index;
-    const targetForum = `forum/${dirname}/${index}`
-    const numbering = (parseInt(index) + 1).toString();
-    var upperNote = "";
-    var lowerNote = "";
-    if (upnKey !== "") {
-        upperNote = entryData[upnKey];
-    }
-    if (lonKey !== "") {
-        lowerNote = entryData[lonKey];
-    }
-
-    div.innerHTML = `
-    <button class="btn btn-square btn-outline-dark btn-block text-left collapsed" type="button" 
-    data-toggle="collapse" data-target="#${collapseId}" aria-expanded="false" id="${toggleId}">
-        <div class="small-index">
-            ${numbering} <span id="${commentCntId}"></span>
-        </div>
-        <table class="btn-title" >
-        <tr>
+function addForum(index) {
+  const entryData = entries[index];
+  const div = document.createElement('div');
+  const boardId = "board_" + index;
+  const submitId = "submit_" + index;
+  const nameId = "name_" + index;
+  const textId = "text_" + index;
+  const spinId = "spin_" + index;
+  const charCntId = "char_" + index;
+  const commentCntId = "comment_cnt_" + index;
+  const commentAllId = "comment_all_" + index;
+  const targetForum = `forum/${dirname}/${index}`
+  const numbering = (parseInt(index) + 1).toString();
+  var upperNote = "";
+  var lowerNote = "";
+  if (upnKey !== "") {
+    upperNote = entryData[upnKey];
+  }
+  if (lonKey !== "") {
+    lowerNote = entryData[lonKey];
+  }
+  div.innerHTML = `
+    <div class="board-header">
+      <center>
+        <table>
+          <tr>
             <td class="td-note">
-                ${upperNote}
+              ${upperNote}
             </td>
-        </tr>
-        <tr>
+          </tr>
+          <tr>
             <td>${entryData[wantedKey]}</td>
-        </tr>
-        <tr>
+          </tr>
+          <tr>
             <td class="td-note">
-                ${lowerNote}
+              ${lowerNote}
             </td>
-        </tr>
+          </tr>
         </table>
-    </button>
-    <div class="collapse" id="${collapseId}" data-parent="#forum-accordion">
-      <div class="card card-body">
-        <div id="${boardId}" class="comment">
-        </div>
-        <div id="${spinId}">
-            <div class="spinning"></div>
-        </div>
-        <div class="comment-form">
-            <div>
-                <div>Name</div>
-                <input id="${nameId}" class="comment-name-input" 
-                    type="text" maxlength="32" name="username" placeholder="Name"></input>
-            </div>
-            <div>Comment <span id="${charCntId}">0/500</span>
-            </div>
-            <textarea id="${textId}" class="comment-textarea" name="subject" maxlength='500'
-            placeholder="Edit feature is currently under development." style="height:150px"></textarea>
-            <button class="btn btn-success btn-submit" id="${submitId}">
-            Submit</button>
-        </div>
+      </center>
     </div>
-    `;
-    // TODO: Audio auto-play
-    document.getElementById('forum-accordion').appendChild(div);
+    <div id="${boardId}" class="comment">
+    </div>
+    <div id="${spinId}">
+      <div class="spinning"></div>
+    </div>
+    <div class="comment-form">
+      <div>
+        <div>Name</div>
+        <input id="${nameId}" class="comment-name-input" 
+          type="text" maxlength="32" name="username" placeholder="Name"></input>
+      </div>
+      <div>Comment <span id="${charCntId}">0/500</span>
+      </div>
+      <textarea id="${textId}" class="comment-textarea" name="subject" maxlength='500'
+        placeholder="Edit feature is currently under development." style="height:150px"></textarea>
+      <button class="btn btn-success btn-submit" id="${submitId}">Submit</button>
+    </div>
+  </div>
+  `;
+  // TODO: Audio auto-play
+  document.getElementById('comment-board').innerHTML = ``;
+  document.getElementById('comment-board').appendChild(div);
 
-    document.getElementById(textId).addEventListener("input", () => {
-        textarea = document.getElementById(textId);
-        var maxlength = textarea.maxLength;
-        var currentLength = textarea.value.length;
-        $("#" + charCntId).text(currentLength + "/" + maxlength);
-    });
+  const user = firebase.auth().currentUser;
+  if (user) {
+    $("#" + nameId).val(user.displayName);
+  }
+  $("#" + spinId).removeClass("hide-loader");
+  loadComments(targetForum, boardId, spinId, commentCntId, commentAllId)
 
-    document.getElementById(toggleId).addEventListener("click", () => {
-        const user = firebase.auth().currentUser;
-        if (user) {
-            $("#" + nameId).val(user.displayName);
-        }
-        $("#" + spinId).removeClass("hide-loader");
-        loadComments(targetForum, boardId, spinId, commentCntId, commentAllId)
-    })
+  document.getElementById(textId).addEventListener("input", () => {
+    textarea = document.getElementById(textId);
+    var maxlength = textarea.maxLength;
+    var currentLength = textarea.value.length;
+    $("#" + charCntId).text(currentLength + "/" + maxlength);
+  });
 
-    document.getElementById(submitId).addEventListener("click", () => {
-        var commentName = $("#" + nameId).val()
-        var commentText = $("#" + textId).val()
-        var isValidatedOrMsg = validateComment(commentText);
-        if (isValidatedOrMsg !== true) {
-            alert(isValidatedOrMsg);
-        } else {
-            $("#" + spinId).removeClass("hide-loader");
-            const user = firebase.auth().currentUser;
-            if (user) {
-                writeCommentData(
-                    index, dirname, user.uid, commentName, commentText, 0
-                )
-            } else {
-                writeCommentData(
-                    index, dirname, "", commentName, commentText, 0
-                )
-            }
-            $("#" + textId).val("")
-            loadComments(targetForum, boardId, spinId, commentCntId, commentAllId)
-        }
-    })
+  document.getElementById(submitId).addEventListener("click", () => {
+    var commentName = $("#" + nameId).val()
+    var commentText = $("#" + textId).val()
+    var isValidatedOrMsg = validateComment(commentText);
+    if (isValidatedOrMsg !== true) {
+      alert(isValidatedOrMsg);
+    } else {
+      $("#" + spinId).removeClass("hide-loader");
+      const user = firebase.auth().currentUser;
+      if (user) {
+          writeCommentData(
+              index, dirname, user.uid, commentName, commentText, 0
+          )
+      } else {
+          writeCommentData(
+              index, dirname, "", commentName, commentText, 0
+          )
+      }
+      $("#" + textId).val("")
+      loadComments(targetForum, boardId, spinId, commentCntId, commentAllId)
+    }
+  })
 }
 
 function rewriteCommentId(cRef, state) {
@@ -171,13 +163,13 @@ function loadComments(reference, boardId, spinId, commentCntId, commentAllId) {
             }
 
             // Counter span was not added in the index.html and need to initialize
-            if (commentCntInc <= 1) {
-                document.getElementById(commentCntId).innerHTML = 
-                `<span style="font-size: 16px"><i class="fa fa-comment"></i></span>
-                    <span style="font-size: 12px; margin: 0px 2px;">&#10005;</span>
-                    <span id="${commentAllId}">${commentCntInc}</span>`
+            if ($(`#${commentAllId}`).length == 0) {
+              document.getElementById(commentCntId).innerHTML = 
+              `<span style="font-size: 16px"><i class="fa fa-comment"></i></span>
+                <span style="font-size: 12px; margin: 0px 2px;">&#10005;</span>
+                <span id="${commentAllId}">${commentCntInc}</span>`
             } else {
-                document.getElementById(commentAllId).innerText = commentCntInc;
+              document.getElementById(commentAllId).innerText = commentCntInc;
             }
         }
 
@@ -192,7 +184,6 @@ function loadComments(reference, boardId, spinId, commentCntId, commentAllId) {
                 deleteUserComment(uid, dirname, savedUserKey)
             })
         }
-
         $("#" + spinId).addClass("hide-loader")
     })
 }
@@ -216,13 +207,13 @@ function writeCommentData(index, dirname, uid, name, text, state) {
     const databaseKey = firebase.database().ref(target).push().key;
     const savedUserKey = saveUserComment(uid, dirname, databaseKey)
     const commentData = {
-        t: text,
-        n: name,
-        u: uid,
-        d: Date.now(),
-        s: state,
-        sk: savedUserKey
-      }
+      t: text,
+      n: name,
+      u: uid,
+      d: Date.now(),
+      s: state,
+      sk: savedUserKey
+    }
     updates[databaseKey] = commentData
     firebase.database().ref(target).update(updates)
     return databaseKey
@@ -231,12 +222,12 @@ function writeCommentData(index, dirname, uid, name, text, state) {
 function deleteCommentData(target, key) {
     var updates = {}
     const deletedData = {
-        t: "",          // Text
-        n: "",          // Commentor's Name
-        u: "",          // Commentor's UID
-        d: Date.now(),  // Date
-        s: 1,           // State
-        sk: "",         // savedUserKey
+      t: "",          // Text
+      n: "",          // Commentor's Name
+      u: "",          // Commentor's UID
+      d: Date.now(),  // Date
+      s: 1,           // State
+      sk: "",         // savedUserKey
     }
     updates[key] = deletedData
     firebase.database().ref(target).update(updates)
