@@ -155,7 +155,7 @@ window.onload = () => {
                   $("#youtube-player").attr("src", urlData.val())
                 }
                 else {
-                  $("#iframe-wrapper").hide()
+                  $("#iframe-box").hide()
                   $("#coming-soon").show()
                 }
 
@@ -223,7 +223,7 @@ window.onload = () => {
             Go to Joytan Public and review</a>
         </div>
       </div>
-      <div class="row align-items-center" style="background-color: black;">
+      <div id="iframe-box" class="row align-items-center" style="background-color: black;">
         <iframe id="youtube-player" scrolling="no">
         </iframe>
       </div>
@@ -300,13 +300,11 @@ window.onload = () => {
         </div>
       </div>
       <div class=row>
-        <div class="col-4" style="padding: 2px;">
-          <div class="panel-body">
-            Table of Content
-            <ul class="list-group" id="side-index"></ul>
-          </div>
+        <div class="panel-body col-xs-12 col-sm-4 col-md-3" style="padding: 2px;">
+          Table of Content
+          <ul class="list-group" id="side-index"></ul>
         </div>
-        <div class="col-8" id="comment-board"></div>
+        <div class="col-xs-12 col-sm-8 col-md-9" id="comment-board"></div>
       </div>
     </div>
   </div>
