@@ -1,0 +1,26 @@
+/* Adaptive row height for small device */
+@media screen and (max-width: 575.98px) {
+  .list-group{
+    max-height: 100px;
+  }
+  .navbar {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+  }
+  /* #auth-btn-wrapper {
+    position: relative;
+    right: auto;
+  } */
+}
+@media screen and (min-width: 576px) {
+  .navbar {
+    position: relative;
+    /* display: inline; */
+  }
+  #auth-btn-wrapper {
+    position: absolute; 
+    right: 5px;
+    top: 4px;
+  }
+}

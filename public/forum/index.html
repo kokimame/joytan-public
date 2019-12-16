@@ -52,6 +52,7 @@
 <link rel="stylesheet" href="../css/auth.css">
 <link rel="stylesheet" href="../css/shared.css">
 <link rel="stylesheet" href="../css/quiz.css">
+<link rel="stylesheet" href="../css/responsive.css">
 <script src="../js/addForum.js"></script>
 <script src="../js/addQuiz.js"></script>
 <script src="../js/authHelpers.js"></script>
@@ -127,6 +128,8 @@ window.onload = () => {
     })
     if (startQuiz) {
       $("#goQuiz").click()
+    } else {
+      $("#quiz-view").hide()
     }
 
     structureRef.getDownloadURL().then(url => {
@@ -189,50 +192,54 @@ window.onload = () => {
 <body>
 <div class="row justify-content-center">
   <div class="col-12">
-    <div class="container">
-      <div style="text-align: center">
-        <nav class="navbar navbar-expand-sm navbar-light bg-light" style="padding: 0px 8px; width: 100%;">
-          <a class="navbar-brand" href="javascript:window.location.href=window.location.href" style="margin-right: 8px;">
-            <img src="https://kokimame.github.io/joytan/images/joytan.png" width="30" height="30" alt="Joytan">
-          </a>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
+    <div style="text-align: center">
+      <nav class="navbar navbar-expand-sm navbar-light bg-light" style="padding: 0px 8px; width: 100%;">
+        <div id="logo" class="pull-left hidden-xs">
+          <a href="javascript:window.location.href=window.location.href"><img src="https://kokimame.github.io/joytan/images/joytan.png" 
+              alt="Joytan App Forums" title="Joytan App Forums" width="30" height="30"></a>
+        </div>
+        <span class="form-inline my-2 my-lg-0 nav-item" id="auth-btn-wrapper">
+          <button id="auth-button" class="btn btn-info btn-slim" onclick="handleAuthButton()" 
+            style="display: none;"></button>  
+        </span>
         
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-              <li class="nav-item active">
-                <a class="nav-link" href="javascript:window.location.href=window.location.href">Forum <span class="sr-only">(current)</span></a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="http://slack-invite.joytan.pub/">Join Slack</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="https://joytan.pub">Public</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="https://youtube.com/c/JoytanApp">YouTube</a>
-              </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  Others
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <a href="https://play.google.com/store/apps/details?id=com.joytan.rec" class="fa icon fa-android"></a>
-                  <a href="https://github.com/kokimame/joytan-public" class="fa icon fa-github"></a>
-                  <a href="https://kokimame.github.io/joytan/" class="fa icon fa-desktop"></a>
-                  <a href="https://twitter.com/JoytanApp" class="fa icon fa-twitter"></a>
-                  <a id="btn-stat" href="" class="fa icon fa-chart-line" style="color: rgb(81, 73, 131);"></a>
-                </div>
-              </li>
-            </ul>
-          </div>
-        </nav>
-      </div>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
 
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="javascript:window.location.href=window.location.href">Forum <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="http://slack-invite.joytan.pub/">Join Slack</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="https://joytan.pub">Public</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="https://youtube.com/c/JoytanApp">YouTube</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Others
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a href="https://play.google.com/store/apps/details?id=com.joytan.rec" class="fa icon fa-android"></a>
+                <a href="https://github.com/kokimame/joytan-public" class="fa icon fa-github"></a>
+                <a href="https://kokimame.github.io/joytan/" class="fa icon fa-desktop"></a>
+                <a href="https://twitter.com/JoytanApp" class="fa icon fa-twitter"></a>
+                <a id="btn-stat" href="" class="fa icon fa-chart-line" style="color: rgb(81, 73, 131);"></a>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
       <div class="row tight-line space-between">
-        <button id="auth-button" class="btn btn-info btn-slim" onclick="handleAuthButton()" 
-        style="display: none; float: left;"></button>
         <div id="project-title"></div>
         <div class="g-ytsubscribe" data-channelid="UC0bLbtTI9uni3bNRPIJQAqA"
         data-layout="default" data-count="default"></div>
