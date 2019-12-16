@@ -1,57 +1,48 @@
-<span onclick="closeAuthForm()" class="close" title="Close Modal">&times;</span>
-<div class="modal-container">
-  <div class="modal-contents">
-    <div id="quiz-modal">
-      <h2>Quiz</h2>
-      <hr>
-      <div id="q-target"></div>
-      <center>
-      Click the correct one
-      <div id="q-choices">
-        <table class="four-choices" onclick="showAnswer()">
-          <tr>
-            <td>
-              <table id="ch-1" class="n-choice bordered wrapword">
-                <tr><td class="upn"></td></tr>
-                <tr><td class="lon"></td></tr>
-                <tr><td class="main-script"></td></tr>
-              </table>
-            </td>
-            <td>
-              <table id="ch-2" class="n-choice bordered wrapword">
-                <tr><td class="upn"></td></tr>
-                <tr><td class="lon"></td></tr>
-                <tr><td class="main-script"></td></tr>
-              </table>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <table id="ch-3" class="n-choice bordered wrapword">
-                <tr><td class="upn"></td></tr>
-                <tr><td class="lon"></td></tr>
-                <tr><td class="main-script"></td></tr>
-              </table> 
-            </td>
-            <td>
-              <table id="ch-4" class="n-choice bordered wrapword">
-                <tr><td class="upn"></td></tr>
-                <tr><td class="lon"></td></tr>
-                <tr><td class="main-script"></td></tr>
-              </table>
-            </td>
-          </tr>
+<div id="q-target"></div>
+<center>
+Click the correct one
+<div id="q-choices">
+  <table class="four-choices" onclick="showAnswer()">
+    <tr>
+      <td>
+        <table id="ch-1" class="n-choice bordered wrapword">
+          <tr><td class="upn"></td></tr>
+          <tr><td class="lon"></td></tr>
+          <tr><td class="main-script"></td></tr>
         </table>
-      </div>
-      </center>
-      <center>
-        <button class="btn btn-success" type="button"
-        style="margin: 10px 0px;" onclick="nextQuiz()" >Next</button>
-      </center>
-
-      <center>
-        <button class="btn btn-danger" type="button" onclick="closeAuthForm()" >Close</button>
-      </center>
-    </div>
-  </div>
+      </td>
+      <td>
+        <table id="ch-2" class="n-choice bordered wrapword">
+          <tr><td class="upn"></td></tr>
+          <tr><td class="lon"></td></tr>
+          <tr><td class="main-script"></td></tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <table id="ch-3" class="n-choice bordered wrapword">
+          <tr><td class="upn"></td></tr>
+          <tr><td class="lon"></td></tr>
+          <tr><td class="main-script"></td></tr>
+        </table> 
+      </td>
+      <td>
+        <table id="ch-4" class="n-choice bordered wrapword">
+          <tr><td class="upn"></td></tr>
+          <tr><td class="lon"></td></tr>
+          <tr><td class="main-script"></td></tr>
+        </table>
+      </td>
+    </tr>
+  </table>
 </div>
+</center>
+<center>
+  <button class="btn btn-success" type="button"
+  style="margin: 10px 0px;" onclick="nextQuiz()" >Next</button>
+</center>
+
+<center>
+  <button class="btn btn-danger" type="button" onclick="closeAuthForm()" >Close</button>
+</center>
