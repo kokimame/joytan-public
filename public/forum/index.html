@@ -73,13 +73,22 @@ function changePositionStyle(id, newStyle) {
 
 function mainToggle(activity) {
   if (activity === "forum") {
-    $("#quiz-view").hide()
-    $("#forum-wrapper").show()
+    $("#quiz-view").hide('fast')
+    $("#forum-wrapper").show('fast')
   } else if (activity === "quiz") {
-    $("#forum-wrapper").hide()
-    $("#quiz-view").show()
+    $("#forum-wrapper").hide('fast')
+    $("#quiz-view").show('fast')
   }
 }
+
+function dropdownProject() {
+  if($("#project-items").is(":visible")){
+    $("#project-items").hide('fast');
+  } else {
+    $("#project-items").show('fast');
+  }
+}
+
 
 window.onload = () => {
     const storage = firebase.storage();
@@ -94,8 +103,7 @@ window.onload = () => {
     $(() => {
       $("#quiz-view").load("quiz.html");
     });
-
-      // Close modal when clicking outside
+    // Close modal when clicking outside
     $("#auth-form").click(ev => {
         if(ev.target != document.getElementById("auth-form")) {
             return;
@@ -136,18 +144,22 @@ window.onload = () => {
       $.getJSON(url, (data) => {
         topProjectsRef.listAll().then(res => {
           res.prefixes.forEach(projectRef => {
-            if(projectRef.name == projectName) {
+            var projData = data[projectRef.name]
+
+            if (projectRef.name != projectName) {
+              $("#project-items").append(`<a href="./?p=${projectRef.name}">${projData["flags"] + projData["title"]}</a>`)
+            }
+            else if(projectRef.name == projectName) {
+              $("#project-title").text(" " + projData["flags"] + projData["title"])
+
               firebase.database().ref(`forum/url/${projectName}`).once('value').then(urlData => {
-                projData = data[projectName]
                 dirname = projData["dirname"]
                 entries = projData["entries"]
                 wantedKey = projData["wanted"]
                 upnKey = projData["upn"]
                 lonKey = projData["lon"]
-
                 addQuiz()
 
-                $("#project-title").text(projData["flags"] + projData["title"])
                 if(urlData.val()) {
                   $("#youtube-player").attr("src", urlData.val())
                 }
@@ -213,10 +225,10 @@ window.onload = () => {
               <a class="nav-link" href="javascript:window.location.href=window.location.href">Forum <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="http://slack-invite.joytan.pub/">Join Slack</a>
+              <a class="nav-link" href="https://joytan.pub">Public</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="https://joytan.pub">Public</a>
+              <a class="nav-link" href="http://slack-invite.joytan.pub/">Join Slack</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="https://youtube.com/c/JoytanApp">YouTube</a>
@@ -240,9 +252,13 @@ window.onload = () => {
 
     <div class="container">
       <div class="row tight-line space-between">
-        <div id="project-title"></div>
-        <div class="g-ytsubscribe" data-channelid="UC0bLbtTI9uni3bNRPIJQAqA"
-        data-layout="default" data-count="default"></div>
+        <div class="project-search">
+          <button onclick="dropdownProject()" class="dropbtn" id="dbutton"><i class="fas fa-search"></i> <span id="project-title"></span></button>
+          <div id="project-items" class="dropdown-content">
+          </div>
+        </div>
+
+        <div class="g-ytsubscribe" data-channelid="UC0bLbtTI9uni3bNRPIJQAqA" data-layout="default" data-count="default"></div>
       </div>
       <div id="iframe-box" class="row align-items-center" style="background-color: black;">
         <iframe id="youtube-player" scrolling="no">
