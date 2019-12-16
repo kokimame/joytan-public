@@ -219,3 +219,7 @@ hr {
 .nav-item {
   text-decoration: underline;
 }
+
+#auth-btn-wrapper {
+  text-decoration: none;
+}
