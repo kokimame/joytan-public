@@ -8,11 +8,20 @@
     display: flex;
     justify-content: space-between;
   }
-  /* #auth-btn-wrapper {
-    position: relative;
-    right: auto;
-  } */
+  #top-message {
+    font-size: 14px;
+  }
+  #big-service-name {
+    font-size: 24px;
+  }
+  .player-table .main-script {
+    font-size: 17px;
+  }
+  .player-table {
+    font-size: 14px;
+  }
 }
+
 @media screen and (min-width: 576px) {
   .navbar {
     position: relative;

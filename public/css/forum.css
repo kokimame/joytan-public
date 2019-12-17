@@ -220,11 +220,3 @@ hr {
   color: red;
   cursor: pointer;
 }
-
-.nav-item {
-  text-decoration: underline;
-}
-
-#auth-btn-wrapper {
-  text-decoration: none;
-}

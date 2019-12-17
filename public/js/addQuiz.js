@@ -40,7 +40,6 @@ function addQuiz()
 
     var mainScript = selected[0][1][wantedKey];
     // If timeStampData available, add the controller
-    console.log(selected[0], timestamps[selected[0][0]])
     if (timestamps != false) {
         const index = selected[0][0];
         const ytId = "yt_" + index;

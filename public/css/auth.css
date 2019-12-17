@@ -121,7 +121,7 @@ button:hover {
   
 /* Change styles for cancel button and signup button on extra small screens */
 @media screen and (max-width: 300px) {
-    .cancel-btn, .signup-dbtn, .login-btn {
+    .cancel-btn, .signup-btn, .login-btn {
        width: 100%;
     }
 }
