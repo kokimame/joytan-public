@@ -56,6 +56,7 @@
 <script src="../js/addForum.js"></script>
 <script src="../js/addQuiz.js"></script>
 <script src="../js/authHelpers.js"></script>
+<script src="../js/callPlayer.js"></script>
 
 
 <script>
@@ -91,14 +92,17 @@ function dropdownProject() {
 
 
 window.onload = () => {
+    const urlVars = getUrlVars()
+    const projectName = urlVars["p"];
+    const startQuiz = urlVars["quiz"];
+
     const storage = firebase.storage();
     const storageRef = storage.ref();
     const topProjectsRef = storageRef.child('projects');
     const structureRef = storageRef.child('projects_structure.json');
-    const urlVars = getUrlVars()
-    const projectName = urlVars["p"];
-    const startQuiz = urlVars["quiz"];
+    const timestampsRef = storageRef.child(`timestamps/${projectName}_time.json`);
     const ytplayer = document.getElementById("youtube-player");
+    var timestampData = false;
     
     $(() => {
       $("#quiz-view").load("quiz.html");
@@ -140,8 +144,17 @@ window.onload = () => {
       $("#quiz-view").hide()
     }
 
+    // FIXME: NOT SURE if downloading timestamp files in parallel with structureRef works all the time
+    timestampsRef.getDownloadURL().then(url => {
+      $.getJSON(url, data => {  
+        timestampData = data;
+      })
+    }).catch(err => {
+      // Ignore when timestamps are not provided yet in Firebase storage
+    })
+
     structureRef.getDownloadURL().then(url => {
-      $.getJSON(url, (data) => {
+      $.getJSON(url, data => {
         topProjectsRef.listAll().then(res => {
           res.prefixes.forEach(projectRef => {
             var projData = data[projectRef.name]
@@ -151,17 +164,17 @@ window.onload = () => {
             }
             else if(projectRef.name == projectName) {
               $("#project-title").text(" " + projData["flags"] + projData["title"])
-
               firebase.database().ref(`forum/url/${projectName}`).once('value').then(urlData => {
                 dirname = projData["dirname"]
                 entries = projData["entries"]
                 wantedKey = projData["wanted"]
                 upnKey = projData["upn"]
                 lonKey = projData["lon"]
+                timestamps = timestampData;
                 addQuiz()
 
                 if(urlData.val()) {
-                  $("#youtube-player").attr("src", urlData.val())
+                  $("#youtube-player").attr("src", urlData.val() + '?enablejsapi=1')
                 }
                 else {
                   $("#iframe-box").hide()
@@ -227,7 +240,7 @@ window.onload = () => {
               <a class="nav-link" href="https://joytan.pub">Public</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="http://slack-invite.joytan.pub/">Join Slack</a>
+              <a class="nav-link" href="http://slack-invite.joytan.pub/">Join Team</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="https://youtube.com/c/JoytanApp">YouTube</a>
@@ -260,7 +273,7 @@ window.onload = () => {
         <div class="g-ytsubscribe" data-channelid="UC0bLbtTI9uni3bNRPIJQAqA" data-layout="default" data-count="default"></div>
       </div>
       <div id="iframe-box" class="row align-items-center" style="background-color: black;">
-        <iframe id="youtube-player" scrolling="no">
+        <iframe id="youtube-player" scrolling="no" allow="autoplay">
         </iframe>
       </div>
       <div id="coming-soon">

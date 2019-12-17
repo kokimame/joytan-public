@@ -29,24 +29,42 @@ function showAnswer() {
 
 function addQuiz() 
 {
-    let selected = shuffleArray([...entries]).slice(0, 4);
+    var enumEntries = []
+    // Make a list of [original index, entry data]
+    for (const item of entries.entries()) {
+        enumEntries.push(item)
+    }
+    let selected = shuffleArray([...enumEntries]).slice(0, 4);
     let shuffled = shuffleArray([...selected]);
-    let answer = selected[0][wantedKey];
+    let answer = selected[0][1][wantedKey];
 
-    $(`#q-target`).html(selected[0][wantedKey])
+    var mainScript = selected[0][1][wantedKey];
+    // If timeStampData available, add the controller
+    console.log(selected[0], timestamps[selected[0][0]])
+    if (timestamps != false) {
+        const index = selected[0][0];
+        const ytId = "yt_" + index;
+        var startTime = timestamps[index];
+        var endTime = timestamps[index + 1];
+        mainScript += ` <a href="javascript:void callPlayer('youtube-player','playDuration',[${startTime}, ${endTime}])">
+        <i id="${ytId}" class="fab fa-youtube player-icon"></i></a>`
+    }
+    
+
+    $(`#q-target`).html(mainScript)
 
     for(i = 0; i < shuffled.length; i++) {
         // Remove answer class used in previous quizw
         $(`#ch-${i+1}`).removeClass('answer')
 
-        if (answer == shuffled[i][wantedKey]) {
+        if (answer == shuffled[i][1][wantedKey]) {
             $(`#ch-${i+1}`).addClass("answer")    
         }
         $(`#ch-${i+1}`).css('background-color', '')
-        $(`#ch-${i+1} .main-script`).html(shuffled[i][wantedKey])
+        $(`#ch-${i+1} .main-script`).html(shuffled[i][1][wantedKey])
         $(`#ch-${i+1} .main-script`).css('visibility', 'hidden');
 
-        $(`#ch-${i+1} .upn`).html(shuffled[i][upnKey])
-        $(`#ch-${i+1} .lon`).html(shuffled[i][lonKey])
+        $(`#ch-${i+1} .upn`).html(shuffled[i][1][upnKey])
+        $(`#ch-${i+1} .lon`).html(shuffled[i][1][lonKey])
     }
 }

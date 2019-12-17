@@ -6,6 +6,7 @@ function addForum(index) {
   const nameId = "name_" + index;
   const textId = "text_" + index;
   const spinId = "spin_" + index;
+  const ytId = "yt_" + index;
   const charCntId = "char_" + index;
   const commentCntId = "comment_cnt_" + index;
   const commentAllId = "comment_all_" + index;
@@ -19,6 +20,16 @@ function addForum(index) {
   if (lonKey !== "") {
     lowerNote = entryData[lonKey];
   }
+
+  var mainScript = entryData[wantedKey];
+  // If timeStampData available, add the controller
+  if (timestamps != false) {
+    var startTime = timestamps[index]
+    var endTime = timestamps[index + 1]
+    mainScript += ` <a href="javascript:void callPlayer('youtube-player','playDuration',[${startTime}, ${endTime}])">
+    <i id="${ytId}" class="fab fa-youtube player-icon"></i></a>`
+  }
+
   div.innerHTML = `
     <div class="board-header">
       <center>
@@ -29,7 +40,7 @@ function addForum(index) {
             </td>
           </tr>
           <tr>
-            <td>${entryData[wantedKey]}</td>
+            <td>${mainScript}</td>
           </tr>
           <tr>
             <td class="td-note">
