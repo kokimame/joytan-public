@@ -81,7 +81,12 @@ hr {
   font-weight: bolder;
   display: none;
 }
-
+#top-page-message {
+  text-align: center;
+  font-size: 14px;
+  margin: 4px;
+  display: none;
+}
 .td-note {
 	font-size: 10px;
 	text-align: center;
