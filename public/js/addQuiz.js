@@ -37,7 +37,11 @@ function addQuiz()
     for (var i of candidIndices) {
       selected.push([i, entries[i]])
     }
-    selected.unshift([mainIndex, entries[mainIndex]])
+    // Pick three false choices
+    selected = shuffleArray([...selected]).slice(0, 3);
+    // Push the answer to the three selected candidates
+    selected.unshift([mainIndex, entries[mainIndex]]);
+    // Randomize the order of choices
     var shuffled = shuffleArray([...selected]);
   }
   else {
@@ -64,7 +68,7 @@ function addQuiz()
 
   $(`#q-target`).html(mainScript)
 
-  for(i = 0; i < shuffled.length; i++) {
+  for(i = 0; i < 4; i++) {
     // Remove answer class used in previous quizw
     $(`#ch-${i+1}`).removeClass('answer')
 
