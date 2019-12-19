@@ -1,7 +1,7 @@
 <div id="q-target"></div>
 <center>
 Click the correct one
-<div id="q-choices">
+<div id="quiz-activity">
   <table class="four-choices" onclick="showAnswer()">
     <tr>
       <td>
@@ -39,6 +39,41 @@ Click the correct one
 </div>
 </center>
 <center>
-  <button class="btn btn-success" type="button"
-  style="margin: 10px 0px;" onclick="nextQuiz()" >Next</button>
+  <span id="stacked-label-check">
+    <li>
+      <label style="margin-bottom: 0; margin-top: 3px;">
+        <input id="checkUpn" type="checkbox" class="radio" value="upn" name="fooby[1][]">Hide upper label
+      </label>
+    </li>
+    <li>
+      <label>
+        <input id="checkLon" type="checkbox" class="radio" value="lon" name="fooby[1][]">Hide lower label
+      </label>
+    </li>
+  </span>
+  <script>
+    // A warning to those using ES6. 
+    // Arrow functions do not set 'this' so this will be the parent. 
+    // So, basically don't use an arrow function here.
+    $("input:checkbox").on('click', function() {
+    // in the handler, 'this' refers to the box clicked on
+    var $box = $(this);
+    if ($box.is(":checked")) {
+      // the name of the box is retrieved using the .attr() method
+      // as it is assumed and expected to be immutable
+      var group = "input:checkbox[name='" + $box.attr("name") + "']";
+      // the checked state of the group/box on the other hand will change
+      // and the current value is retrieved using .prop() method
+      $(group).prop("checked", false);
+      $box.prop("checked", true);
+    } else {
+      $box.prop("checked", false);
+    }
+    labelVisibility($('#checkUpn'))
+    labelVisibility($('#checkLon'))
+  });
+  </script>
+  <button id="next-quiz-btn" class="btn btn-success"
+    type="button" onclick="nextQuiz()" >Next</button>
 </center>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>

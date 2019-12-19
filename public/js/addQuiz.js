@@ -1,34 +1,47 @@
-function shuffleArray(array) {
-    for (var i = array.length - 1; i > 0; i--) {
-      var j = Math.floor(Math.random() * (i + 1));
-      var temp = array[i];
-      array[i] = array[j];
-      array[j] = temp;
+function labelVisibility (box){
+    if (box.is(":checked")) {
+      $('.' + box.attr("value")).hide()
+    } else {
+      $('.' + box.attr("value")).show()
     }
-    return array
+}
+
+function shuffleArray(array) {
+  for (var i = array.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
+  }
+  return array
 }
 
 function nextQuiz() {
-    if($(`#ch-1 .main-script`).css('visibility') == 'hidden') {
-      showAnswer()
-    } else {
-      addQuiz()
-    }
+  if($(`#ch-1 .main-script`).css('visibility') == 'hidden') {
+    showAnswer()
+  } else {
+    addQuiz()
+  }
 }
 
 function showAnswer() {
-    for (i = 0; i < 4; i++) {
-      $(`#ch-${i+1} .main-script`).css('visibility', 'visible');
-      if($(`#ch-${i+1}`).hasClass('answer')) {
-        $(`#ch-${i+1}`).css('background-color', 'lightgreen')
-      } else {
-        $(`#ch-${i+1}`).css('background-color', 'tomato')
-      }
+  for (i = 0; i < 4; i++) {
+    $(`#ch-${i+1} .main-script`).css('visibility', 'visible');
+    if($(`#ch-${i+1}`).hasClass('answer')) {
+      $(`#ch-${i+1}`).css('background-color', 'lightgreen')
+    } else {
+      $(`#ch-${i+1}`).css('background-color', 'tomato')
     }
+  }
+  $('.upn').show()
+  $('.lon').show()
 }
 
 function addQuiz() 
 {
+  labelVisibility($('#checkUpn'))
+  labelVisibility($('#checkLon'))
+  
   choiceLookup = quizzes["multi"];
   if (quizzes != false) {
     var mainIndex = Math.floor(Math.random() * Math.floor(entries.length));
