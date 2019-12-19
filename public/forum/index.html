@@ -101,8 +101,10 @@ window.onload = () => {
     const topProjectsRef = storageRef.child('projects');
     const structureRef = storageRef.child('projects_structure.json');
     const timestampsRef = storageRef.child(`timestamps/${projectName}_time.json`);
+    const quizRef = storageRef.child(`quiz/${projectName}_quiz.json`);
     const ytplayer = document.getElementById("youtube-player");
     var timestampData = false;
+    var quizData = false;
     
     $(() => {
       $("#quiz-view").load("quiz.html");
@@ -143,6 +145,14 @@ window.onload = () => {
     } else {
       $("#quiz-view").hide()
     }
+    // FIXME: NOT SURE if downloading quiz files in parallel with structureRef works all the time
+    quizRef.getDownloadURL().then(url => {
+      $.getJSON(url, data => {  
+        quizData = data;
+      })
+    }).catch(err => {
+      // Ignore when timestamps are not provided yet in Firebase storage
+    })
 
     // FIXME: NOT SURE if downloading timestamp files in parallel with structureRef works all the time
     timestampsRef.getDownloadURL().then(url => {
@@ -152,6 +162,16 @@ window.onload = () => {
     }).catch(err => {
       // Ignore when timestamps are not provided yet in Firebase storage
     })
+
+    // Operation for https://joytan.pub/forum
+    if (projectName === undefined) {
+      $("#top-page-message").show()
+      $("#iframe-box").hide()
+      $("#activity-container").hide()
+      $("#activity-slide").hide()
+      $("#dbutton").css("font-size", "30px");
+      $("#project-items").css("font-size", "20px");
+    }
 
     structureRef.getDownloadURL().then(url => {
       $.getJSON(url, data => {
@@ -171,6 +191,7 @@ window.onload = () => {
                 upnKey = projData["upn"]
                 lonKey = projData["lon"]
                 timestamps = timestampData;
+                quizzes = quizData;
                 addQuiz()
 
                 if(urlData.val()) {
@@ -278,6 +299,11 @@ window.onload = () => {
       <div id="coming-soon">
           Video coming soon!
       </div>
+      <div id="top-page-message">
+        This is the top page of Joytan Forum.</br>
+        There is no interesting content here😿</br>
+        Jump to a project using <b>the project search tool</b> (<i class="fas fa-search"></i>).
+      </div>
 
       <div id="auth-form" class="modal">
         <span onclick="closeAuthForm()" class="close" title="Close Modal">&times;</span>
@@ -346,7 +372,7 @@ window.onload = () => {
         </div>
       </div>
 
-      <div class="row justify-content-center" style="background-color: #bbb;">
+      <div id="activity-slide" class="row justify-content-center" style="background-color: #bbb;">
         <link href="https://cdn.jsdelivr.net/css-toggle-switch/latest/toggle-switch.css" rel="stylesheet" />
         <div class="switch-toggle switch-3 switch-candy">
           <input id="goForum" name="state-d" type="radio" checked="checked" />
@@ -357,16 +383,17 @@ window.onload = () => {
         </div>
       </div>
 
-      <div class="row" id="forum-wrapper">
-        <div class="panel-body col-xs-12 col-sm-4 col-md-3" style="padding: 2px;">
-          Table of Contents
-          <ul class="list-group" id="side-index"></ul>
+      <div id="activity-container">
+        <div class="row" id="forum-wrapper">
+          <div class="panel-body col-xs-12 col-sm-4 col-md-3" style="padding: 2px;">
+            Table of Contents
+            <ul class="list-group" id="side-index"></ul>
+          </div>
+          <div class="col-xs-12 col-sm-8 col-md-9" id="comment-board"></div>
         </div>
-        <div class="col-xs-12 col-sm-8 col-md-9" id="comment-board"></div>
-      </div>
-
-      <div class="row">
-        <div id="quiz-view"></div>
+        <div class="row">
+          <div id="quiz-view"></div>
+        </div>
       </div>
     </div>
   </div>
