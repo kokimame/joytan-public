@@ -206,7 +206,8 @@ window.onload = () => {
                   var commentCntId = "comment_cnt_" + i;
                   $("#side-index").append(
                     `<li class="list-group-item" 
-                      onclick="addForum(${i})">${entries[i][wantedKey]}<span id="${commentCntId}"></span></li>`
+                      onclick="addForum(${i})"><span class="small-numbering">${i+1}</span> 
+                      ${entries[i][wantedKey]}<span id="${commentCntId}"></span></li>`
                   )
                 }
 

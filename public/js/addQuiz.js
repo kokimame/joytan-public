@@ -33,6 +33,7 @@ function showAnswer() {
       $(`#ch-${i+1}`).css('background-color', 'tomato')
     }
   }
+  $('.td-numbering').show()
   $('.upn').show()
   $('.lon').show()
 }
@@ -41,6 +42,7 @@ function addQuiz()
 {
   labelVisibility($('#checkUpn'))
   labelVisibility($('#checkLon'))
+  $('.td-numbering').hide()
   
   choiceLookup = quizzes["multi"];
   if (quizzes != false) {
@@ -94,5 +96,6 @@ function addQuiz()
 
     $(`#ch-${i+1} .upn`).html(shuffled[i][1][upnKey])
     $(`#ch-${i+1} .lon`).html(shuffled[i][1][lonKey])
+    $(`#ch-${i+1} .td-numbering`).html(shuffled[i][0] + 1)
   }
 }
