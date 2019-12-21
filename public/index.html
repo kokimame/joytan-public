@@ -134,7 +134,9 @@
     function loadProjects(structureJson, topRef) {
       topRef.listAll().then(res => {
         res.prefixes.forEach(projectRef => {
-          addProject(structureJson[projectRef.name], projectRef);
+          if (structureJson[projectRef.name]['state'] == 'open') {
+            addProject(structureJson[projectRef.name], projectRef);
+          }
         })
       })
     };
@@ -265,7 +267,10 @@
             </div>
           </div>
         </div>
-        <hr />
+        <hr style="margin-bottom: 10px;" />
+        <div style="margin-bottom: 5px; font-family: sans-serif;">
+          Ongoing projects
+        </div>
         <div class="accordion" id="projectsTop">
         </div>
         <div class="footer">

@@ -36,26 +36,25 @@ function addProject(item, projectRef) {
 
   //🇯🇵🇫🇷🇩🇪🇬🇧🇺🇸🇷🇺🇰🇷🇮🇹🇸🇪🇪🇸🇹🇷
   div.innerHTML = `
-  <br />
-    <button class="btn btn-outline-dark btn-block text-left collapsed" type="button" 
-      data-toggle="collapse" data-target="#${projectName}" aria-expanded="false" id="${titleId}">
-      <i class="fa fa-chevron-down pull-right"></i>
-      <div class"btn-title" >
-          ${titleFixed}
-      </div>
-      
-      <div class="progress">
-        <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" 
-          role="progressbar" style="width: 0%; height: 100%" aria-valuenow="10" 
-          aria-valuemin="0" aria-valuemax="100" id="${doneProgId}"></div>
-        <div class="progress-bar bg-warning" 
-          role="progressbar" style="width: 0%; height: 90%;" aria-valuenow="10" 
-          aria-valuemin="0" aria-valuemax="100" id="${reviewProgId}"></div>
-        <div class="progress-bar bg-info" role="progressbar" 
-          style="width: 0%; height: 80%;" aria-valuenow="30"
-          aria-valuemin="0" aria-valuemax="100" id="${availProgId}"></div>
-      </div>
-    </button>
+  <button class="btn btn-outline-dark btn-block text-left collapsed" type="button" 
+    data-toggle="collapse" data-target="#${projectName}" aria-expanded="false" id="${titleId}">
+    <i class="fa fa-chevron-down pull-right"></i>
+    <div class"btn-title" >
+        ${titleFixed}
+    </div>
+    
+    <div class="progress">
+      <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" 
+        role="progressbar" style="width: 0%; height: 100%" aria-valuenow="10" 
+        aria-valuemin="0" aria-valuemax="100" id="${doneProgId}"></div>
+      <div class="progress-bar bg-warning" 
+        role="progressbar" style="width: 0%; height: 90%;" aria-valuenow="10" 
+        aria-valuemin="0" aria-valuemax="100" id="${reviewProgId}"></div>
+      <div class="progress-bar bg-info" role="progressbar" 
+        style="width: 0%; height: 80%;" aria-valuenow="30"
+        aria-valuemin="0" aria-valuemax="100" id="${availProgId}"></div>
+    </div>
+  </button>
   <div class="collapse" id="${projectName}" data-parent="#projectsTop">
     <div class="card card-body" id="${cardId}">
       <div class="load-control" style="height: 40px;">
@@ -82,6 +81,7 @@ function addProject(item, projectRef) {
         style="display: inline-block;">Vote & Next</button>
     </div>
   </div>
+  <br />
   `;
   // TODO: Audio auto-play
   document.getElementById('projectsTop').appendChild(div);
