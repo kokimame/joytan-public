@@ -177,12 +177,12 @@ function loadComments(reference, boardId, spinId, commentCntId, commentAllId) {
             // Counter span was not added in the index.html and need to initialize
             if ($(`#${commentAllId}`).length == 0) {
               document.getElementById(commentCntId).innerHTML = 
-              `<span style="font-size: 12px"> 
-                <i class="fa fa-comment"></i> 
-                <span style="font-size: 8px; margin: 0px 2px;">&#10005;</span>
-                <span id="${commentAllId}">${commentCntInc}</span></span>`
+              `<span class="comment-counter">
+                <i id="${commentAllId}" class="font-layer fa fa-comment"
+                 data-count="${commentCntInc}"></i>
+              </span>`
             } else {
-              document.getElementById(commentAllId).innerText = commentCntInc;
+              $(`#` + commentAllId).attr("data-count", commentCntInc);
             }
         }
 

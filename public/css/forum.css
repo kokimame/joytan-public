@@ -180,6 +180,12 @@ hr {
   padding: 2px;
 }
 
+.comment-counter {
+  position: absolute;
+  font-size: 12px;
+  right: 3px;
+}
+
 .board-header {
   border: 1px solid #ddd;
   background-color: #f6f6f6;
@@ -193,6 +199,10 @@ hr {
   left: 8px;
   top: 4px;
   font-size: 10px; 
+}
+
+.list-group-item {
+  position: relative;
 }
 
 .list-group{

@@ -205,9 +205,10 @@ window.onload = () => {
                 for (var i = 0; i < entries.length; i++){
                   var commentCntId = "comment_cnt_" + i;
                   $("#side-index").append(
-                    `<li class="list-group-item" 
+                    `<li class="list-group-item"
                       onclick="addForum(${i})"><span class="small-numbering">${i+1}</span> 
-                      ${entries[i][wantedKey]}<span id="${commentCntId}"></span></li>`
+                      ${entries[i][wantedKey]}<span id="${commentCntId}"></span>
+                    </li>`
                   )
                 }
 
@@ -218,10 +219,10 @@ window.onload = () => {
                     var commentAllId = "comment_all" + index;
                     commentLookup[index].length
                     document.getElementById(commentCntId).innerHTML = 
-                      `<span style="font-size: 12px">
-                        <i class="fa fa-comment"></i>
-                        <span style="font-size: 8px; margin: 0px 2px;">&#10005;</span>
-                        <span id="${commentAllId}">${Object.keys(commentLookup[index]).length}</span></span>`
+                      `<span class="comment-counter">
+                        <i id="${commentAllId}" class="font-layer fa fa-comment"
+                         data-count="${Object.keys(commentLookup[index]).length}"></i>
+                      </span>`
                   }
                 })
                 $("#side-index li").get(0).click()
