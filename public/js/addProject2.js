@@ -5,12 +5,11 @@ var openIndexLookup = {};
 var cardPallete = ["#a8e6cf", "#dcedc1", "#ffd3b6", "#ffaaa5", "#ff8b94",
                    "#ebf4f6", "#bdeaee", "#90cdd6", "#fff6e9", "#ffefd7", 
                    "#fffef9", "#e3f0ff", "#d2e7ff"];
-const moreThanWarning = "You are reviewing more than 50 entires. Please VOTE first and load audio :)"
 
 
-function addProject(item, projectRef) {
+function addProject2(pData) {
   const div = document.createElement('div');
-  const projectName = item["dirname"]
+  const projectName = pData["dirname"]
   const loadBtnId = "loadBtn_" + projectName
   const voteBtnId = "voteBtn_" + projectName
   const controlId = "control_" + projectName
@@ -28,8 +27,8 @@ function addProject(item, projectRef) {
   const doneProgId = "done_" + titleId
   const reviewProgId = "review_" + titleId
   const availProgId = "avail_" + titleId
-  const totalEntries = item["entries"].length;
-  var titleFixed = item["flags"] + item["title"]
+  const totalEntries = pData["size"];
+  var titleFixed = pData["flags"] + pData["title"]
 
   fileCountLookup[projectName] = 0;
   openIndexLookup[projectName] = [];
@@ -39,28 +38,31 @@ function addProject(item, projectRef) {
   <button class="btn btn-outline-dark btn-block text-left collapsed" type="button" 
     data-toggle="collapse" data-target="#${projectName}" aria-expanded="false" id="${titleId}">
     <i class="fa fa-chevron-down pull-right"></i>
-    <div class"btn-title" >
-        ${titleFixed}
+    <div class="btn-title" >
+      ${titleFixed}
     </div>
     
-    <div class="progress">
+    <div class="progress" style="border-radius: 10px">
       <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" 
-        role="progressbar" style="width: 0%; height: 100%" aria-valuenow="10" 
+        role="progressbar" style="width: 0%; height: 100%;" aria-valuenow="10" 
         aria-valuemin="0" aria-valuemax="100" id="${doneProgId}"></div>
       <div class="progress-bar bg-warning" 
-        role="progressbar" style="width: 0%; height: 90%;" aria-valuenow="10" 
+        role="progressbar" 
+        style="width: 0%; height: 90%;" aria-valuenow="10" 
         aria-valuemin="0" aria-valuemax="100" id="${reviewProgId}"></div>
       <div class="progress-bar bg-info" role="progressbar" 
-        style="width: 0%; height: 80%;" aria-valuenow="30"
+        style="width: 0%; height: 80%; border-radius: 0px 10px 10px 0px;" aria-valuenow="30"
         aria-valuemin="0" aria-valuemax="100" id="${availProgId}"></div>
     </div>
+    <span class="forum-link" id="${forumId}">
+      Go to Forum <a class="far fa-comments" style="text-decoration: underline"></a>
+    </span>
   </button>
   <div class="collapse" id="${projectName}" data-parent="#projectsTop">
     <div class="card card-body" id="${cardId}">
       <div class="load-control" style="height: 40px;">
         <div id="${spinId}">
-          <div class="spinning">
-          </div>
+          <i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>
         </div>
         <div id="${controlId}">
           <button type="button" class="btn btn-slim btn-success" id="${loadBtnId}">Load</button>
@@ -70,8 +72,6 @@ function addProject(item, projectRef) {
           </div>
           <button type="button" class="btn btn-slim btn-success auto-play" id="${autoBtnId}" value="off">
             Auto <a class="fa fa-volume-up"></a></button>
-          <button type="button" class="btn btn-slim btn-secondary" id="${forumId}" value="off">
-            Forum<a class="far fa-comments forum-link"></a></button>
         </div>
       </div>
       <hr style="margin-bottom: 12px;" />
@@ -96,150 +96,130 @@ function addProject(item, projectRef) {
   
   
   function updateProgress() {
-    projectRef.listAll().then(res => {
+    var bSelect = document.getElementById(baseSelectId);
+    if (bSelect != null) {
+      pData["available"].forEach(index => {
+        bSelect.innerHTML += `<option value="${index}">${index}</option>`
+      });
+    }
 
-      var bSelect = document.getElementById(baseSelectId);
-      if (bSelect != null) {
-        res.prefixes.forEach(entryRef => {
-          var index = parseInt(entryRef.name, 10)
-          bSelect.innerHTML += `<option value="${index}">${index}</option>`
-        });
+    fileCountLookup[projectName] = pData["available"].length;
+    var availEntries = pData["available"];
+    var votedEntries = pData["voted"];
+    var doneEntries = pData["done"];
+
+    const availRatio = 100 * availEntries.length / totalEntries;
+    const votedRatio = 100 * votedEntries.length / totalEntries;
+    const doneRatio = 100 * doneEntries.length / totalEntries;
+
+    doneProg.style.width = doneRatio.toString() + "%";
+    reviewProg.style.width = (votedRatio - doneRatio).toString() + "%";
+    availProg.style.width = (availRatio - votedRatio).toString() + "%";
+
+    if (doneRatio > 5) {
+      doneProg.innerText = doneEntries.length;
+    }
+    if ((votedRatio - doneRatio) > 5) {
+      reviewProg.innerText = votedEntries.length - doneEntries.length;
+    }
+    if ((availRatio - votedRatio) > 5) {
+      availProg.innerText = fileCountLookup[projectName] - votedEntries.length;
+    }
+
+    doneLookup[projectName] = doneEntries;
+    votedLookup[projectName] = votedEntries;
+
+    /* Look for any elements with the class "custom-select" */
+    var cSelect = document.getElementById(customSelectId);
+    var bSelect = document.getElementById(baseSelectId);
+
+    // After voting bSelect becomes null
+    // and accessing properties raises exeptions.
+    // This is a very stupid way to stop these errors.
+    // FIXME: Should be a better way!!
+    if (bSelect == null) {
+      return
+    }
+    /* For each element, create a new DIV that will act
+    as the selected item */
+    var selectedItem = document.createElement("div");
+    selectedItem.id = selectedId
+    selectedItem.setAttribute("class", "select-selected");
+    // Remove all previous items for selection
+    while (cSelect.firstChild) {
+      cSelect.removeChild(cSelect.firstChild);
+    }
+    cSelect.appendChild(selectedItem);
+    /*for each element, create a new DIV that will contain the option list:*/
+    var selectables = document.createElement("div");
+    selectables.id = selectableId;
+    selectables.setAttribute("class", "select-items select-hide");
+
+    for (var j = 0; j < bSelect.length; j+= 3) {
+      const idxId = "".concat(j.toString(), '_', projectName);
+      const multiIndices = document.createElement("div");
+      multiIndices.setAttribute("class", "multi-index")
+      multiIndices.id = idxId;
+      /*for each option in the original select element,
+      create a new DIV that will act as an option item:*/
+      for (var k = 0; k < 3; k++) {
+        if (j + k >= bSelect.length) {
+          break;
+        }
+        var opt = document.createElement("div");
+        opt.setAttribute("class", "opt-idx");
+        opt.innerHTML = bSelect.options[j + k].innerHTML;
+
+        var numIndex = parseInt(opt.innerText);
+
+          // Update background color for status indication
+        if (doneEntries.indexOf(numIndex) != -1) {
+          // Dark Green for done entries
+          opt.style.background = "#08A93D"
+        } 
+        else if (votedEntries.indexOf(numIndex) != -1) {
+          // Yellow for reviewed entries
+          opt.style.background = "#F3B301"
+        }
+        multiIndices.appendChild(opt)
       }
+      selectables.appendChild(multiIndices);
 
-      fileCountLookup[projectName] = res.prefixes.length;
-      firebase.database().ref("votes").child(projectName).once('value').then(snapshotVote => {
-        firebase.database().ref("users/3fG1zIUGn1hAf8JkDGd500uNuIi1/done/projects").child(projectName).once('value').then(snapshotDone => {
-          var voteRatio = 0
-          var doneRatio = 0
-          var doneEntries = [];
-          var votedEntries = [];
+      multiIndices.addEventListener("click", function(e) {
+        var indices = multiIndices.getElementsByClassName("opt-idx")
+        createPlayers(parseInt(indices[0].innerText))
+        selectedItem.innerHTML = multiIndices.innerHTML
+      });
+    }
+    cSelect.appendChild(selectables);
+    
+    selectedItem.innerHTML = selectables.firstChild.innerHTML
 
-          if (snapshotDone.val()) {
-            doneEntries = Object.keys(snapshotDone.val());
-            doneRatio = 100 * doneEntries.length / totalEntries
-          }
-          if (snapshotVote.val()) {
-            votedEntries = Object.keys(snapshotVote.val());
-            voteRatio = 100 * votedEntries.length / totalEntries
-          }
-          availRatio = (100 * fileCountLookup[projectName] / totalEntries)
-
-          doneProg.style.width = doneRatio.toString() + "%";
-          reviewProg.style.width = (voteRatio - doneRatio).toString() + "%";
-          availProg.style.width = (availRatio - voteRatio).toString() + "%";
-
-          if (doneRatio > 5) {
-            doneProg.innerText = doneEntries.length;
-          }
-          if ((voteRatio - doneRatio) > 5) {
-            reviewProg.innerText = votedEntries.length - doneEntries.length;
-          }
-          if ((availRatio - voteRatio) > 5) {
-            availProg.innerText = fileCountLookup[projectName] - votedEntries.length;
-          }
-
-          doneLookup[projectName] = doneEntries;
-          votedLookup[projectName] = votedEntries;
-
-          /* Look for any elements with the class "custom-select" */
-          var cSelect = document.getElementById(customSelectId);
-          var bSelect = document.getElementById(baseSelectId);
-
-          // After voting bSelect becomes null
-          // and accessing properties raises exeptions.
-          // This is a very stupid way to stop these errors.
-          // FIXME: Should be a better way!!
-          if (bSelect == null) {
-            return
-          }
-          /* For each element, create a new DIV that will act
-           as the selected item */
-          var selectedItem = document.createElement("div");
-          selectedItem.id = selectedId
-          selectedItem.setAttribute("class", "select-selected");
-          // Remove all previous items for selection
-          while (cSelect.firstChild) {
-            cSelect.removeChild(cSelect.firstChild);
-          }
-          cSelect.appendChild(selectedItem);
-          /*for each element, create a new DIV that will contain the option list:*/
-          var selectables = document.createElement("div");
-          selectables.id = selectableId;
-          selectables.setAttribute("class", "select-items select-hide");
-
-          for (var j = 0; j < bSelect.length; j+= 3) {
-            const idxId = "".concat(j.toString(), '_', projectName);
-            const multiIndices = document.createElement("div");
-            multiIndices.setAttribute("class", "multi-index")
-            multiIndices.id = idxId;
-            /*for each option in the original select element,
-            create a new DIV that will act as an option item:*/
-            for (var k = 0; k < 3; k++) {
-              if (j + k >= bSelect.length) {
-                break;
-              }
-              var opt = document.createElement("div");
-              opt.setAttribute("class", "opt-idx");
-              opt.innerHTML = bSelect.options[j + k].innerHTML;
-
-              var stringNum = ("0000" + parseInt(opt.innerText)).slice(-5);
-
-              // Update background color for status indication
-              if (doneEntries.indexOf(stringNum) != -1) {
-                // Dark Green for done entries
-                opt.style.background = "#08A93D"
-              } 
-              else if (votedEntries.indexOf(stringNum) != -1) {
-                // Yellow for reviewed entries
-                opt.style.background = "#F3B301"
-              }
-              multiIndices.appendChild(opt)
-            }
-            selectables.appendChild(multiIndices);
-
-            multiIndices.addEventListener("click", function(e) {
-              var indices = multiIndices.getElementsByClassName("opt-idx")
-              for (var i = 0; i < indices.length; i++) {
-                createPlayers(parseInt(indices[i].innerText))
-              }
-              selectedItem.innerHTML = multiIndices.innerHTML
-            });
-          }
-          cSelect.appendChild(selectables);
-          
-          selectedItem.innerHTML = selectables.firstChild.innerHTML
-
-          selectedItem.addEventListener("click", function(e) {
-            /*when the select box is clicked, close any other select boxes,
-            and open/close the current select box:*/
-            e.stopPropagation();
-            closeAllSelect(this);
-            this.nextSibling.classList.toggle("select-hide");
-            this.classList.toggle("select-arrow-active");
-          });
-        })
-      })
-    })
+    selectedItem.addEventListener("click", function(e) {
+    /*when the select box is clicked, close any other select boxes,
+    and open/close the current select box:*/
+    e.stopPropagation();
+    closeAllSelect(this);
+    this.nextSibling.classList.toggle("select-hide");
+    this.classList.toggle("select-arrow-active");
+    });
   }
 
   function createPlayers(index) {
-    if (openIndexLookup[projectName].includes(index)) {
-      // If the new index is already opened, ignore it
-      // otherwise the id duplication error occurs.
-      return
-    } else {
-      openIndexLookup[projectName].push(index)
-    }
-
-    // Maybe this is not an optimal way to pass parameters
-    // but this is very convinient for this specific part
-    entryRef = projectRef.child(("0000" + index).slice(-5));
-    entries = item["entries"];
-    currentWanted = item["wanted"];
-    upperNote = item["upn"];
-    lowerNote = item["lon"];
-    appendAudio(audioId, item["dirname"]);
-    /////////  //////////  ///////////  ////
+    // if (openIndexLookup[projectName].includes(index)) {
+    //   // If the new index is already opened, ignore it
+    //   // otherwise the id duplication error occurs.
+    //   return
+    // } else {
+    //   openIndexLookup[projectName].push(index)
+    // }
+    var db = firebase.firestore()
+    db.collection(`projects/${projectName}/voice`).get().then(result => {
+      result.forEach(doc => {
+        console.log(doc.id, ' and ', doc.data())
+        addPlayer2(doc.id, doc.data(), audioId)
+      })
+    })
 
     // Show spinner and the spinner will be removed in addPlayer.js
     $("#" + spinId).removeClass("hide-loader");
@@ -268,9 +248,7 @@ function addProject(item, projectRef) {
         return
       }
       var divs = selected.getElementsByClassName('opt-idx');
-      for (var j = 0; j < divs.length; j++) {
-        createPlayers(parseInt(divs[j].innerText))
-      }
+      createPlayers(parseInt(divs[0].innerText))
     }
   })
   document.getElementById(loadBtnId).addEventListener("click", () => {
@@ -292,9 +270,7 @@ function addProject(item, projectRef) {
         }
 
         var spans = nextIndices.getElementsByClassName('opt-idx');
-        for (var j = 0; j < spans.length; j++) {
-          createPlayers(parseInt(spans[j].innerText))
-        }
+        createPlayers(parseInt(spans[0].innerText))
         selected.innerHTML = nextIndices.innerHTML;
         break;
       }
@@ -317,9 +293,7 @@ function addProject(item, projectRef) {
           nextIndices = multiIndices[i + 1];
         }
         var spans = nextIndices.getElementsByClassName('opt-idx');
-        for (var j = 0; j < spans.length; j++) {
-          createPlayers(parseInt(spans[j].innerText))
-        }
+        createPlayers(parseInt(spans[0].innerText))
         selected.innerHTML = nextIndices.innerHTML;
         updateProgress();
         break;
@@ -328,7 +302,10 @@ function addProject(item, projectRef) {
   })
 
   document.getElementById(forumId).addEventListener('click', () => {
-    window.location.href = "forum/?p=" + projectName
+    window.open("forum/?p=" + projectName, '_blank')
+  })
+  document.getElementById(forumId).addEventListener('auxclick', () => {
+    window.open("forum/?p=" + projectName, '_blank')
   })
 
   document.getElementById(autoBtnId).addEventListener('click', () => {
@@ -380,19 +357,6 @@ function addProject(item, projectRef) {
   document.addEventListener("click", closeAllSelect);
 }
 
-function appendAudio(idToAppend, projectName) {
-  entryRef.listAll().then(res => {
-    res.prefixes.forEach(userRef => {
-      userRef.listAll().then(res => {
-        for (var wavRef of res.items) {
-          if (wavRef.name.startsWith('n_d_')) {
-            addPlayer(wavRef, idToAppend, projectName);
-          }
-        }
-      })
-    })
-  })
-}
 function playNext(audioDiv, justEnded, autoBtnId) {
   var players = audioDiv.getElementsByClassName("fa fa-play ml-2");
   var arrayOfId = [];
@@ -409,4 +373,3 @@ function playNext(audioDiv, justEnded, autoBtnId) {
     autoBtn.innerHTML = `Auto <a class="fa fa-volume-up">`
   }
 }
-

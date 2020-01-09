@@ -11,12 +11,13 @@
   <title>Joytan Public</title>
 
   <!-- update the version number as needed -->
-  <script defer src="/__/firebase/6.4.1/firebase-app.js"></script>
+  <script defer src="/__/firebase/7.6.1/firebase-app.js"></script>
   <!-- include only the Firebase features as you need -->
-  <script defer src="/__/firebase/6.4.1/firebase-auth.js"></script>
-  <script defer src="/__/firebase/6.4.1/firebase-database.js"></script>
-  <script defer src="/__/firebase/6.4.1/firebase-messaging.js"></script>
-  <script defer src="/__/firebase/6.4.1/firebase-storage.js"></script>
+  <script defer src="/__/firebase/7.6.1/firebase-auth.js"></script>
+  <script defer src="/__/firebase/7.6.1/firebase-database.js"></script>
+  <script defer src="/__/firebase/7.6.1/firebase-messaging.js"></script>
+  <script defer src="/__/firebase/7.6.1/firebase-storage.js"></script>
+  <script defer src="/__/firebase/7.6.1/firebase-firestore.js"></script>
   <!-- initialize the SDK after all desired features are loaded -->
   <script defer src="/__/firebase/init.js"></script>
   
@@ -37,6 +38,8 @@
 
   <script src="/js/addPlayer.js"></script>
   <script src="/js/addProject.js"></script>
+  <script src="/js/addProject2.js"></script>
+  <script src="/js/addPlayer2.js"></script>
   <script src="/js/authHelpers.js"></script>
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/auth.css">
@@ -64,19 +67,23 @@
   <meta name="theme-color" content="#ffffff">
 
   <script type="text/javascript">
+    window.userData = {}
+    window.userVoteHistory = {} // Project name => list of voice ID
     window.onload = () => {
-      const storage = firebase.storage();
-      const storageRef = storage.ref();
-      const topProjectsRef = storageRef.child('projects');
-      const structureRef = storageRef.child('projects_structure.json');
-      var structureData;
-
-      structureRef.getDownloadURL().then(url => {
-        $.getJSON(url, (data) => {
-          loadProjects(data, topProjectsRef);
-        })
-      })
-
+      const db = firebase.firestore()
+      const user = firebase.auth().currentUser
+      db.collection("projects").where("state", "==", "open")
+        .get().then(querySnapshot => {
+          querySnapshot.forEach(doc => {
+            pData = doc.data()
+            if(pData["available"].length > 0) {
+              console.log(doc.id, "-->", pData)
+              addProject2(pData)
+            }
+          })
+        }
+      )
+    
       $(() => {
         $("#about-view").load("about.html"); 
         $("#stat-view").load("stat.html"); 
@@ -106,6 +113,13 @@
 
       firebase.auth().onAuthStateChanged(user => {
         if (user) {
+          const db = firebase.firestore()
+          db.collection('users').doc(user.uid).get().then(doc => {
+            if(doc.exists) {
+              window.userData = doc.data()
+            }
+          })
+
           $("#auth-button").html(`Account <i class="fa fa-user" />`)
           $("#auth-button").show()
         } else {
@@ -131,15 +145,6 @@
       }
 
     } // ^^^^^ onload ^^^^^
-    function loadProjects(structureJson, topRef) {
-      topRef.listAll().then(res => {
-        res.prefixes.forEach(projectRef => {
-          if (structureJson[projectRef.name]['state'] == 'open') {
-            addProject(structureJson[projectRef.name], projectRef);
-          }
-        })
-      })
-    };
   </script>
 
 </head>

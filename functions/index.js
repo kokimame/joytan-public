@@ -152,8 +152,5 @@ exports.denoiseAudio = functions.storage.object().onFinalize(async (object) => {
   fs.unlinkSync(tempFilePath);
   fs.unlinkSync(normedTempFilePath);
 
-  const senderInfo = normedStorageFilePath.split("/").slice(1, 4)
-  console.log(`Added ${senderInfo[1]} in ${senderInfo[0]} by ${senderInfo[2]}`)
-
   return null;
 });
