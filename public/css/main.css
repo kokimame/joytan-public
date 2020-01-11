@@ -1,6 +1,11 @@
 html, body {
     max-width: 100%;
     overflow-x: hidden;
+    background-color: #dae0e6;
+}
+#service-general {
+    padding-top: 10px;
+    padding-bottom: 6px;
 }
 
 .text-left {
@@ -21,18 +26,39 @@ button {
     background-color: lightgray;
 }
 
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255,255,255, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
+}
+
 .card-body {
     padding: 0px;
+    /* -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    border-radius: 6px; */
 }
 .player-field {
     display: inline-block;
     padding: 10px;
 }
 
+.spinner-wrapper {
+    text-align: center;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
 /* .btn-outline-dark:hover, .btn-outline-dark:focus, .btn-outline-dark:active, .btn-outline-dark.active {
     color: #fff;
     background-color: #16424d;
 } */
+.btn-title {
+    background-color: white;
+}
+
+.btn:focus,.btn:active {
+    outline: none !important;
+    box-shadow: none;
+ }
 
 .btn-vote {
     width: 120px;

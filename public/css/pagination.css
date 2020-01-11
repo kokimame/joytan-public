@@ -1,24 +1,17 @@
-#pagination {
-    width: 960px;
+.pagination {
     margin: 0 auto;
-    height: 30px;
     text-align: center;
-    padding-bottom: 10px;
-    background-color: 
-    #D03800;
-    padding-top: 15px;
+    background-color: lightgray;
 }
     
     
-#pagination .page-numbers {
-    color: 
-    white;
+.pagination .page-numbers {
     text-decoration: none;
     padding: 10px;
     /* font-family: "PT Sans" sans-serif; */
 }
     
-#pagination .page-numbers:hover {
+.pagination .page-numbers:hover {
     color: #d03800;
     background-color: #fff;
     -webkit-transition: all 0.5s ease;
@@ -27,11 +20,9 @@
     -ms-transition: all 0.5s ease;
 }
     
-#pagination span.page-numbers.current {
-    background-color: 
-    white;
-    color: 
-    #F15755;
+.pagination span.page-numbers.current {
+    background-color: white;
+    color: #F15755;
     /* font-family: "PT Sans" sans-serif; */
     text-decoration: none;
 }

@@ -36,10 +36,10 @@ function addProject2(pData) {
 
   //🇯🇵🇫🇷🇩🇪🇬🇧🇺🇸🇷🇺🇰🇷🇮🇹🇸🇪🇪🇸🇹🇷
   div.innerHTML = `
-  <button class="btn btn-outline-dark btn-block text-left collapsed" type="button" 
+  <button class="btn btn-block text-left collapsed btn-title" type="button" 
     data-toggle="collapse" data-target="#${projectName}" aria-expanded="false" id="${titleId}">
     <i class="fa fa-chevron-down pull-right"></i>
-    <div class="btn-title" >
+    <div class="title-in-btn" >
       ${titleFixed}
     </div>
     
@@ -61,25 +61,20 @@ function addProject2(pData) {
   </button>
   <div class="collapse" id="${projectName}" data-parent="#projectsTop">
     <div class="card card-body" id="${cardId}">
-      <div class="load-control" style="height: 40px;">
-        <div id="${spinId}">
+      <div>
+        <div id="${spinId}" class="spinner-wrapper">
           <i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>
         </div>
         <div id="${controlId}">
-          <ul id="${pagerId}" class="pagination pagination-sm" style="float: left;">
-            <li class="page-item">
-              <a class="page-link" href="" aria-label="Previous">
-                <span aria-hidden="true">&laquo;</span>
-                <span class="sr-only">Previous</span>
-              </a>
-            </li>
-            <li class="page-item">
-              <a class="page-link" href="" aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
-                <span class="sr-only">Next</span>
-              </a>
-            </li>
-          </ul>
+          <div class="pagination">		
+            <span class="page-numbers current">1</span>
+            <a class="page-numbers" href="http://www.augusteight.at/blog/page/2/">2</a>
+            <a class="page-numbers" href="http://www.augusteight.at/blog/page/3/">3</a>
+            <span class="page-numbers dots">...</span>
+            <a class="page-numbers" href="http://www.augusteight.at/blog/page/17/">17</a>
+            <a class="next page-numbers" href="http://www.augusteight.at/blog/page/2/">Next »
+            </a>
+          </div>
           <button type="button" class="btn btn-slim btn-success auto-play" id="${autoBtnId}" value="off">
           Auto <a class="fa fa-volume-up"></a></button>
         </div>

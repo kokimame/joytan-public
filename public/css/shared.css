@@ -37,10 +37,18 @@
 .hide-loader{
     display: none;
 }
-
-.nav-item {
-    text-decoration: underline;
-  }
+.nav-wrapper {
+    text-align: center;
+    background-color: #33a8ff;
+}
+.navbar {
+    padding: 0px 8px; 
+    width: 100%;
+}
+.nav-link {
+    color: white;
+    font-weight: bold;
+}
   
 #auth-btn-wrapper {
 text-decoration: none;
