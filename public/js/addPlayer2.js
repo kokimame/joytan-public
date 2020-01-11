@@ -18,7 +18,6 @@ function addPlayer2(voiceId, entryData, targetId) {
   const voiceRef = storage.ref().child(`voice/${projectName}/n_d_${voiceId}.wav`);
 
   voiceRef.getDownloadURL().then((url) => {
-    console.log("userData..." , window.userData)
     // Add extra assertion to prevent failed loadings
     var upnString = entryData["upn"];
     var lonString = entryData["lon"];

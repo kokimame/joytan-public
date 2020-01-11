@@ -41,6 +41,7 @@
   <script src="/js/addProject2.js"></script>
   <script src="/js/addPlayer2.js"></script>
   <script src="/js/authHelpers.js"></script>
+  <link rel="stylesheet" href="css/pagination.css">
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/auth.css">
   <link rel="stylesheet" href="css/select.css">
@@ -81,6 +82,7 @@
               addProject2(pData)
             }
           })
+          $("#landing-spin").addClass("hide-loader");
         }
       )
     
@@ -173,7 +175,7 @@
                 <a class="nav-link" href="https://joytan.pub/forum">Forum <span class="sr-only">(current)</span></a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="http://slack-invite.joytan.pub/">Join Team</a>
+                <a class="nav-link" href="http://slack-invite.joytan.pub/">Join team</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="https://youtube.com/c/JoytanApp">YouTube</a>
@@ -277,6 +279,9 @@
           Ongoing projects
         </div>
         <div class="accordion" id="projectsTop">
+          <div id="landing-spin">
+            <i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>
+          </div>
         </div>
         <div class="footer">
           <!-- 2019-present © Kohki Mametani -->

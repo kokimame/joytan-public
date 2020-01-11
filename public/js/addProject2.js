@@ -12,6 +12,7 @@ function addProject2(pData) {
   const projectName = pData["dirname"]
   const loadBtnId = "loadBtn_" + projectName
   const voteBtnId = "voteBtn_" + projectName
+  const pagerId = "pager_" + projectName
   const controlId = "control_" + projectName
   const autoBtnId = "auto_" + projectName
   const forumId = "forum_" + projectName
@@ -65,17 +66,25 @@ function addProject2(pData) {
           <i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>
         </div>
         <div id="${controlId}">
-          <button type="button" class="btn btn-slim btn-success" id="${loadBtnId}">Load</button>
-          <div class="custom-select" id="${customSelectId}">
-            <select class="form-control" id="${baseSelectId}">
-            </select>
-          </div>
+          <ul id="${pagerId}" class="pagination pagination-sm" style="float: left;">
+            <li class="page-item">
+              <a class="page-link" href="" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>
+              </a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Next</span>
+              </a>
+            </li>
+          </ul>
           <button type="button" class="btn btn-slim btn-success auto-play" id="${autoBtnId}" value="off">
-            Auto <a class="fa fa-volume-up"></a></button>
+          Auto <a class="fa fa-volume-up"></a></button>
         </div>
       </div>
-      <hr style="margin-bottom: 12px;" />
-      <div id="${audioId}" style="display: inline-block;">
+      <div id="${audioId}" class="player-field">
       </div>
       <button type="button" id="${voteBtnId}" class="btn btn-slim btn-success btn-vote"
         style="display: inline-block;">Vote & Next</button>
@@ -93,16 +102,13 @@ function addProject2(pData) {
   var audioDiv = document.getElementById(audioId)
 
   updateProgress();
+
+  function setupPagination() {
+
+  }
   
   
   function updateProgress() {
-    var bSelect = document.getElementById(baseSelectId);
-    if (bSelect != null) {
-      pData["available"].forEach(index => {
-        bSelect.innerHTML += `<option value="${index}">${index}</option>`
-      });
-    }
-
     fileCountLookup[projectName] = pData["available"].length;
     var availEntries = pData["available"];
     var votedEntries = pData["voted"];
@@ -128,91 +134,9 @@ function addProject2(pData) {
 
     doneLookup[projectName] = doneEntries;
     votedLookup[projectName] = votedEntries;
-
-    /* Look for any elements with the class "custom-select" */
-    var cSelect = document.getElementById(customSelectId);
-    var bSelect = document.getElementById(baseSelectId);
-
-    // After voting bSelect becomes null
-    // and accessing properties raises exeptions.
-    // This is a very stupid way to stop these errors.
-    // FIXME: Should be a better way!!
-    if (bSelect == null) {
-      return
-    }
-    /* For each element, create a new DIV that will act
-    as the selected item */
-    var selectedItem = document.createElement("div");
-    selectedItem.id = selectedId
-    selectedItem.setAttribute("class", "select-selected");
-    // Remove all previous items for selection
-    while (cSelect.firstChild) {
-      cSelect.removeChild(cSelect.firstChild);
-    }
-    cSelect.appendChild(selectedItem);
-    /*for each element, create a new DIV that will contain the option list:*/
-    var selectables = document.createElement("div");
-    selectables.id = selectableId;
-    selectables.setAttribute("class", "select-items select-hide");
-
-    for (var j = 0; j < bSelect.length; j+= 3) {
-      const idxId = "".concat(j.toString(), '_', projectName);
-      const multiIndices = document.createElement("div");
-      multiIndices.setAttribute("class", "multi-index")
-      multiIndices.id = idxId;
-      /*for each option in the original select element,
-      create a new DIV that will act as an option item:*/
-      for (var k = 0; k < 3; k++) {
-        if (j + k >= bSelect.length) {
-          break;
-        }
-        var opt = document.createElement("div");
-        opt.setAttribute("class", "opt-idx");
-        opt.innerHTML = bSelect.options[j + k].innerHTML;
-
-        var numIndex = parseInt(opt.innerText);
-
-          // Update background color for status indication
-        if (doneEntries.indexOf(numIndex) != -1) {
-          // Dark Green for done entries
-          opt.style.background = "#08A93D"
-        } 
-        else if (votedEntries.indexOf(numIndex) != -1) {
-          // Yellow for reviewed entries
-          opt.style.background = "#F3B301"
-        }
-        multiIndices.appendChild(opt)
-      }
-      selectables.appendChild(multiIndices);
-
-      multiIndices.addEventListener("click", function(e) {
-        var indices = multiIndices.getElementsByClassName("opt-idx")
-        createPlayers(parseInt(indices[0].innerText))
-        selectedItem.innerHTML = multiIndices.innerHTML
-      });
-    }
-    cSelect.appendChild(selectables);
-    
-    selectedItem.innerHTML = selectables.firstChild.innerHTML
-
-    selectedItem.addEventListener("click", function(e) {
-    /*when the select box is clicked, close any other select boxes,
-    and open/close the current select box:*/
-    e.stopPropagation();
-    closeAllSelect(this);
-    this.nextSibling.classList.toggle("select-hide");
-    this.classList.toggle("select-arrow-active");
-    });
   }
 
   function createPlayers(index) {
-    // if (openIndexLookup[projectName].includes(index)) {
-    //   // If the new index is already opened, ignore it
-    //   // otherwise the id duplication error occurs.
-    //   return
-    // } else {
-    //   openIndexLookup[projectName].push(index)
-    // }
     var db = firebase.firestore()
     db.collection(`projects/${projectName}/voice`).get().then(result => {
       result.forEach(doc => {
@@ -234,49 +158,12 @@ function addProject2(pData) {
   }
 
   document.getElementById(titleId).addEventListener("click", e => {
-    if (document.getElementById(selectedId) == null) {
-      // Stop when base selector is NOT ready!
-      // TODO: Probably there is a better way to do this.
-      e.stopPropagation();
-    } else if (audioDiv.innerHTML.trim() == "" && document.getElementById(projectName).className == "collapse") {
-      // MAYBE: To prevent double loading which induce the unplayable player error
-      removeAllPlayers(audioId)
-      var selected = document.getElementById(selectedId);
-
-      if (openIndexLookup[projectName].length >= 50) {
-        alert(moreThanWarning)
-        return
-      }
-      var divs = selected.getElementsByClassName('opt-idx');
-      createPlayers(parseInt(divs[0].innerText))
+    if (audioDiv.innerHTML.trim() == "" && 
+        document.getElementById(projectName).className == "collapse") {
+      createPlayers(0)
     }
   })
-  document.getElementById(loadBtnId).addEventListener("click", () => {
-    // If more than 50 entries are open, let users do the vote first.
-    var multiIndices = document.getElementById(selectableId).getElementsByClassName("multi-index");
-    var selected = document.getElementById(selectedId);
-    var nextIndices = null;
-
-    for (var i = 0; i < multiIndices.length; i++) {
-      if (selected.innerHTML == multiIndices[i].innerHTML) {
-        if (openIndexLookup[projectName].length >= 50) {
-          alert(moreThanWarning)
-          return
-        }
-        if (i >= multiIndices.length - 1) {
-          nextIndices = multiIndices[0];
-        } else {
-          nextIndices = multiIndices[i + 1];
-        }
-
-        var spans = nextIndices.getElementsByClassName('opt-idx');
-        createPlayers(parseInt(spans[0].innerText))
-        selected.innerHTML = nextIndices.innerHTML;
-        break;
-      }
-    }
-  })
-  document.getElementById(voteBtnId).addEventListener("click", () => {
+    document.getElementById(voteBtnId).addEventListener("click", () => {
     getVotes(voteClass);
     removeAllPlayers(audioId);
     openIndexLookup[projectName] = [];
