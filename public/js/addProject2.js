@@ -10,21 +10,15 @@ var cardPallete = ["#a8e6cf", "#dcedc1", "#ffd3b6", "#ffaaa5", "#ff8b94",
 function addProject2(pData) {
   const div = document.createElement('div');
   const projectName = pData["dirname"]
-  const loadBtnId = "loadBtn_" + projectName
-  const voteBtnId = "voteBtn_" + projectName
-  const pagerId = "pager_" + projectName
+  const pagingId = "paging_" + projectName
   const controlId = "control_" + projectName
   const autoBtnId = "auto_" + projectName
   const forumId = "forum_" + projectName
-  const voteClass = "vote_" + projectName
-  const customSelectId = "cSelect_" + projectName
-  const baseSelectId = "bSelect_" + projectName
-  const selectableId = "selectable_" + projectName
-  const selectedId = "selected_" + projectName
   const cardId = "card_" + projectName
   const audioId = "audio_" + projectName
   const spinId = "spin_" + projectName
   const titleId = "title_" + projectName
+  const contribId = "contrib_" + projectName
   const doneProgId = "done_" + titleId
   const reviewProgId = "review_" + titleId
   const availProgId = "avail_" + titleId
@@ -49,7 +43,7 @@ function addProject2(pData) {
         aria-valuemin="0" aria-valuemax="100" id="${doneProgId}"></div>
       <div class="progress-bar bg-warning" 
         role="progressbar" 
-        style="width: 0%; height: 90%;" aria-valuenow="10" 
+        style="width: 0%; height: 90%; color: black;" aria-valuenow="10" 
         aria-valuemin="0" aria-valuemax="100" id="${reviewProgId}"></div>
       <div class="progress-bar bg-info" role="progressbar" 
         style="width: 0%; height: 80%; border-radius: 0px 10px 10px 0px;" aria-valuenow="30"
@@ -61,28 +55,25 @@ function addProject2(pData) {
   </button>
   <div class="collapse" id="${projectName}" data-parent="#projectsTop">
     <div class="card card-body" id="${cardId}">
-      <div>
-        <div id="${spinId}" class="spinner-wrapper">
-          <i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>
-        </div>
-        <div id="${controlId}">
-          <div class="pagination">		
-            <span class="page-numbers current">1</span>
-            <a class="page-numbers" href="http://www.augusteight.at/blog/page/2/">2</a>
-            <a class="page-numbers" href="http://www.augusteight.at/blog/page/3/">3</a>
-            <span class="page-numbers dots">...</span>
-            <a class="page-numbers" href="http://www.augusteight.at/blog/page/17/">17</a>
-            <a class="next page-numbers" href="http://www.augusteight.at/blog/page/2/">Next »
-            </a>
-          </div>
-          <button type="button" class="btn btn-slim btn-success auto-play" id="${autoBtnId}" value="off">
-          Auto <a class="fa fa-volume-up"></a></button>
-        </div>
+      <div id="${spinId}" class="spinner-wrapper">
+        <i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>
       </div>
+      <span class="pagination"  id="${controlId}">
+        <span id="${pagingId}">		
+          <span class="page-back page-numbers">« Back</span>
+          <span class="page-next page-numbers">Next »</span>
+          <span class="page-numbers current">1</span>
+          <span class="page-numbers">2</span>
+          <span class="page-numbers">3</span>
+          <span class="dots">...</span>
+          <span class="page-numbers">17</span>
+          <span class="total-count"><span id="${contribId}"></span> contributions</span>
+        </span>
+        <button type="button" class="btn btn-slim btn-warning auto-play" id="${autoBtnId}" value="off">
+        Auto <a class="fa fa-volume-up"></a></button>
+      </span>
       <div id="${audioId}" class="player-field">
       </div>
-      <button type="button" id="${voteBtnId}" class="btn btn-slim btn-success btn-vote"
-        style="display: inline-block;">Vote & Next</button>
     </div>
   </div>
   <br />
@@ -93,17 +84,31 @@ function addProject2(pData) {
   var availProg = document.getElementById(availProgId);
   var reviewProg = document.getElementById(reviewProgId);
   var doneProg = document.getElementById(doneProgId);
-  reviewProg.style.color = "black";
   var audioDiv = document.getElementById(audioId)
 
-  updateProgress();
+  setupProgressBar();
 
-  function setupPagination() {
+  function openNewPage() {
 
   }
+
+  function setupPagination() {
+    var db = firebase.firestore()
+    db.collection(`projects/${projectName}/voice`).get().then(result => {
+      $(`#${contribId}`).html(result.size)
+      createPlayersWithResult(result)
+    })
+    // Show spinner and the spinner will be removed in addPlayer.js
+    $("#" + spinId).removeClass("hide-loader");
+    // Remove the spin class in case of faild loading.
+    setTimeout(() => {
+      $("#" + spinId).addClass("hide-loader");
+      $("#" + controlId).show();
+    }, 5000);
+    $("#" + controlId).hide();
+  }
   
-  
-  function updateProgress() {
+  function setupProgressBar() {
     fileCountLookup[projectName] = pData["available"].length;
     var availEntries = pData["available"];
     var votedEntries = pData["voted"];
@@ -131,13 +136,17 @@ function addProject2(pData) {
     votedLookup[projectName] = votedEntries;
   }
 
+  function createPlayersWithResult(result) {
+    result.forEach(doc => {
+      console.log(doc.id, ' and ', doc.data())
+      addPlayer2(doc.id, doc.data(), audioId)
+    })
+  }
+
   function createPlayers(index) {
     var db = firebase.firestore()
     db.collection(`projects/${projectName}/voice`).get().then(result => {
-      result.forEach(doc => {
-        console.log(doc.id, ' and ', doc.data())
-        addPlayer2(doc.id, doc.data(), audioId)
-      })
+      createPlayersWithResult(result)
     })
 
     // Show spinner and the spinner will be removed in addPlayer.js
@@ -146,40 +155,15 @@ function addProject2(pData) {
     setTimeout(() => {
       $("#" + spinId).addClass("hide-loader");
       document.getElementById(controlId).style.display = "block";
-      document.getElementById(voteBtnId).style.display = "inline-block";
     }, 5000);
     document.getElementById(controlId).style.display = "none"
-    document.getElementById(voteBtnId).style.display = "none"
   }
 
   document.getElementById(titleId).addEventListener("click", e => {
+    // No HTML in audio field and card is collapsed
     if (audioDiv.innerHTML.trim() == "" && 
         document.getElementById(projectName).className == "collapse") {
-      createPlayers(0)
-    }
-  })
-    document.getElementById(voteBtnId).addEventListener("click", () => {
-    getVotes(voteClass);
-    removeAllPlayers(audioId);
-    openIndexLookup[projectName] = [];
-
-    var multiIndices = document.getElementById(selectableId).getElementsByClassName("multi-index");
-    var selected = document.getElementById(selectedId);
-    var nextIndices = null;
-
-    for (var i = 0; i < multiIndices.length; i++) {
-      if (selected.innerHTML == multiIndices[i].innerHTML) {
-        if (i >= multiIndices.length - 1) {
-          nextIndices = multiIndices[0];
-        } else {
-          nextIndices = multiIndices[i + 1];
-        }
-        var spans = nextIndices.getElementsByClassName('opt-idx');
-        createPlayers(parseInt(spans[0].innerText))
-        selected.innerHTML = nextIndices.innerHTML;
-        updateProgress();
-        break;
-      }
+      setupPagination();
     }
   })
 

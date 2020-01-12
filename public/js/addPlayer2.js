@@ -7,12 +7,9 @@ function addPlayer2(voiceId, entryData, targetId) {
   const autoBtnId = "auto_" + projectName;
   const spinId = "spin_" + projectName;
   const controlId = "control_" + projectName;
-  const voteBtnId = "voteBtn_" + projectName;
   const likeId = "like_" + voiceId;
   const dislikeId = "dislike_" + voiceId;
-  const voteId = "vote_" + voiceId;
   const mediaLinkId = "mediaLink_" + voiceId;
-  const voteClass = "vote_" + projectName;
 
   const storage = firebase.storage();
   const voiceRef = storage.ref().child(`voice/${projectName}/n_d_${voiceId}.wav`);
@@ -66,7 +63,6 @@ function addPlayer2(voiceId, entryData, targetId) {
     // Hide loader
     $("#" + spinId).addClass("hide-loader");
     document.getElementById(controlId).style.display = "block";
-    document.getElementById(voteBtnId).style.display = "inline-block";
 
     likeOrDislike = window.userData[`vote_${projectName}`][voiceId]
     if (typeof likeOrDislike !== 'undefined') {
@@ -175,47 +171,6 @@ function updateLikeOrDislike(likeOrDislike, sign, projectName, voiceId, entryId)
     batch.set(userRef, voteResult, { merge : true })
   }
   batch.commit()
-}
-
-function getVotes(voteClass) {
-  const voteForms = document.getElementsByClassName(voteClass);
-  const user = firebase.auth().currentUser;
-  for (var i = 0; i < voteForms.length; i++) {
-    form = voteForms[i]
-    // When something selected in the 3 choice...
-    if (form["vote"].value) {
-      vote = parseInt(form["vote"].value)
-      // Store vote results in the AUDIO FILE-oriented way
-      rtdbTarget = form.id.replace(/\.[^/.]+$/, "")
-      rtdbTarget = rtdbTarget.replace("projects/", "votes/")
-      writeVoteData(rtdbTarget, vote)
-      if (user) {
-        // Store vote results for the USER-oriented way
-        writeUserVoteData(user, rtdbTarget, vote)
-      }
-    }
-  }
-}
-
-function writeVoteData(target, vote) {
-  var voteData = {
-    vote: vote
-  }
-  var newKey = firebase.database().ref(target).push().key;
-  var updates = {}
-  updates[newKey] = voteData
-  firebase.database().ref(target).update(updates)
-}
-
-function writeUserVoteData(user, target, vote) {
-  var voteData = {
-    vote: vote,
-    ref: target
-  }
-  var newKey = firebase.database().ref("users").child(user.uid).child("votes").push().key;
-  var updates = {}
-  updates[newKey] = voteData
-  firebase.database().ref("users").child(user.uid).child("votes").update(updates)
 }
 
 function removeAllPlayers(audioId) {
