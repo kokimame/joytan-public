@@ -41,8 +41,8 @@
 
   <script src="/js/addPlayer.js"></script>
   <script src="/js/addProject.js"></script>
-  <script src="/js/addProject2.js"></script>
-  <script src="/js/addPlayer2.js"></script>
+  <script src="/js/addProject.js"></script>
+  <script src="/js/addPlayer.js"></script>
   <script src="/js/authHelpers.js"></script>
   <link rel="stylesheet" href="css/pagination.css">
   <link rel="stylesheet" href="css/main.css">
@@ -82,7 +82,7 @@
             pData = doc.data()
             if(pData["available"].length > 0) {
               console.log(doc.id, "-->", pData)
-              addProject2(pData)
+              addProject(pData)
             }
           })
           $("#landing-spin").addClass("hide-loader");

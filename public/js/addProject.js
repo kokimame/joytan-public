@@ -1,84 +1,67 @@
 var fileCountLookup = {};
 var votedLookup = {};
 var doneLookup = {};
-var openIndexLookup = {};
-var cardPallete = ["#a8e6cf", "#dcedc1", "#ffd3b6", "#ffaaa5", "#ff8b94",
-                   "#ebf4f6", "#bdeaee", "#90cdd6", "#fff6e9", "#ffefd7", 
-                   "#fffef9", "#e3f0ff", "#d2e7ff"];
-const moreThanWarning = "You are reviewing more than 50 entires. Please VOTE first and load audio :)"
+var pageLookup = {};
 
-
-function addProject(item, projectRef) {
+function addProject(pData) {
   const div = document.createElement('div');
-  const projectName = item["dirname"]
-  const loadBtnId = "loadBtn_" + projectName
-  const voteBtnId = "voteBtn_" + projectName
+  const projectName = pData["dirname"]
+  const pagingId = "paging_" + projectName
   const controlId = "control_" + projectName
   const autoBtnId = "auto_" + projectName
   const forumId = "forum_" + projectName
-  const voteClass = "vote_" + projectName
-  const customSelectId = "cSelect_" + projectName
-  const baseSelectId = "bSelect_" + projectName
-  const selectableId = "selectable_" + projectName
-  const selectedId = "selected_" + projectName
   const cardId = "card_" + projectName
   const audioId = "audio_" + projectName
   const spinId = "spin_" + projectName
   const titleId = "title_" + projectName
+  const contribId = "contrib_" + projectName
   const doneProgId = "done_" + titleId
   const reviewProgId = "review_" + titleId
   const availProgId = "avail_" + titleId
-  const totalEntries = item["entries"].length;
-  var titleFixed = item["flags"] + item["title"]
+  const totalEntries = pData["size"];
+  var titleFixed = pData["flags"] + pData["title"]
 
   fileCountLookup[projectName] = 0;
-  openIndexLookup[projectName] = [];
+  pageLookup[projectName] = [];
 
   //🇯🇵🇫🇷🇩🇪🇬🇧🇺🇸🇷🇺🇰🇷🇮🇹🇸🇪🇪🇸🇹🇷
   div.innerHTML = `
-  <button class="btn btn-outline-dark btn-block text-left collapsed" type="button" 
+  <button class="btn btn-block text-left collapsed btn-title" type="button" 
     data-toggle="collapse" data-target="#${projectName}" aria-expanded="false" id="${titleId}">
     <i class="fa fa-chevron-down pull-right"></i>
-    <div class"btn-title" >
-        ${titleFixed}
+    <div class="title-in-btn" >
+      ${titleFixed}
     </div>
     
-    <div class="progress">
+    <div class="progress" style="border-radius: 10px">
       <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" 
-        role="progressbar" style="width: 0%; height: 100%" aria-valuenow="10" 
+        role="progressbar" style="width: 0%; height: 100%;" aria-valuenow="10" 
         aria-valuemin="0" aria-valuemax="100" id="${doneProgId}"></div>
       <div class="progress-bar bg-warning" 
-        role="progressbar" style="width: 0%; height: 90%;" aria-valuenow="10" 
+        role="progressbar" 
+        style="width: 0%; height: 90%; color: black;" aria-valuenow="10" 
         aria-valuemin="0" aria-valuemax="100" id="${reviewProgId}"></div>
       <div class="progress-bar bg-info" role="progressbar" 
-        style="width: 0%; height: 80%;" aria-valuenow="30"
+        style="width: 0%; height: 80%; border-radius: 0px 10px 10px 0px;" aria-valuenow="30"
         aria-valuemin="0" aria-valuemax="100" id="${availProgId}"></div>
     </div>
+    <span class="forum-link" id="${forumId}">
+      Go to Forum <a class="far fa-comments" style="text-decoration: underline"></a>
+    </span>
   </button>
   <div class="collapse" id="${projectName}" data-parent="#projectsTop">
     <div class="card card-body" id="${cardId}">
-      <div class="load-control" style="height: 40px;">
-        <div id="${spinId}">
-          <div class="spinning">
-          </div>
-        </div>
-        <div id="${controlId}">
-          <button type="button" class="btn btn-slim btn-success" id="${loadBtnId}">Load</button>
-          <div class="custom-select" id="${customSelectId}">
-            <select class="form-control" id="${baseSelectId}">
-            </select>
-          </div>
-          <button type="button" class="btn btn-slim btn-success auto-play" id="${autoBtnId}" value="off">
-            Auto <a class="fa fa-volume-up"></a></button>
-          <button type="button" class="btn btn-slim btn-secondary" id="${forumId}" value="off">
-            Forum<a class="far fa-comments forum-link"></a></button>
-        </div>
+      <span class="pagination" id="${controlId}">
+        <ul id="${pagingId}"></ul>
+        <span class="total-count"><span id="${contribId}"></span> contributions</span>
+        <button type="button" class="btn btn-slim btn-warning auto-play" id="${autoBtnId}" value="off">
+        Auto <a class="fa fa-volume-up"></a></button>
+      </span>
+      <div id="${spinId}" class="spinner-wrapper">
+      <i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>
       </div>
-      <hr style="margin-bottom: 12px;" />
-      <div id="${audioId}" style="display: inline-block;">
+      <div id="${audioId}" class="player-field">
       </div>
-      <button type="button" id="${voteBtnId}" class="btn btn-slim btn-success btn-vote"
-        style="display: inline-block;">Vote & Next</button>
     </div>
   </div>
   <br />
@@ -89,246 +72,120 @@ function addProject(item, projectRef) {
   var availProg = document.getElementById(availProgId);
   var reviewProg = document.getElementById(reviewProgId);
   var doneProg = document.getElementById(doneProgId);
-  reviewProg.style.color = "black";
   var audioDiv = document.getElementById(audioId)
 
-  updateProgress();
+  setupProgressBar();
   
-  
-  function updateProgress() {
-    projectRef.listAll().then(res => {
+  function setupPagination() {
+    var db = firebase.firestore()
+    db.collection(`projects/${projectName}/voice`).orderBy("created_at", "desc").get().then(result => {
+      $(`#${contribId}`).html(result.size)
+      $(`#${pagingId}`).pagination({
+        items: result.size,
+        itemsOnPage: 20,
+        edges: 1,
+        prevText: "Back",
+        displayedPages: 3,
+        onPageClick: function(pageNumber) {
+          nextPage(pageNumber)
+        },
+        cssStyle: 'light-theme'
+      });
+      pageLookup[projectName] = result
+      nextPage(1)
+    })
+    // Show spinner and the spinner will be removed in addPlayer.js
+    $("#" + spinId).removeClass("hide-loader");
+    // Remove the spin class in case of faild loading.
+    setTimeout(() => {
+      $("#" + spinId).addClass("hide-loader");
+      $("#" + controlId).show();
+    }, 5000);
+    $("#" + controlId).hide();
+  }
 
-      var bSelect = document.getElementById(baseSelectId);
-      if (bSelect != null) {
-        res.prefixes.forEach(entryRef => {
-          var index = parseInt(entryRef.name, 10)
-          bSelect.innerHTML += `<option value="${index}">${index}</option>`
-        });
+  function nextPage(index) {
+    // Show spinner and the spinner will be removed in addPlayer.js
+    $("#" + spinId).removeClass("hide-loader");
+    // Remove the spin class in case of faild loading.
+    setTimeout(() => {
+      $("#" + spinId).addClass("hide-loader");
+      $("#" + controlId).show();
+    }, 5000);
+    $("#" + controlId).hide();
+
+    removeAllPlayers(audioId)
+    index = index - 1
+    for (var i = index * 20; i < index * 20 + 20; i += 1) {
+      if (i >= pageLookup[projectName].docs.length) {
+        break
       }
+      doc = pageLookup[projectName].docs[i]
+      addPlayer(doc.id, doc.data(), audioId)
+    }
+  }
+  
+  function setupProgressBar() {
+    fileCountLookup[projectName] = pData["available"].length;
+    var availEntries = pData["available"];
+    var votedEntries = pData["voted"];
+    var doneEntries = pData["done"];
 
-      fileCountLookup[projectName] = res.prefixes.length;
-      firebase.database().ref("votes").child(projectName).once('value').then(snapshotVote => {
-        firebase.database().ref("users/3fG1zIUGn1hAf8JkDGd500uNuIi1/done/projects").child(projectName).once('value').then(snapshotDone => {
-          var voteRatio = 0
-          var doneRatio = 0
-          var doneEntries = [];
-          var votedEntries = [];
+    const availRatio = 100 * availEntries.length / totalEntries;
+    const votedRatio = 100 * votedEntries.length / totalEntries;
+    const doneRatio = 100 * doneEntries.length / totalEntries;
 
-          if (snapshotDone.val()) {
-            doneEntries = Object.keys(snapshotDone.val());
-            doneRatio = 100 * doneEntries.length / totalEntries
-          }
-          if (snapshotVote.val()) {
-            votedEntries = Object.keys(snapshotVote.val());
-            voteRatio = 100 * votedEntries.length / totalEntries
-          }
-          availRatio = (100 * fileCountLookup[projectName] / totalEntries)
+    doneProg.style.width = doneRatio.toString() + "%";
+    reviewProg.style.width = (votedRatio - doneRatio).toString() + "%";
+    availProg.style.width = (availRatio - votedRatio).toString() + "%";
 
-          doneProg.style.width = doneRatio.toString() + "%";
-          reviewProg.style.width = (voteRatio - doneRatio).toString() + "%";
-          availProg.style.width = (availRatio - voteRatio).toString() + "%";
+    if (doneRatio > 5) {
+      doneProg.innerText = doneEntries.length;
+    }
+    if ((votedRatio - doneRatio) > 5) {
+      reviewProg.innerText = votedEntries.length - doneEntries.length;
+    }
+    if ((availRatio - votedRatio) > 5) {
+      availProg.innerText = fileCountLookup[projectName] - votedEntries.length;
+    }
 
-          if (doneRatio > 5) {
-            doneProg.innerText = doneEntries.length;
-          }
-          if ((voteRatio - doneRatio) > 5) {
-            reviewProg.innerText = votedEntries.length - doneEntries.length;
-          }
-          if ((availRatio - voteRatio) > 5) {
-            availProg.innerText = fileCountLookup[projectName] - votedEntries.length;
-          }
+    doneLookup[projectName] = doneEntries;
+    votedLookup[projectName] = votedEntries;
+  }
 
-          doneLookup[projectName] = doneEntries;
-          votedLookup[projectName] = votedEntries;
-
-          /* Look for any elements with the class "custom-select" */
-          var cSelect = document.getElementById(customSelectId);
-          var bSelect = document.getElementById(baseSelectId);
-
-          // After voting bSelect becomes null
-          // and accessing properties raises exeptions.
-          // This is a very stupid way to stop these errors.
-          // FIXME: Should be a better way!!
-          if (bSelect == null) {
-            return
-          }
-          /* For each element, create a new DIV that will act
-           as the selected item */
-          var selectedItem = document.createElement("div");
-          selectedItem.id = selectedId
-          selectedItem.setAttribute("class", "select-selected");
-          // Remove all previous items for selection
-          while (cSelect.firstChild) {
-            cSelect.removeChild(cSelect.firstChild);
-          }
-          cSelect.appendChild(selectedItem);
-          /*for each element, create a new DIV that will contain the option list:*/
-          var selectables = document.createElement("div");
-          selectables.id = selectableId;
-          selectables.setAttribute("class", "select-items select-hide");
-
-          for (var j = 0; j < bSelect.length; j+= 3) {
-            const idxId = "".concat(j.toString(), '_', projectName);
-            const multiIndices = document.createElement("div");
-            multiIndices.setAttribute("class", "multi-index")
-            multiIndices.id = idxId;
-            /*for each option in the original select element,
-            create a new DIV that will act as an option item:*/
-            for (var k = 0; k < 3; k++) {
-              if (j + k >= bSelect.length) {
-                break;
-              }
-              var opt = document.createElement("div");
-              opt.setAttribute("class", "opt-idx");
-              opt.innerHTML = bSelect.options[j + k].innerHTML;
-
-              var stringNum = ("0000" + parseInt(opt.innerText)).slice(-5);
-
-              // Update background color for status indication
-              if (doneEntries.indexOf(stringNum) != -1) {
-                // Dark Green for done entries
-                opt.style.background = "#08A93D"
-              } 
-              else if (votedEntries.indexOf(stringNum) != -1) {
-                // Yellow for reviewed entries
-                opt.style.background = "#F3B301"
-              }
-              multiIndices.appendChild(opt)
-            }
-            selectables.appendChild(multiIndices);
-
-            multiIndices.addEventListener("click", function(e) {
-              var indices = multiIndices.getElementsByClassName("opt-idx")
-              for (var i = 0; i < indices.length; i++) {
-                createPlayers(parseInt(indices[i].innerText))
-              }
-              selectedItem.innerHTML = multiIndices.innerHTML
-            });
-          }
-          cSelect.appendChild(selectables);
-          
-          selectedItem.innerHTML = selectables.firstChild.innerHTML
-
-          selectedItem.addEventListener("click", function(e) {
-            /*when the select box is clicked, close any other select boxes,
-            and open/close the current select box:*/
-            e.stopPropagation();
-            closeAllSelect(this);
-            this.nextSibling.classList.toggle("select-hide");
-            this.classList.toggle("select-arrow-active");
-          });
-        })
-      })
+  function createPlayersWithResult(result) {
+    result.forEach(doc => {
+      console.log(doc.id, ' and ', doc.data())
+      addPlayer(doc.id, doc.data(), audioId)
     })
   }
 
   function createPlayers(index) {
-    if (openIndexLookup[projectName].includes(index)) {
-      // If the new index is already opened, ignore it
-      // otherwise the id duplication error occurs.
-      return
-    } else {
-      openIndexLookup[projectName].push(index)
-    }
-
-    // Maybe this is not an optimal way to pass parameters
-    // but this is very convinient for this specific part
-    entryRef = projectRef.child(("0000" + index).slice(-5));
-    entries = item["entries"];
-    currentWanted = item["wanted"];
-    upperNote = item["upn"];
-    lowerNote = item["lon"];
-    appendAudio(audioId, item["dirname"]);
-    /////////  //////////  ///////////  ////
+    var db = firebase.firestore()
+    db.collection(`projects/${projectName}/voice`).get().then(result => {
+      createPlayersWithResult(result)
+    })
 
     // Show spinner and the spinner will be removed in addPlayer.js
     $("#" + spinId).removeClass("hide-loader");
     // Remove the spin class in case of faild loading.
     setTimeout(() => {
       $("#" + spinId).addClass("hide-loader");
-      document.getElementById(controlId).style.display = "block";
-      document.getElementById(voteBtnId).style.display = "inline-block";
+      $("#" + controlId).show();
     }, 5000);
-    document.getElementById(controlId).style.display = "none"
-    document.getElementById(voteBtnId).style.display = "none"
+    $("#" + controlId).hide();
   }
 
   document.getElementById(titleId).addEventListener("click", e => {
-    if (document.getElementById(selectedId) == null) {
-      // Stop when base selector is NOT ready!
-      // TODO: Probably there is a better way to do this.
-      e.stopPropagation();
-    } else if (audioDiv.innerHTML.trim() == "" && document.getElementById(projectName).className == "collapse") {
-      // MAYBE: To prevent double loading which induce the unplayable player error
-      removeAllPlayers(audioId)
-      var selected = document.getElementById(selectedId);
-
-      if (openIndexLookup[projectName].length >= 50) {
-        alert(moreThanWarning)
-        return
-      }
-      var divs = selected.getElementsByClassName('opt-idx');
-      for (var j = 0; j < divs.length; j++) {
-        createPlayers(parseInt(divs[j].innerText))
-      }
-    }
-  })
-  document.getElementById(loadBtnId).addEventListener("click", () => {
-    // If more than 50 entries are open, let users do the vote first.
-    var multiIndices = document.getElementById(selectableId).getElementsByClassName("multi-index");
-    var selected = document.getElementById(selectedId);
-    var nextIndices = null;
-
-    for (var i = 0; i < multiIndices.length; i++) {
-      if (selected.innerHTML == multiIndices[i].innerHTML) {
-        if (openIndexLookup[projectName].length >= 50) {
-          alert(moreThanWarning)
-          return
-        }
-        if (i >= multiIndices.length - 1) {
-          nextIndices = multiIndices[0];
-        } else {
-          nextIndices = multiIndices[i + 1];
-        }
-
-        var spans = nextIndices.getElementsByClassName('opt-idx');
-        for (var j = 0; j < spans.length; j++) {
-          createPlayers(parseInt(spans[j].innerText))
-        }
-        selected.innerHTML = nextIndices.innerHTML;
-        break;
-      }
-    }
-  })
-  document.getElementById(voteBtnId).addEventListener("click", () => {
-    getVotes(voteClass);
-    removeAllPlayers(audioId);
-    openIndexLookup[projectName] = [];
-
-    var multiIndices = document.getElementById(selectableId).getElementsByClassName("multi-index");
-    var selected = document.getElementById(selectedId);
-    var nextIndices = null;
-
-    for (var i = 0; i < multiIndices.length; i++) {
-      if (selected.innerHTML == multiIndices[i].innerHTML) {
-        if (i >= multiIndices.length - 1) {
-          nextIndices = multiIndices[0];
-        } else {
-          nextIndices = multiIndices[i + 1];
-        }
-        var spans = nextIndices.getElementsByClassName('opt-idx');
-        for (var j = 0; j < spans.length; j++) {
-          createPlayers(parseInt(spans[j].innerText))
-        }
-        selected.innerHTML = nextIndices.innerHTML;
-        updateProgress();
-        break;
-      }
+    // No HTML in audio field and card is collapsed
+    if (audioDiv.innerHTML.trim() == "" && 
+        document.getElementById(projectName).className == "collapse") {
+      setupPagination();
     }
   })
 
-  document.getElementById(forumId).addEventListener('click', () => {
-    window.location.href = "forum/?p=" + projectName
+  $(`#${forumId}`).bind('click auxclick', () => {
+    window.open("forum/?p=" + projectName, '_blank')
   })
 
   document.getElementById(autoBtnId).addEventListener('click', () => {
@@ -380,19 +237,6 @@ function addProject(item, projectRef) {
   document.addEventListener("click", closeAllSelect);
 }
 
-function appendAudio(idToAppend, projectName) {
-  entryRef.listAll().then(res => {
-    res.prefixes.forEach(userRef => {
-      userRef.listAll().then(res => {
-        for (var wavRef of res.items) {
-          if (wavRef.name.startsWith('n_d_')) {
-            addPlayer(wavRef, idToAppend, projectName);
-          }
-        }
-      })
-    })
-  })
-}
 function playNext(audioDiv, justEnded, autoBtnId) {
   var players = audioDiv.getElementsByClassName("fa fa-play ml-2");
   var arrayOfId = [];
@@ -409,4 +253,3 @@ function playNext(audioDiv, justEnded, autoBtnId) {
     autoBtn.innerHTML = `Auto <a class="fa fa-volume-up">`
   }
 }
-
