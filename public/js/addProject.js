@@ -20,6 +20,7 @@ function addProject(pData) {
   const availProgId = "avail_" + titleId
   const totalEntries = pData["size"];
   var titleFixed = pData["flags"] + pData["title"]
+  const playerPerPage = 20;
 
   fileCountLookup[projectName] = 0;
   pageLookup[projectName] = [];
@@ -82,11 +83,12 @@ function addProject(pData) {
       $(`#${contribId}`).html(result.size)
       $(`#${pagingId}`).pagination({
         items: result.size,
-        itemsOnPage: 20,
+        itemsOnPage: playerPerPage,
         edges: 1,
         prevText: "Back",
         displayedPages: 3,
-        onPageClick: function(pageNumber) {
+        onPageClick: function(pageNumber, event) {
+          event.preventDefault() 
           nextPage(pageNumber)
         },
         cssStyle: 'light-theme'
@@ -116,7 +118,7 @@ function addProject(pData) {
 
     removeAllPlayers(audioId)
     index = index - 1
-    for (var i = index * 20; i < index * 20 + 20; i += 1) {
+    for (var i = index * playerPerPage; i < (index + 1) * playerPerPage; i += 1) {
       if (i >= pageLookup[projectName].docs.length) {
         break
       }

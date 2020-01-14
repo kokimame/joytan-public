@@ -33,12 +33,9 @@ function addPlayer(voiceId, entryData, targetId) {
       <td style="text-align: center">
         <i id="${playBtnId}" class="fa fa-play ml-2"></i><br />
         <div style="overflow: hidden">
-        <div class="like grow" id="${likeId}" value="like">
-          <i class="fa fa-thumbs-o-up like" aria-hidden="true"></i>
-        </div>
-        <div class="dislike grow" id="${dislikeId}" value="dislike">
-          <i class="fa fa-thumbs-o-up dislike" aria-hidden="true"></i>
-        </div>
+          <div class="like grow" id="${likeId}" value="like">
+            <i class="fa fa-thumbs-o-up like" aria-hidden="true"></i>
+          </div>
         </div>
       </td>
       <td>
