@@ -26,11 +26,6 @@ function addPlayer2(voiceId, entryData, targetId) {
     lonString = (typeof lonString === 'undefined') ? "" : lonString;
     color = "#D0D0D0"; // Light gray by default;
 
-    // if (doneLookup[projectName].indexOf(index) != -1) {
-    //   color = "#cefdde";
-    // } else if (votedLookup[projectName].indexOf(index) != -1) {
-    //   color = "#fff1cc"
-    // }
     const div = document.createElement('div');
     div.className = 'player-table';
     div.innerHTML = `

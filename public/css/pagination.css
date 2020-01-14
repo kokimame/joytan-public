@@ -1,7 +1,7 @@
 .pagination {
     text-decoration: none;
     margin: 0 auto;
-    float: left;
+    text-align: center;
     padding: 8px;    
 }
 .page-numbers {

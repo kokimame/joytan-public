@@ -1,11 +1,7 @@
 var fileCountLookup = {};
 var votedLookup = {};
 var doneLookup = {};
-var openIndexLookup = {};
-var cardPallete = ["#a8e6cf", "#dcedc1", "#ffd3b6", "#ffaaa5", "#ff8b94",
-                   "#ebf4f6", "#bdeaee", "#90cdd6", "#fff6e9", "#ffefd7", 
-                   "#fffef9", "#e3f0ff", "#d2e7ff"];
-
+var pageLookup = {};
 
 function addProject2(pData) {
   const div = document.createElement('div');
@@ -26,7 +22,7 @@ function addProject2(pData) {
   var titleFixed = pData["flags"] + pData["title"]
 
   fileCountLookup[projectName] = 0;
-  openIndexLookup[projectName] = [];
+  pageLookup[projectName] = [];
 
   //🇯🇵🇫🇷🇩🇪🇬🇧🇺🇸🇷🇺🇰🇷🇮🇹🇸🇪🇪🇸🇹🇷
   div.innerHTML = `
@@ -55,23 +51,15 @@ function addProject2(pData) {
   </button>
   <div class="collapse" id="${projectName}" data-parent="#projectsTop">
     <div class="card card-body" id="${cardId}">
-      <div id="${spinId}" class="spinner-wrapper">
-        <i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>
-      </div>
-      <span class="pagination"  id="${controlId}">
-        <span id="${pagingId}">		
-          <span class="page-back page-numbers">« Back</span>
-          <span class="page-next page-numbers">Next »</span>
-          <span class="page-numbers current">1</span>
-          <span class="page-numbers">2</span>
-          <span class="page-numbers">3</span>
-          <span class="dots">...</span>
-          <span class="page-numbers">17</span>
-          <span class="total-count"><span id="${contribId}"></span> contributions</span>
-        </span>
+      <span class="pagination" id="${controlId}">
+        <ul id="${pagingId}"></ul>
+        <span class="total-count"><span id="${contribId}"></span> contributions</span>
         <button type="button" class="btn btn-slim btn-warning auto-play" id="${autoBtnId}" value="off">
         Auto <a class="fa fa-volume-up"></a></button>
       </span>
+      <div id="${spinId}" class="spinner-wrapper">
+      <i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>
+      </div>
       <div id="${audioId}" class="player-field">
       </div>
     </div>
@@ -87,16 +75,24 @@ function addProject2(pData) {
   var audioDiv = document.getElementById(audioId)
 
   setupProgressBar();
-
-  function openNewPage() {
-
-  }
-
+  
   function setupPagination() {
     var db = firebase.firestore()
-    db.collection(`projects/${projectName}/voice`).get().then(result => {
+    db.collection(`projects/${projectName}/voice`).orderBy("created_at", "desc").get().then(result => {
       $(`#${contribId}`).html(result.size)
-      createPlayersWithResult(result)
+      $(`#${pagingId}`).pagination({
+        items: result.size,
+        itemsOnPage: 20,
+        edges: 1,
+        prevText: "Back",
+        displayedPages: 3,
+        onPageClick: function(pageNumber) {
+          nextPage(pageNumber)
+        },
+        cssStyle: 'light-theme'
+      });
+      pageLookup[projectName] = result
+      nextPage(1)
     })
     // Show spinner and the spinner will be removed in addPlayer.js
     $("#" + spinId).removeClass("hide-loader");
@@ -106,6 +102,27 @@ function addProject2(pData) {
       $("#" + controlId).show();
     }, 5000);
     $("#" + controlId).hide();
+  }
+
+  function nextPage(index) {
+    // Show spinner and the spinner will be removed in addPlayer.js
+    $("#" + spinId).removeClass("hide-loader");
+    // Remove the spin class in case of faild loading.
+    setTimeout(() => {
+      $("#" + spinId).addClass("hide-loader");
+      $("#" + controlId).show();
+    }, 5000);
+    $("#" + controlId).hide();
+
+    removeAllPlayers(audioId)
+    index = index - 1
+    for (var i = index * 20; i < index * 20 + 20; i += 1) {
+      if (i >= pageLookup[projectName].docs.length) {
+        break
+      }
+      doc = pageLookup[projectName].docs[i]
+      addPlayer2(doc.id, doc.data(), audioId)
+    }
   }
   
   function setupProgressBar() {
@@ -154,9 +171,9 @@ function addProject2(pData) {
     // Remove the spin class in case of faild loading.
     setTimeout(() => {
       $("#" + spinId).addClass("hide-loader");
-      document.getElementById(controlId).style.display = "block";
+      $("#" + controlId).show();
     }, 5000);
-    document.getElementById(controlId).style.display = "none"
+    $("#" + controlId).hide();
   }
 
   document.getElementById(titleId).addEventListener("click", e => {
@@ -167,10 +184,7 @@ function addProject2(pData) {
     }
   })
 
-  document.getElementById(forumId).addEventListener('click', () => {
-    window.open("forum/?p=" + projectName, '_blank')
-  })
-  document.getElementById(forumId).addEventListener('auxclick', () => {
+  $(`#${forumId}`).bind('click auxclick', () => {
     window.open("forum/?p=" + projectName, '_blank')
   })
 
