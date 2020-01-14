@@ -44,6 +44,7 @@
 <link rel="icon" type="image/png" sizes="96x96" href="../icons/favicon-96x96.png">
 <link rel="icon" type="image/png" sizes="16x16" href="../icons/favicon-16x16.png">
 <link rel="manifest" href="../icons/manifest.json">
+
 <meta name="msapplication-TileColor" content="#ffffff">
 <meta name="msapplication-TileImage" content="../icons/ms-icon-144x144.png">
 <meta name="theme-color" content="#ffffff">
@@ -56,7 +57,12 @@
 <script src="../js/addForum.js"></script>
 <script src="../js/addQuiz.js"></script>
 <script src="../js/authHelpers.js"></script>
+<!-- Control YouTube Player -->
 <script src="../js/callPlayer.js"></script>
+
+<!-- Threaded comment board in JQuery-->
+<link rel="stylesheet" type="text/css" href="../css/jquery-comments.css">
+<script type="text/javascript" src="../js/jquery-comments.js"></script>
 
 
 <script>
@@ -105,6 +111,21 @@ window.onload = () => {
     const ytplayer = document.getElementById("youtube-player");
     var timestampData = false;
     var quizData = false;
+
+    $('#comments-container').comments({
+    profilePictureURL: 'https://viima-app.s3.amazonaws.com/media/public/defaults/user-icon.png',
+    getComments: function(success, error) {
+        var commentsArray = [{
+            id: 1,
+            created: '2015-10-01',
+            content: 'Lorem ipsum dolort sit amet',
+            fullname: 'Simon Powell',
+            upvote_count: 2,
+            user_has_upvoted: true
+        }];
+        success(commentsArray);
+    }
+    });
     
     $(() => {
       $("#quiz-view").load("quiz.html");
@@ -305,6 +326,9 @@ window.onload = () => {
         This is the top page of Joytan Forum.</br>
         There is no interesting content here😿</br>
         Jump to a project using <b>the project search tool</b> (<i class="fas fa-search"></i>).
+      </div>
+
+      <div id="comments-container">
       </div>
 
       <div id="auth-form" class="modal">
