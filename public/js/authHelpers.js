@@ -36,7 +36,7 @@ function validatePassword(){
       userData['user'].updateProfile({
         displayName: unameInput.value
       })
-      closeAuthForm();
+      closeModals();
     });
   }
 function loginUser() {
@@ -52,14 +52,14 @@ function loginUser() {
       throw error;
   }).then(user => {
       console.log("Log in an user! =>", user)
-      closeAuthForm();
+      closeModals();
   });
 }
 function signOutUser() {
   firebase.auth().signOut().then(function() {
       // Sign-out successful.
       console.log('User Logged Out!');
-      closeAuthForm();
+      closeModals();
   }).catch(error => {
      // An error happened.
       console.log(error);
@@ -79,7 +79,7 @@ function handleAuthButton() {
   }
   document.getElementById("auth-form").style.display = "block";
 }
-function closeAuthForm() {
+function closeModals() {
   $("#auth-form").hide();
   $("#about-view").hide();
   $("#stat-view").hide();

@@ -60,8 +60,6 @@ function addPlayer(voiceId, entryData, targetId) {
     if (typeof likeOrDislike !== 'undefined') {
       if (likeOrDislike == "like") {
         $(`#${likeId}`).addClass('active-thumb')
-      } else {
-        $(`#${dislikeId}`).addClass('active-thumb')
       }
     }
 
@@ -78,16 +76,8 @@ function addPlayer(voiceId, entryData, targetId) {
       }
     }
 
-    $(`#${likeId}, #${dislikeId}`).on('click', function() {
+    $(`#${likeId}`).on('click', function() {
       event.preventDefault();
-      const likeOrDislike = $(this).attr('value')
-      if (likeOrDislike == 'like' && $(`#${dislikeId}`).hasClass('active-thumb')) {
-        $(`#${dislikeId}`).removeClass('active-thumb')
-        updateLikeOrDislike('dislike', -1, projectName, voiceId, entryId)
-      } else if (likeOrDislike == 'dislike' && $(`#${likeId}`).hasClass('active-thumb')) {
-        $(`#${likeId}`).removeClass('active-thumb')
-        updateLikeOrDislike('like', -1, projectName, voiceId, entryId)
-      }
       if($(this).hasClass('active-thumb')) {
         $(this).removeClass('active-thumb')
         updateLikeOrDislike(likeOrDislike, -1, projectName, voiceId, entryId)
