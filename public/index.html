@@ -91,7 +91,7 @@
     
       $(() => {
         $("#about-view").load("about.html"); 
-        $("#stat-view").load("stat.html"); 
+        $("#stats-view").load("stats.html"); 
       });
       // Close modal when clicking outside
       $("#auth-form").click(ev => {
@@ -108,11 +108,11 @@
           $("#about-view").hide();
         }
       });
-      $("#stat-view").click(ev => {
-        if(ev.target != document.getElementById("stat-view")) {
+      $("#stats-view").click(ev => {
+        if(ev.target != document.getElementById("stats-view")) {
           return;
         } else {
-          $("#stat-view").hide();
+          $("#stats-view").hide();
         }
       });
 
@@ -143,9 +143,13 @@
         e.preventDefault();
         $("#about-view").show();
       }
+      document.getElementById('check-the-statistics').onclick = e => {
+        e.preventDefault();
+        $("#stats-view").show();
+      }
       document.getElementById('btn-stat').onclick = e => {
         e.preventDefault();
-        $("#stat-view").show();
+        $("#stats-view").show();
       }
     } // ^^^^^ onload ^^^^^
   </script>
@@ -212,8 +216,9 @@
             will immediately be available on this website! 
             <a href="" id="learn-more">Learn more</a>
           </p>
+          <a href="" id="check-the-statistics">Check the statistics</a>
           <div id="about-view" class="modal"></div>
-          <div id="stat-view" class="modal"></div>
+          <div id="stats-view" class="modal"></div>
 
           <div id="auth-form" class="modal">
             <span onclick="closeModals()" class="close" title="Close Modal">&times;</span>
