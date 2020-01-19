@@ -147,29 +147,6 @@ function addProject(pData) {
     }
   }
 
-  function createPlayersWithResult(result) {
-    result.forEach(doc => {
-      console.log(doc.id, ' and ', doc.data())
-      addPlayer(doc.id, doc.data(), audioId)
-    })
-  }
-
-  function createPlayers(index) {
-    var db = firebase.firestore()
-    db.collection(`projects/${projectName}/voice`).get().then(result => {
-      createPlayersWithResult(result)
-    })
-
-    // Show spinner and the spinner will be removed in addPlayer.js
-    $("#" + spinId).removeClass("hide-loader");
-    // Remove the spin class in case of faild loading.
-    setTimeout(() => {
-      $("#" + spinId).addClass("hide-loader");
-      $("#" + controlId).show();
-    }, 5000);
-    $("#" + controlId).hide();
-  }
-
   document.getElementById(titleId).addEventListener("click", e => {
     // No HTML in audio field and card is collapsed
     if (audioDiv.innerHTML.trim() == "" && 
