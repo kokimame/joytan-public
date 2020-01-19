@@ -1,7 +1,4 @@
-var fileCountLookup = {};
-var votedLookup = {};
-var doneLookup = {};
-var pageLookup = {};
+var pageLookup = {}
 
 function addProject(pData) {
   const div = document.createElement('div');
@@ -22,7 +19,6 @@ function addProject(pData) {
   var titleFixed = pData["flags"] + pData["title"]
   const playerPerPage = 20;
 
-  fileCountLookup[projectName] = 0;
   pageLookup[projectName] = [];
 
   //🇯🇵🇫🇷🇩🇪🇬🇧🇺🇸🇷🇺🇰🇷🇮🇹🇸🇪🇪🇸🇹🇷
@@ -128,7 +124,6 @@ function addProject(pData) {
   }
   
   function setupProgressBar() {
-    fileCountLookup[projectName] = pData["available"].length;
     var availEntries = pData["available"];
     var votedEntries = pData["voted"];
     var doneEntries = pData["done"];
@@ -148,11 +143,8 @@ function addProject(pData) {
       reviewProg.innerText = votedEntries.length - doneEntries.length;
     }
     if ((availRatio - votedRatio) > 5) {
-      availProg.innerText = fileCountLookup[projectName] - votedEntries.length;
+      availProg.innerText = availEntries.length - votedEntries.length;
     }
-
-    doneLookup[projectName] = doneEntries;
-    votedLookup[projectName] = votedEntries;
   }
 
   function createPlayersWithResult(result) {
