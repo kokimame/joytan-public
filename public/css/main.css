@@ -151,6 +151,19 @@ button {
 
 }
 
+.project-category {
+    display: inline-block;
+    font-weight: 600;
+    padding: 8px;
+    margin-top: 6px;
+    color: #0079D3;
+    background-color: #e6ecf3;
+    font-family: Arial, Helvetica, sans-serif;
+    border-radius: 25%/50%;
+    -moz-border-radius: 25%/50%;
+    -webkit-border-radius: 25%/50%;
+}
+
 .footer {
     /* position: fixed; */
     left: 0;
