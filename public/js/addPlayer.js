@@ -11,7 +11,7 @@ function addPlayer(voiceId, entryData, targetId) {
   const mediaLinkId = "mediaLink_" + voiceId;
 
   const storage = firebase.storage();
-  const voiceRef = storage.ref().child(`voice/${projectName}/n_d_${voiceId}.wav`);
+  const voiceRef = storage.ref().child(`n_d_voice/${projectName}/n_d_${voiceId}.wav`);
 
   voiceRef.getDownloadURL().then((url) => {
     // Add extra assertion to prevent failed loadings
