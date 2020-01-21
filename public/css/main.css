@@ -1,5 +1,6 @@
 html, body {
     max-width: 100%;
+    overflow-x: hidden;
     background-color: #dae0e6;
 }
 /* Hide schollbar early on but not disabling the feature */
@@ -10,6 +11,15 @@ html, body {
     padding-bottom: 6px;
 }
 
+#other-link-list {
+    list-style-type: none;
+    padding: 0px;
+    text-align: center;
+}
+
+.nav-item {
+    border-color: black;
+}
 .text-left {
     text-align: left !important;
 }
