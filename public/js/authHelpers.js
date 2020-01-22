@@ -69,14 +69,35 @@ function handleAuthButton() {
   var user = firebase.auth().currentUser;
   if (user) {
       generateAccountPage(user);
-      document.getElementById("login-modal").style.display = "none"
-      document.getElementById("signup-modal").style.display = "none"
       document.getElementById("account-modal").style.display = "block"
+      document.getElementById("firebaseui-auth-container").style.display = "none"
   } else {
-      document.getElementById("login-modal").style.display = "none"
-      document.getElementById("signup-modal").style.display = "block"
-      document.getElementById("account-modal").style.display = "none"
-  }
+    document.getElementById("account-modal").style.display = "none"
+    document.getElementById("firebaseui-auth-container").style.display = "block"
+    // FirebaseUI config.
+    var uiConfig = {
+      signInSuccessUrl: 'http://localhost:5000',
+      signInOptions: [
+        // Leave the lines as is for the providers you want to offer your users.
+        firebase.auth.TwitterAuthProvider.PROVIDER_ID,
+        firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+        firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+        firebase.auth.EmailAuthProvider.PROVIDER_ID,
+      ],
+      // tosUrl and privacyPolicyUrl accept either url string or a callback
+      // function.
+      // Terms of service url/callback.
+      tosUrl: 'https://kokimame.github.io/joytan/privacy_policy_joytan_rec.html',
+      // Privacy policy url/callback.
+      privacyPolicyUrl: function() {
+        window.location.assign('https://kokimame.github.io/joytan/privacy_policy_joytan_rec.html');
+      }
+    }
+    // Initialize the FirebaseUI Widget using Firebase.
+    var ui = new firebaseui.auth.AuthUI(firebase.auth());
+    // The start method will wait until the DOM is loaded.
+    ui.start('#firebaseui-auth-container', uiConfig);
+  };
   document.getElementById("auth-form").style.display = "block";
 }
 function closeModals() {

@@ -20,6 +20,11 @@
   <script defer src="/__/firebase/7.6.1/firebase-firestore.js"></script>
   <!-- initialize the SDK after all desired features are loaded -->
   <script defer src="/__/firebase/init.js"></script>
+
+  <!-- Firebase Auth UI -->
+  <script src="https://www.gstatic.com/firebasejs/ui/4.3.0/firebase-ui-auth.js"></script>
+  <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.3.0/firebase-ui-auth.css" />
+  
   
   <!-- JQuery -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
@@ -132,28 +137,12 @@
         }
         // FIXME: Cannot move the show() outside of the if
       });
-
-      document.getElementById('signup-form').onsubmit = e => {
-        e.preventDefault();
-      }
-      document.getElementById('login-form').onsubmit = e => {
-        e.preventDefault();
-      }
       document.getElementById('learn-more').onclick = e => {
         e.preventDefault();
         $("#about-view").show();
       }
-      // document.getElementById('check-the-statistics').onclick = e => {
-      //   e.preventDefault();
-      //   $("#stats-view").show();
-      // }
-      document.getElementById('btn-stat').onclick = e => {
-        e.preventDefault();
-        $("#stats-view").show();
-      }
     } // ^^^^^ onload ^^^^^
   </script>
-
 </head>
 
 <body>
@@ -217,70 +206,14 @@
           <!-- <a href="" id="check-the-statistics">Check the statistics</a> -->
           <div id="about-view" class="modal"></div>
           <div id="stats-view" class="modal"></div>
-
           <div id="auth-form" class="modal">
             <span onclick="closeModals()" class="close" title="Close Modal">&times;</span>
             <div class="modal-container">
               <div class="modal-contents container">
-                <div id="signup-modal">
-                  <form id="signup-form" method="post">
-                    <h2>Sign Up</h2>
-                    <p>Have an account? <a href="#/" onclick="signupLoginTransition('login')"><b>Log in!</b></a></p>
-                    <hr>
-                    <p>Please fill in this form to create an account.</p>
-                    <label for="signup-email"><b>Email</b></label>
-                    <input id="signup-email" class="auth-input" type="text" placeholder="Enter Email" name="signup-email"
-                      pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="For example, [a-Z]@[a-Z].domain" required>
-              
-                    <label for="signup-psw"><b>Password</b></label>
-                    <input id="signup-psw" class="auth-input" type="password" placeholder="Enter Password" name="signup-psw" onchange="validatePassword()"
-                      minlength="8" maxlength="15" required>
-              
-                    <label for="confirm-password"><b>Repeat Password</b></label>
-                    <input id="confirm-password" class="auth-input" type="password" placeholder="Repeat Password" name="psw-repeat" onkeyup="validatePassword()"
-                    required>
-      
-                    <label for="signup-uname"><b>User name</b></label>
-                    <input id="signup-uname" class="auth-input" type="text" placeholder="Enter your Username" name="signup-uname"
-                      minlength="3" maxlength="32" required>
-                    
-                    <label>
-                      <input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me
-                    </label>
-                          
-                    <div class="clearfix">
-                      <button class="modal-button cancel-btn" type="button" onclick="closeModals()" >Cancel</button>
-                      <button class="modal-button signup-btn btn-success" type="submit" onclick="createNewUser()">Sign Up</button>
-                    </div>
-                  </form>
-                </div>
-                <div id="login-modal">
-                  <form id="login-form" method="post">
-                    <h2>Log in</h2>
-                    <p>Don't have an account? <a href="#/" onclick="signupLoginTransition('signup')"><b>Sign up!</b></a></p>
-                    <hr>
-                    <p>Please fill in this form to log in.</p>
-                    <label for="email"><b>Email</b></label>
-                    <input id="login-email" class="auth-input" type="text" placeholder="Enter Email" name="email"
-                      pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="For example, [a-Z]@[a-Z].domain" required>
-              
-                    <label for="psw"><b>Password</b></label>
-                    <input id="login-psw" class="auth-input" type="password" placeholder="Enter Password" name="psw" required
-                      minlength="8" maxlength="15" required>
-    
-                    <label>
-                      <input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me
-                    </label>
-              
-                    <div class="clearfix">
-                      <button class="modal-button cancel-btn" type="button" onclick="closeModals()" >Cancel</button>
-                      <button class="modal-button login-btn btn-success" type="submit" onclick="loginUser()">Log in</button>
-                    </div>
-                  </form>
-                </div>
+                <div id="firebaseui-auth-container"></div>
                 <div id="account-modal">
                 </div>
-              </div>
+              </div>  
             </div>
           </div>
         </div>
