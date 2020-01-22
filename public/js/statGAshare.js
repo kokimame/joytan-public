@@ -62,7 +62,7 @@ d3.csv("/data/share_android.csv",
       .enter().append("circle") // Uses the enter().append() method
       .attr("cx", d => { return x(d.day) })
       // .attr("class", "dot") // Assign a class for styling
-      .attr("fill", "#ffab00")
+      .attr("fill", "#f22")
       .attr("stroke", "#fff")
       .attr("cy", d => { return y(d.count) })
       .attr("r", 3);
