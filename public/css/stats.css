@@ -1,3 +1,10 @@
+#last-updated {
+    /* float: right; */
+    color: darkgray;
+    font-style: italic;
+    font-weight: lighter;
+}
+
 .svg-container {
     display: inline-block;
     position: relative;
