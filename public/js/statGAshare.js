@@ -57,4 +57,13 @@ d3.csv("/data/share_android.csv",
         .x(d => { return x(d.day) })
         .y(d => { return y(d.count) })
         )
+    svg.selectAll(".dot")
+      .data(data)
+      .enter().append("circle") // Uses the enter().append() method
+      .attr("cx", d => { return x(d.day) })
+      // .attr("class", "dot") // Assign a class for styling
+      .attr("fill", "#ffab00")
+      .attr("stroke", "#fff")
+      .attr("cy", d => { return y(d.count) })
+      .attr("r", 3);
 })
