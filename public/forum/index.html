@@ -166,7 +166,6 @@ window.onload = () => {
     // Operation for https://joytan.pub/forum
     if (projectName === undefined) {
       $("#top-page-message").show()
-      $("#iframe-box").hide()
       $("#activity-container").hide()
       $("#activity-slide").hide()
       $("#dbutton").css("font-size", "30px");
@@ -196,9 +195,9 @@ window.onload = () => {
 
                 if(urlData.val()) {
                   $("#youtube-player").attr("src", urlData.val() + '?enablejsapi=1')
+                  $("#iframe-box").show()  
                 }
                 else {
-                  $("#iframe-box").hide()
                   $("#coming-soon").show()
                 }
 
@@ -294,7 +293,8 @@ window.onload = () => {
 
         <div class="g-ytsubscribe" data-channelid="UC0bLbtTI9uni3bNRPIJQAqA" data-layout="default" data-count="default"></div>
       </div>
-      <div id="iframe-box" class="row align-items-center" style="background-color: black;">
+      <div id="iframe-box" class="row align-items-center" 
+          style="background-color: black; display: none;">
         <iframe id="youtube-player" scrolling="no" allow="autoplay">
         </iframe>
       </div>

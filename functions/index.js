@@ -117,7 +117,16 @@ exports.denoiseAudio = functions.storage.object().onFinalize(async (object) => {
   const denoisedTempFilePath = path.join(os.tmpdir(), denoisedTempFileName);
   const normedTempFileName = "n_" + denoisedTempFileName;
   const normedTempFilePath = path.join(os.tmpdir(), normedTempFileName);
-  const normedStorageFilePath = path.join(path.dirname(filePath), normedTempFileName);
+
+  // Compatibility with old version
+  var normedStorageFilePath = "";
+  if (filePath.startsWith("voice")) {
+    // New version, use separate directory to keep output audio
+    normedStorageFilePath = path.join(path.dirname("n_d_" + filePath), normedTempFileName);
+  } else {
+    // Previous versoin
+    normedStorageFilePath = path.join(path.dirname(filePath), normedTempFileName);
+  }
 
   await bucket.file(filePath).download({destination: tempFilePath});
 

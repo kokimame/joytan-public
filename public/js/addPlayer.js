@@ -8,11 +8,10 @@ function addPlayer(voiceId, entryData, targetId) {
   const spinId = "spin_" + projectName;
   const controlId = "control_" + projectName;
   const likeId = "like_" + voiceId;
-  const dislikeId = "dislike_" + voiceId;
   const mediaLinkId = "mediaLink_" + voiceId;
 
   const storage = firebase.storage();
-  const voiceRef = storage.ref().child(`voice/${projectName}/n_d_${voiceId}.wav`);
+  const voiceRef = storage.ref().child(`n_d_voice/${projectName}/n_d_${voiceId}.wav`);
 
   voiceRef.getDownloadURL().then((url) => {
     // Add extra assertion to prevent failed loadings
@@ -56,34 +55,39 @@ function addPlayer(voiceId, entryData, targetId) {
     $("#" + spinId).addClass("hide-loader");
     document.getElementById(controlId).style.display = "block";
 
-    likeOrDislike = window.userData[`vote_${projectName}`][voiceId]
-    if (typeof likeOrDislike !== 'undefined') {
-      if (likeOrDislike == "like") {
-        $(`#${likeId}`).addClass('active-thumb')
-      }
+    var likedArray = window.userData[`vote_${projectName}`]
+    if (typeof likedArray !== 'undefined' && likedArray.includes(voiceId)) {
+      $(`#${likeId}`).addClass('active-thumb')
     }
 
     if (mediaLink) {
       if (mediaLink.startsWith("tw::")) {
         var twitterUid = mediaLink.slice(4)
-        var newLink = $("<a />", {
+        var userLink = $("<a />", {
           href : "https://twitter.com/i/user/" + twitterUid,
           html : "by " + displayName + ' <i class="fab fa-twitter"></i>',
           target : "__blank",
           class : "media-link"
         })
-        $(`#${mediaLinkId}`).html(newLink)
+      } else if (mediaLink.startsWith("fb::")) {
+        var userLink = $("<a />", {
+          href : "https://www.facebook.com/search/people/?q=" + displayName,
+          html : "by " + displayName + ' <i class="fab fa-facebook"></i>',
+          target : "__blank",
+          class : "media-link"
+        })
       }
+      $(`#${mediaLinkId}`).html(userLink)
     }
 
     $(`#${likeId}`).on('click', function() {
       event.preventDefault();
       if($(this).hasClass('active-thumb')) {
         $(this).removeClass('active-thumb')
-        updateLikeOrDislike(likeOrDislike, -1, projectName, voiceId, entryId)
+        updateLike(-1, projectName, voiceId, entryId)
       } else {
         $(this).addClass('active-thumb');
-        updateLikeOrDislike(likeOrDislike, 1, projectName, voiceId, entryId)
+        updateLike(1, projectName, voiceId, entryId)
       }
     });
   
@@ -124,35 +128,44 @@ function addPlayer(voiceId, entryData, targetId) {
   })
 }
 
-function updateLikeOrDislike(likeOrDislike, sign, projectName, voiceId, entryId) {
-  const fieldName = 'vote_' + likeOrDislike
+function updateLike(sign, projectName, voiceId, entryId) {
   const increment = firebase.firestore.FieldValue.increment(sign);
-  const arrayOp = sign === 1 ? firebase.firestore.FieldValue.arrayUnion(entryId) 
-                             : firebase.firestore.FieldValue.arrayRemove(entryId)
+
   const user = firebase.auth().currentUser;
   const db = firebase.firestore()
   const voiceRef = db.collection(`projects/${projectName}/voice`).doc(voiceId);
   const projectRef = db.collection('projects').doc(projectName);
-  var recordingDoc = {}
-  var projectDoc = {}
-  var batch = db.batch();
-  recordingDoc[fieldName] = increment
-  projectDoc["voted"] = arrayOp
-  batch.update(voiceRef, recordingDoc)
-  if (likeOrDislike == "like") {
-    batch.update(projectRef, projectDoc)
-  }
-  if (user) {
-    // const userVoiceRef = db.collection(`users/${user.uid}/vote_${projectName}`).doc(voiceId)
-    const userRef = db.collection('users').doc(user.uid)
-    const targetField = 'vote_' + projectName
-    var voteResult = {}
-    voteResult[targetField] = {}
-    voteResult[targetField][voiceId] = sign === 1 ? likeOrDislike 
-                                      : firebase.firestore.FieldValue.delete()
-    batch.set(userRef, voteResult, { merge : true })
-  }
-  batch.commit()
+
+  db.runTransaction(trans => {
+    return trans.get(voiceRef).then(voiceDoc => {
+      var projectDoc = {}
+        // Update the array of voted entry in the project document
+      const votedEntryOp = sign === 1 ? firebase.firestore.FieldValue.arrayUnion(entryId) 
+                                    : firebase.firestore.FieldValue.arrayRemove(entryId)
+      const likeCount = voiceDoc.data().vote_like;
+      console.log(voiceDoc.data())
+      projectDoc["voted"] = votedEntryOp
+      // For first/last like, apply operation to voted entries
+      if (likeCount == 0 || likeCount == 1) {
+        trans.update(projectRef, projectDoc)
+      }
+
+      var newVoiceDoc = {}
+      newVoiceDoc['vote_like'] = increment
+      trans.update(voiceRef, newVoiceDoc)
+
+      if (user) {
+        // const userVoiceRef = db.collection(`users/${user.uid}/vote_${projectName}`).doc(voiceId)
+        const userRef = db.collection('users').doc(user.uid)
+        const targetField = 'vote_' + projectName
+        var userDoc = {}
+        const userLikeOp = sign === 1 ? firebase.firestore.FieldValue.arrayUnion(voiceId) 
+                                      : firebase.firestore.FieldValue.arrayRemove(voiceId)
+        userDoc[targetField] = userLikeOp
+        trans.set(userRef, userDoc, { merge : true })
+      }
+    });
+  })
 }
 
 function removeAllPlayers(audioId) {
