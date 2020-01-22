@@ -3,11 +3,24 @@ html, body {
     overflow-x: hidden;
     background-color: #dae0e6;
 }
+/* Hide schollbar early on but not disabling the feature */
+.element::-webkit-scrollbar { width: 0 !important }
+
 #service-general {
-    padding-top: 10px;
-    padding-bottom: 6px;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
+#other-link-list {
+    list-style-type: none;
+    padding: 0px;
+    text-align: center;
+}
+
+.nav-item {
+    border-color: black;
+}
 .text-left {
     text-align: left !important;
 }
@@ -26,10 +39,6 @@ button {
     background-color: lightgray;
 }
 
-.accordion .card-body {
-    /* -moz-border-radius: 6px;
-    -webkit-border-radius: 6px; */
-}
 .accordion .card:last-of-type, .accordion .card:first-of-type {
     padding: 0px;
     border-bottom-left-radius: 10px;
@@ -65,6 +74,32 @@ button {
 .btn-vote {
     width: 120px;
     margin-left: 2px;
+}
+.floating-btn {
+    position: relative;
+    font-size: 80%;
+    font-weight: bold;
+    color: #0079D3;
+    background-color: rgb(211, 255, 226);
+    padding: 2px 4px;
+    margin-left: 8px;
+    border-radius: 10%/50%;
+    -moz-border-radius: 10%/50%;
+    -webkit-border-radius: 10%/50%;
+    -webkit-box-shadow: 0 3px 3px #ccc;
+    -moz-box-shadow: 0 3px 3px #ccc;
+    box-shadow: 0 3px 3px #ccc;
+}
+
+.small-beta {
+    position: absolute;
+    font-size: 15px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: lighter;
+    font-style: italic;
+    color: gray;
+    top: 8px;
+    right: 4px;
 }
 
 .auto-play {
@@ -149,6 +184,20 @@ button {
     cursor: pointer;
     color: rgb(87, 87, 87);
 
+}
+
+.project-category {
+    display: inline-block;
+    font-weight: 600;
+    padding: 6px;
+    margin-top: 6px;
+    margin-bottom: 6px;
+    color: #0079D3;
+    background-color: #e6ecf3;
+    font-family: Arial, Helvetica, sans-serif;
+    border-radius: 25%/50%;
+    -moz-border-radius: 25%/50%;
+    -webkit-border-radius: 25%/50%;
 }
 
 .footer {

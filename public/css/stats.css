@@ -1,0 +1,22 @@
+#last-updated {
+    /* float: right; */
+    color: darkgray;
+    font-style: italic;
+    font-weight: lighter;
+}
+
+.svg-container {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    vertical-align: top;
+    overflow: hidden;
+}
+
+.svg-content {
+    display: inline-block;
+    position: relative;
+    justify-content: center;
+    text-align: center;
+}

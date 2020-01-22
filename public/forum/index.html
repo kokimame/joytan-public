@@ -57,8 +57,7 @@
 <script src="../js/addForum.js"></script>
 <script src="../js/addQuiz.js"></script>
 <script src="../js/authHelpers.js"></script>
-<!-- Control YouTube Player -->
-<script src="../js/callPlayer.js"></script>
+<script src="../js/YTController.js"></script>
 
 <!-- Threaded comment board in JQuery-->
 <link rel="stylesheet" type="text/css" href="../css/jquery-comments.css">
@@ -187,7 +186,6 @@ window.onload = () => {
     // Operation for https://joytan.pub/forum
     if (projectName === undefined) {
       $("#top-page-message").show()
-      $("#iframe-box").hide()
       $("#activity-container").hide()
       $("#activity-slide").hide()
       $("#dbutton").css("font-size", "30px");
@@ -217,9 +215,9 @@ window.onload = () => {
 
                 if(urlData.val()) {
                   $("#youtube-player").attr("src", urlData.val() + '?enablejsapi=1')
+                  $("#iframe-box").show()  
                 }
                 else {
-                  $("#iframe-box").hide()
                   $("#coming-soon").show()
                 }
 
@@ -315,7 +313,8 @@ window.onload = () => {
 
         <div class="g-ytsubscribe" data-channelid="UC0bLbtTI9uni3bNRPIJQAqA" data-layout="default" data-count="default"></div>
       </div>
-      <div id="iframe-box" class="row align-items-center" style="background-color: black;">
+      <div id="iframe-box" class="row align-items-center" 
+          style="background-color: black; display: none;">
         <iframe id="youtube-player" scrolling="no" allow="autoplay">
         </iframe>
       </div>
@@ -332,7 +331,7 @@ window.onload = () => {
       </div>
 
       <div id="auth-form" class="modal">
-        <span onclick="closeAuthForm()" class="close" title="Close Modal">&times;</span>
+        <span onclick="closeModals()" class="close" title="Close Modal">&times;</span>
         <div class="modal-container">
           <div class="modal-contents container">
             <div id="signup-modal">
@@ -362,7 +361,7 @@ window.onload = () => {
                 </label>
                       
                 <div class="clearfix">
-                  <button class="modal-button cancel-btn" type="button" onclick="closeAuthForm()" >Cancel</button>
+                  <button class="modal-button cancel-btn" type="button" onclick="closeModals()" >Cancel</button>
                   <button class="modal-button signup-btn btn-success" type="submit" onclick="createNewUser()">Sign Up</button>
                 </div>
               </form>
@@ -387,7 +386,7 @@ window.onload = () => {
                 </label>
           
                 <div class="clearfix">
-                  <button class="modal-button cancel-btn" type="button" onclick="closeAuthForm()" >Cancel</button>
+                  <button class="modal-button cancel-btn" type="button" onclick="closeModals()" >Cancel</button>
                   <button class="modal-button login-btn btn-success" type="submit" onclick="loginUser()">Log in</button>
                 </div>
               </form>
