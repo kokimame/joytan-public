@@ -5,6 +5,20 @@
     color: royalblue;
 }
 
+.nav-yt-subs {
+    position: absolute;
+    font-size: 9px;
+    font-family: Arial, Helvetica, sans-serif;
+    opacity: 0.7;
+    color: white;
+    background-color: red;
+    padding: 3px 1px;
+    top: 25px;
+    right: -10px;
+    transform: rotate(15deg);
+    border-radius: 2px;
+}
+
 .btn-slim {
     padding: 0px 10px;
 }
