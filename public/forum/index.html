@@ -203,15 +203,8 @@ window.onload = () => {
           }
           else if(pData["dirname"] == projectName) {
             $("#project-title").text(" " + pData["flags"] + pData["title"])
-            dirname = pData["dirname"]
-            videoUrl = pData["video_url"]
-            wantedKey = pData["wanted"]
-            upnKey = pData["upn"]
-            lonKey = pData["lon"]
-            timestamps = timestampData;
-            quizzes = quizData;
-            if(videoUrl) {
-              $("#youtube-player").attr("src", videoUrl + '?enablejsapi=1')
+            if(pData["video_url"]) {
+              $("#youtube-player").attr("src", pData["video_url"] + '?enablejsapi=1')
               $("#iframe-box").show()  
             }
             else {
@@ -220,6 +213,12 @@ window.onload = () => {
 
             jsonRef.getDownloadURL().then(url => {
               $.getJSON(url, data => {
+                dirname = pData["dirname"]
+                wantedKey = pData["wanted"]
+                upnKey = pData["upn"]
+                lonKey = pData["lon"]
+                timestamps = timestampData;
+                quizzes = quizData;
                 entries = data
                 addQuiz()
                 for (var i = 0; i < entries.length; i++){
