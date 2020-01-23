@@ -1,5 +1,5 @@
 function addForum(index) {
-  const entryData = entries[index];
+  const entryData = entries[index]
   const div = document.createElement('div');
   const boardId = "board_" + index;
   const submitId = "submit_" + index;

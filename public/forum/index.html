@@ -6,12 +6,13 @@
 <title>Joytan Forum</title>
 
 <!-- update the version number as needed -->
-<script defer src="/__/firebase/6.4.1/firebase-app.js"></script>
+<script defer src="/__/firebase/7.6.1/firebase-app.js"></script>
 <!-- include only the Firebase features as you need -->
-<script defer src="/__/firebase/6.4.1/firebase-auth.js"></script>
-<script defer src="/__/firebase/6.4.1/firebase-database.js"></script>
-<script defer src="/__/firebase/6.4.1/firebase-messaging.js"></script>
-<script defer src="/__/firebase/6.4.1/firebase-storage.js"></script>
+<script defer src="/__/firebase/7.6.1/firebase-auth.js"></script>
+<script defer src="/__/firebase/7.6.1/firebase-database.js"></script>
+<script defer src="/__/firebase/7.6.1/firebase-messaging.js"></script>
+<script defer src="/__/firebase/7.6.1/firebase-storage.js"></script>
+<script defer src="/__/firebase/7.6.1/firebase-firestore.js"></script>
 <!-- initialize the SDK after all desired features are loaded -->
 <script defer src="/__/firebase/init.js"></script>
 
@@ -44,6 +45,7 @@
 <link rel="icon" type="image/png" sizes="96x96" href="../icons/favicon-96x96.png">
 <link rel="icon" type="image/png" sizes="16x16" href="../icons/favicon-16x16.png">
 <link rel="manifest" href="../icons/manifest.json">
+
 <meta name="msapplication-TileColor" content="#ffffff">
 <meta name="msapplication-TileImage" content="../icons/ms-icon-144x144.png">
 <meta name="theme-color" content="#ffffff">
@@ -57,6 +59,10 @@
 <script src="../js/addQuiz.js"></script>
 <script src="../js/authHelpers.js"></script>
 <script src="../js/YTController.js"></script>
+
+<!-- Threaded comment board in JQuery-->
+<link rel="stylesheet" type="text/css" href="../css/jquery-comments.css">
+<script type="text/javascript" src="../js/jquery-comments.js"></script>
 
 
 <script>
@@ -98,13 +104,27 @@ window.onload = () => {
 
     const storage = firebase.storage();
     const storageRef = storage.ref();
-    const topProjectsRef = storageRef.child('projects');
-    const structureRef = storageRef.child('projects_structure.json');
+    const jsonRef = storageRef.child(`project_json/${projectName}.json`);
     const timestampsRef = storageRef.child(`timestamps/${projectName}_time.json`);
     const quizRef = storageRef.child(`quiz/${projectName}_quiz.json`);
     const ytplayer = document.getElementById("youtube-player");
     var timestampData = false;
     var quizData = false;
+
+    // $('#comments-container').comments({
+    //   profilePictureURL: 'https://viima-app.s3.amazonaws.com/media/public/defaults/user-icon.png',
+    //   getComments: function(success, error) {
+    //     var commentsArray = [{
+    //       id: 1,
+    //       created: '2015-10-01',
+    //       content: 'Lorem ipsum dolort sit amet',
+    //       fullname: 'Simon Powell',
+    //       upvote_count: 2,
+    //       user_has_upvoted: true
+    //     }];
+    //     success(commentsArray);
+    //   }
+    // });
     
     $(() => {
       $("#quiz-view").load("quiz.html");
@@ -164,6 +184,7 @@ window.onload = () => {
     })
 
     // Operation for https://joytan.pub/forum
+    // Navigate to the top page content
     if (projectName === undefined) {
       $("#top-page-message").show()
       $("#activity-container").hide()
@@ -172,37 +193,38 @@ window.onload = () => {
       $("#project-items").css("font-size", "20px");
     }
 
-    structureRef.getDownloadURL().then(url => {
-      $.getJSON(url, data => {
-        topProjectsRef.listAll().then(res => {
-          res.prefixes.forEach(projectRef => {
-            var projData = data[projectRef.name]
-
-            if (projectRef.name != projectName) {
-              $("#project-items").append(`<a href="./?p=${projectRef.name}">${projData["flags"] + projData["title"]}</a>`)
+    const db = firebase.firestore()
+      const user = firebase.auth().currentUser
+      db.collection("projects").get().then(querySnapshot => {
+        querySnapshot.forEach(doc => {
+          var pData = doc.data()
+          if (pData["dirname"] != projectName) {
+            $("#project-items").append(`<a href="./?p=${pData["dirname"]}">${pData["flags"] + pData["title"]}</a>`)
+          }
+          else if(pData["dirname"] == projectName) {
+            $("#project-title").text(" " + pData["flags"] + pData["title"])
+            dirname = pData["dirname"]
+            videoUrl = pData["video_url"]
+            wantedKey = pData["wanted"]
+            upnKey = pData["upn"]
+            lonKey = pData["lon"]
+            timestamps = timestampData;
+            quizzes = quizData;
+            if(videoUrl) {
+              $("#youtube-player").attr("src", videoUrl + '?enablejsapi=1')
+              $("#iframe-box").show()  
             }
-            else if(projectRef.name == projectName) {
-              $("#project-title").text(" " + projData["flags"] + projData["title"])
-              firebase.database().ref(`forum/url/${projectName}`).once('value').then(urlData => {
-                dirname = projData["dirname"]
-                entries = projData["entries"]
-                wantedKey = projData["wanted"]
-                upnKey = projData["upn"]
-                lonKey = projData["lon"]
-                timestamps = timestampData;
-                quizzes = quizData;
+            else {
+              $("#coming-soon").show()
+            }
+
+            jsonRef.getDownloadURL().then(url => {
+              $.getJSON(url, data => {
+                entries = data
                 addQuiz()
-
-                if(urlData.val()) {
-                  $("#youtube-player").attr("src", urlData.val() + '?enablejsapi=1')
-                  $("#iframe-box").show()  
-                }
-                else {
-                  $("#coming-soon").show()
-                }
-
                 for (var i = 0; i < entries.length; i++){
                   var commentCntId = "comment_cnt_" + i;
+                  // console.log(forumArg.entryData, typeof forumArg.entryData)
                   $("#side-index").append(
                     `<li class="list-group-item"
                       onclick="addForum(${i})"><span class="small-numbering">${i+1}</span> 
@@ -220,17 +242,17 @@ window.onload = () => {
                     document.getElementById(commentCntId).innerHTML = 
                       `<span class="comment-counter">
                         <i id="${commentAllId}" class="font-layer fa fa-comment"
-                         data-count="${Object.keys(commentLookup[index]).length}"></i>
+                        data-count="${Object.keys(commentLookup[index]).length}"></i>
                       </span>`
                   }
                 })
+                // Show the first forum
                 $("#side-index li").get(0).click()
-              });
-            }
-          })
+              })
+            })
+          }
         })
       })
-    })
 }
 </script>
 
@@ -238,50 +260,52 @@ window.onload = () => {
 <body>
 <div class="row justify-content-center">
   <div class="col-12">
-    <div style="text-align: center">
-      <nav class="navbar navbar-expand-sm navbar-light bg-light" style="padding: 0px 8px; width: 100%;">
-        <div id="logo" class="pull-left hidden-xs">
-          <a href="javascript:window.location.href=window.location.href"><img src="https://kokimame.github.io/joytan/images/joytan.png" 
-              alt="Joytan App Forums" title="Joytan App Forums" width="30" height="30"></a>
-        </div>
-        <span class="form-inline my-2 my-lg-0 nav-item" id="auth-btn-wrapper">
-          <button id="auth-button" class="btn btn-info btn-slim" onclick="handleAuthButton()" 
-            style="display: none;"></button>  
-        </span>
-        
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-              <a class="nav-link" href="javascript:window.location.href=window.location.href">Forum <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="https://joytan.pub">Public</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="http://slack-invite.joytan.pub/">Join Team</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="https://youtube.com/c/JoytanApp">YouTube</a>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Others
-              </a>
-              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a href="https://play.google.com/store/apps/details?id=com.joytan.rec" class="fa icon fa-android"></a>
-                <a href="https://github.com/kokimame/joytan-public" class="fa icon fa-github"></a>
-                <a href="https://kokimame.github.io/joytan/" class="fa icon fa-desktop"></a>
-                <a href="https://twitter.com/JoytanApp" class="fa icon fa-twitter"></a>
-                <a id="btn-stat" href="" class="fa icon fa-chart-line" style="color: rgb(81, 73, 131);"></a>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </nav>
+    <div class="nav-wrapper">
+      <div class="container">
+        <nav class="navbar navbar-expand-sm">
+          <div id="logo" class="pull-left hidden-xs">
+            <a href="javascript:window.location.href=window.location.href"><img src="/icons/logo_512.png" 
+                alt="Joytan App Forums" title="Joytan App Forums" width="30" height="30"></a>
+          </div>
+          <span class="form-inline my-2 my-lg-0 nav-item" id="auth-btn-wrapper">
+            <button id="auth-button" class="btn btn-warning btn-slim" onclick="handleAuthButton()" 
+              style="display: none;"></button>
+          </span>
+          
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon">   
+              <i class="fas fa-hamburger nav-hamburger"></i>
+            </span>
+          </button>
+  
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item active">
+                <a class="nav-link" href="https://joytan.pub">Public <span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="http://slack-invite.joytan.pub/">Join team</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="https://youtube.com/c/JoytanApp">YouTube</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Others +4
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <ul id="other-link-list">
+                    <li><a href="https://play.google.com/store/apps/details?id=com.joytan.rec">Android <a class="fa icon fa-android" /></a></li>
+                    <li><a href="https://github.com/kokimame/joytan-public">GitHub <a class="fa icon fa-github" /></a></li>
+                    <li><a href="https://kokimame.github.io/joytan/">Desktop <a class="fa icon fa-desktop" /></a></li>
+                    <li><a href="https://twitter.com/JoytanApp">Twitter <a class="fa icon fa-twitter" /></a></li>
+                  </ul>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
     </div>
 
     <div class="container">
@@ -305,6 +329,9 @@ window.onload = () => {
         This is the top page of Joytan Forum.</br>
         There is no interesting content here😿</br>
         Jump to a project using <b>the project search tool</b> (<i class="fas fa-search"></i>).
+      </div>
+
+      <div id="comments-container">
       </div>
 
       <div id="auth-form" class="modal">
