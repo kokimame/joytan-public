@@ -83,6 +83,7 @@ button {
     background-color: rgb(211, 255, 226);
     padding: 2px 4px;
     margin-left: 8px;
+    cursor: pointer;
     border-radius: 10%/50%;
     -moz-border-radius: 10%/50%;
     -webkit-border-radius: 10%/50%;
