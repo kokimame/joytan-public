@@ -96,162 +96,148 @@ function dropdownProject() {
   }
 }
 
-
 window.onload = () => {
-    const urlVars = getUrlVars()
-    const projectName = urlVars["p"];
-    const startQuiz = urlVars["quiz"];
+  const urlVars = getUrlVars()
+  const projectName = urlVars["p"];
+  const startQuiz = urlVars["quiz"];
 
-    const storage = firebase.storage();
-    const storageRef = storage.ref();
-    const jsonRef = storageRef.child(`project_json/${projectName}.json`);
-    const timestampsRef = storageRef.child(`timestamps/${projectName}_time.json`);
-    const quizRef = storageRef.child(`quiz/${projectName}_quiz.json`);
-    const ytplayer = document.getElementById("youtube-player");
-    var timestampData = false;
-    var quizData = false;
+  const storage = firebase.storage();
+  const storageRef = storage.ref();
+  const jsonRef = storageRef.child(`project_json/${projectName}.json`);
+  const timestampsRef = storageRef.child(`timestamps/${projectName}_time.json`);
+  const quizRef = storageRef.child(`quiz/${projectName}_quiz.json`);
+  const ytplayer = document.getElementById("youtube-player");
+  var timestampData = false;
+  var quizData = false;
 
-    // $('#comments-container').comments({
-    //   profilePictureURL: 'https://viima-app.s3.amazonaws.com/media/public/defaults/user-icon.png',
-    //   getComments: function(success, error) {
-    //     var commentsArray = [{
-    //       id: 1,
-    //       created: '2015-10-01',
-    //       content: 'Lorem ipsum dolort sit amet',
-    //       fullname: 'Simon Powell',
-    //       upvote_count: 2,
-    //       user_has_upvoted: true
-    //     }];
-    //     success(commentsArray);
-    //   }
-    // });
-    
-    $(() => {
-      $("#quiz-view").load("quiz.html");
-    });
-    // Close modal when clicking outside
-    $("#auth-form").click(ev => {
-        if(ev.target != document.getElementById("auth-form")) {
-            return;
-        } else {
-            $("#auth-form").hide();
+  $(() => {
+    $("#quiz-view").load("quiz.html");
+  });
+  // Close modal when clicking outside
+  $("#auth-form").click(ev => {
+      if(ev.target != document.getElementById("auth-form")) {
+          return;
+      } else {
+          $("#auth-form").hide();
+      }
+  });
+  firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+          $("#auth-button").html(`Account <i class="fa fa-user" />`)
+          $("#auth-button").show()
+      } else {
+          $("#auth-button").html("Log in &bull; Sign up")
+          $("#auth-button").show()
+      }
+  });
+
+  document.getElementById('signup-form').onsubmit = e => {
+      e.preventDefault();
+  }
+  document.getElementById('login-form').onsubmit = e => {
+      e.preventDefault();
+  }
+
+  $("#goForum").click(ev => {
+    mainToggle("forum")
+  })
+  $("#goQuiz").click(ev => {
+    mainToggle("quiz")
+  })
+  if (startQuiz) {
+    $("#goQuiz").click()
+  } else {
+    $("#quiz-view").hide()
+  }
+  // FIXME: NOT SURE if downloading quiz files in parallel with structureRef works all the time
+  quizRef.getDownloadURL().then(url => {
+    $.getJSON(url, data => {  
+      quizData = data;
+    })
+  }).catch(err => {
+    // Ignore when timestamps are not provided yet in Firebase storage
+  })
+
+  // FIXME: NOT SURE if downloading timestamp files in parallel with structureRef works all the time
+  timestampsRef.getDownloadURL().then(url => {
+    $.getJSON(url, data => {  
+      timestampData = data;
+    })
+  }).catch(err => {
+    // Ignore when timestamps are not provided yet in Firebase storage
+  })
+
+  // Operation for https://joytan.pub/forum
+  // Navigate to the top page content
+  if (projectName === undefined) {
+    $("#top-page-message").show()
+    $("#activity-container").hide()
+    $("#activity-slide").hide()
+    $("#dbutton").css("font-size", "30px");
+    $("#project-items").css("font-size", "20px");
+  }
+
+  const db = firebase.firestore()
+  const _jq = $;
+  const user = firebase.auth().currentUser
+  db.collection("projects").get().then(querySnapshot => {
+    querySnapshot.forEach(doc => {
+      var pData = doc.data()
+      if (pData["dirname"] != projectName) {
+        $("#project-items").append(`<a href="./?p=${pData["dirname"]}">${pData["flags"] + pData["title"]}</a>`)
+      }
+      else if(pData["dirname"] == projectName) {
+        $("#project-title").text(" " + pData["flags"] + pData["title"])
+        if(pData["video_url"]) {
+          $("#youtube-player").attr("src", pData["video_url"] + '?enablejsapi=1')
+          $("#iframe-box").show()  
         }
-    });
-    firebase.auth().onAuthStateChanged(user => {
-        if (user) {
-            $("#auth-button").html(`Account <i class="fa fa-user" />`)
-            $("#auth-button").show()
-        } else {
-            $("#auth-button").html("Log in &bull; Sign up")
-            $("#auth-button").show()
+        else {
+          $("#coming-soon").show()
         }
-    });
 
-    document.getElementById('signup-form').onsubmit = e => {
-        e.preventDefault();
-    }
-    document.getElementById('login-form').onsubmit = e => {
-        e.preventDefault();
-    }
+        jsonRef.getDownloadURL().then(url => {
+          $.getJSON(url, data => {
+            dirname = pData["dirname"]
+            wantedKey = pData["wanted"]
+            upnKey = pData["upn"]
+            lonKey = pData["lon"]
+            timestamps = timestampData;
+            quizzes = quizData;
+            entries = data
+            jq = _jq
+            addQuiz()
+            for (var i = 0; i < entries.length; i++){
+              var commentCntId = "comment_cnt_" + i;
+              // console.log(forumArg.entryData, typeof forumArg.entryData)
+              $("#side-index").append(
+                `<li class="list-group-item"
+                  onclick="addForum(${i})"><span class="small-numbering">${i+1}</span> 
+                  ${entries[i][wantedKey]}<span id="${commentCntId}"></span>
+                </li>`
+              )
+            }    
 
-    $("#goForum").click(ev => {
-      mainToggle("forum")
-    })
-    $("#goQuiz").click(ev => {
-      mainToggle("quiz")
-    })
-    if (startQuiz) {
-      $("#goQuiz").click()
-    } else {
-      $("#quiz-view").hide()
-    }
-    // FIXME: NOT SURE if downloading quiz files in parallel with structureRef works all the time
-    quizRef.getDownloadURL().then(url => {
-      $.getJSON(url, data => {  
-        quizData = data;
-      })
-    }).catch(err => {
-      // Ignore when timestamps are not provided yet in Firebase storage
-    })
-
-    // FIXME: NOT SURE if downloading timestamp files in parallel with structureRef works all the time
-    timestampsRef.getDownloadURL().then(url => {
-      $.getJSON(url, data => {  
-        timestampData = data;
-      })
-    }).catch(err => {
-      // Ignore when timestamps are not provided yet in Firebase storage
-    })
-
-    // Operation for https://joytan.pub/forum
-    // Navigate to the top page content
-    if (projectName === undefined) {
-      $("#top-page-message").show()
-      $("#activity-container").hide()
-      $("#activity-slide").hide()
-      $("#dbutton").css("font-size", "30px");
-      $("#project-items").css("font-size", "20px");
-    }
-
-    const db = firebase.firestore()
-      const user = firebase.auth().currentUser
-      db.collection("projects").get().then(querySnapshot => {
-        querySnapshot.forEach(doc => {
-          var pData = doc.data()
-          if (pData["dirname"] != projectName) {
-            $("#project-items").append(`<a href="./?p=${pData["dirname"]}">${pData["flags"] + pData["title"]}</a>`)
-          }
-          else if(pData["dirname"] == projectName) {
-            $("#project-title").text(" " + pData["flags"] + pData["title"])
-            if(pData["video_url"]) {
-              $("#youtube-player").attr("src", pData["video_url"] + '?enablejsapi=1')
-              $("#iframe-box").show()  
-            }
-            else {
-              $("#coming-soon").show()
-            }
-
-            jsonRef.getDownloadURL().then(url => {
-              $.getJSON(url, data => {
-                dirname = pData["dirname"]
-                wantedKey = pData["wanted"]
-                upnKey = pData["upn"]
-                lonKey = pData["lon"]
-                timestamps = timestampData;
-                quizzes = quizData;
-                entries = data
-                addQuiz()
-                for (var i = 0; i < entries.length; i++){
-                  var commentCntId = "comment_cnt_" + i;
-                  // console.log(forumArg.entryData, typeof forumArg.entryData)
-                  $("#side-index").append(
-                    `<li class="list-group-item"
-                      onclick="addForum(${i})"><span class="small-numbering">${i+1}</span> 
-                      ${entries[i][wantedKey]}<span id="${commentCntId}"></span>
-                    </li>`
-                  )
-                }
-
-                firebase.database().ref(`forum/${projectName}`).once('value').then(indexData => {
-                  var commentLookup = indexData.val();
-                  for (var index in commentLookup) {
-                    var commentCntId = "comment_cnt_" + index;
-                    var commentAllId = "comment_all" + index;
-                    commentLookup[index].length
-                    document.getElementById(commentCntId).innerHTML = 
-                      `<span class="comment-counter">
-                        <i id="${commentAllId}" class="font-layer fa fa-comment"
-                        data-count="${Object.keys(commentLookup[index]).length}"></i>
-                      </span>`
-                  }
-                })
-                // Show the first forum
-                $("#side-index li").get(0).click()
-              })
+            firebase.database().ref(`forum/${projectName}`).once('value').then(indexData => {
+              var commentLookup = indexData.val();
+              for (var index in commentLookup) {
+                var commentCntId = "comment_cnt_" + index;
+                var commentAllId = "comment_all" + index;
+                commentLookup[index].length
+                document.getElementById(commentCntId).innerHTML = 
+                  `<span class="comment-counter">
+                    <i id="${commentAllId}" class="font-layer fa fa-comment"
+                    data-count="${Object.keys(commentLookup[index]).length}"></i>
+                  </span>`
+              }
             })
-          }
+            // Show the first forum
+            $("#side-index li").get(0).click()
+          })
         })
-      })
+      }
+    })
+  })
 }
 </script>
 
@@ -328,9 +314,6 @@ window.onload = () => {
         This is the top page of Joytan Forum.</br>
         There is no interesting content here😿</br>
         Jump to a project using <b>the project search tool</b> (<i class="fas fa-search"></i>).
-      </div>
-
-      <div id="comments-container">
       </div>
 
       <div id="auth-form" class="modal">
@@ -417,7 +400,9 @@ window.onload = () => {
             Table of Contents
             <ul class="list-group" id="side-index"></ul>
           </div>
-          <div class="col-xs-12 col-sm-8 col-md-9" id="comment-board"></div>
+          <div class="col-xs-12 col-sm-8 col-md-9">
+            <div id="comments-container"></div>
+          </div>
         </div>
         <div class="row">
           <div id="quiz-view"></div>

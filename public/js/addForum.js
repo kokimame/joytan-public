@@ -56,60 +56,65 @@ function addForum(index) {
     <div id="${spinId}">
       <div class="spinning"></div>
     </div>
-    <div class="comment-form">
-      <div>
-        <div>Name</div>
-        <input id="${nameId}" class="comment-name-input" 
-          type="text" maxlength="32" name="username" placeholder="Name"></input>
-      </div>
-      <div>Comment <span id="${charCntId}">0/500</span>
-      </div>
-      <textarea id="${textId}" class="comment-textarea" name="subject" maxlength='500'
-        placeholder="Edit feature is currently under development." style="height:150px"></textarea>
-      <button class="btn btn-success btn-submit" id="${submitId}">Submit</button>
-    </div>
   </div>
   `;
   // TODO: Audio auto-play
-  document.getElementById('comment-board').innerHTML = ``;
-  document.getElementById('comment-board').appendChild(div);
+  document.getElementById('comments-container').innerHTML = ``;
+  document.getElementById('comments-container').appendChild(div);
 
   const user = firebase.auth().currentUser;
   if (user) {
-    $("#" + nameId).val(user.displayName);
+    $(`#${nameId}`).val(user.displayName);
   }
   $("#" + spinId).removeClass("hide-loader");
-  loadComments(targetForum, boardId, spinId, commentCntId, commentAllId)
-
-  document.getElementById(textId).addEventListener("input", () => {
-    textarea = document.getElementById(textId);
-    var maxlength = textarea.maxLength;
-    var currentLength = textarea.value.length;
-    $("#" + charCntId).text(currentLength + "/" + maxlength);
+  // loadComments(targetForum, boardId, spinId, commentCntId, commentAllId)
+  
+  // This workaround is simple but looks a little bit messy.
+  jq(`#${boardId}`).comments({
+    // profilePictureURL: 'https://viima-app.s3.amazonaws.com/media/public/defaults/user-icon.png',
+    getComments: (success, error) => {
+      var commentsArray = [{
+        id: 1,
+        created: '2015-10-01',
+        content: `${lowerNote}`,
+        fullname: 'Simon Powell',
+        upvote_count: 2,
+        user_has_upvoted: true
+      }];
+      success(commentsArray);
+    }
   });
 
-  document.getElementById(submitId).addEventListener("click", () => {
-    var commentName = $("#" + nameId).val()
-    var commentText = $("#" + textId).val()
-    var isValidatedOrMsg = validateComment(commentText);
-    if (isValidatedOrMsg !== true) {
-      alert(isValidatedOrMsg);
-    } else {
-      $("#" + spinId).removeClass("hide-loader");
-      const user = firebase.auth().currentUser;
-      if (user) {
-          writeCommentData(
-              index, dirname, user.uid, commentName, commentText, 0
-          )
-      } else {
-          writeCommentData(
-              index, dirname, "", commentName, commentText, 0
-          )
-      }
-      $("#" + textId).val("")
-      loadComments(targetForum, boardId, spinId, commentCntId, commentAllId)
-    }
-  })
+  
+  // document.getElementById(textId).addEventListener("input", () => {
+  //   textarea = document.getElementById(textId);
+  //   var maxlength = textarea.maxLength;
+  //   var currentLength = textarea.value.length;
+  //   $("#" + charCntId).text(currentLength + "/" + maxlength);
+  // });
+
+  // document.getElementById(submitId).addEventListener("click", () => {
+  //   var commentName = $("#" + nameId).val()
+  //   var commentText = $("#" + textId).val()
+  //   var isValidatedOrMsg = validateComment(commentText);
+  //   if (isValidatedOrMsg !== true) {
+  //     alert(isValidatedOrMsg);
+  //   } else {
+  //     $("#" + spinId).removeClass("hide-loader");
+  //     const user = firebase.auth().currentUser;
+  //     if (user) {
+  //         writeCommentData(
+  //             index, dirname, user.uid, commentName, commentText, 0
+  //         )
+  //     } else {
+  //         writeCommentData(
+  //             index, dirname, "", commentName, commentText, 0
+  //         )
+  //     }
+  //     $("#" + textId).val("")
+  //     loadComments(targetForum, boardId, spinId, commentCntId, commentAllId)
+  //   }
+  // })
 }
 
 function rewriteCommentId(cRef, state) {
