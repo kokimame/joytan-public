@@ -94,12 +94,13 @@ button {
 
 .small-beta {
     position: absolute;
+    text-transform: uppercase;
     font-size: 15px;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bolder;
     font-style: italic;
-    color: gray;
-    top: 8px;
+    color: tomato;
+    top: 10px;
     right: 4px;
 }
 
