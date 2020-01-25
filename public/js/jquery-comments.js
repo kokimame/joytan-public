@@ -175,6 +175,7 @@
 
                 fieldMappings: {
                     id: 'id',
+                    uid: 'uid',
                     parent: 'parent',
                     created: 'created',
                     modified: 'modified',
@@ -569,6 +570,7 @@
                     commentJSON.content = '';
                     commentJSON.file = file;
                     commentJSON.fileURL = 'C:/fakepath/' + file.name;
+                    commentJSON.uid = ''
                     commentJSON.fileMimeType = file.type;
 
                     // Reverse mapping
@@ -2042,6 +2044,7 @@
             var time = new Date().toISOString();
             var commentJSON = {
                 id: 'c' +  (this.getComments().length + 1),   // Temporary id
+                uid: '', // To be set by Firebase on post
                 parent: textarea.attr('data-parent') || null,
                 created: time,
                 modified: time,
