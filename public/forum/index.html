@@ -208,7 +208,7 @@ window.onload = () => {
             jq = _jq
             addQuiz()
             for (var i = 0; i < entries.length; i++){
-              var commentCntId = "comment_cnt_" + i;
+              var commentCntId = "comment_cnt_" + entries[i]['id'];
               // console.log(forumArg.entryData, typeof forumArg.entryData)
               $("#side-index").append(
                 `<li class="list-group-item"
@@ -216,21 +216,35 @@ window.onload = () => {
                   ${entries[i][wantedKey]}<span id="${commentCntId}"></span>
                 </li>`
               )
-            }    
-
-            firebase.database().ref(`forum/${projectName}`).once('value').then(indexData => {
-              var commentLookup = indexData.val();
-              for (var index in commentLookup) {
-                var commentCntId = "comment_cnt_" + index;
-                var commentAllId = "comment_all" + index;
-                commentLookup[index].length
+            }
+            db.collection(`comment_count`).doc(projectName).get().then(commentData => {
+              var countLookup = commentData.data()
+              for (var key in countLookup) {
+                var commentCntId = "comment_cnt_" + key;
+                var commentAllId = "comment_all" + key;
+                var count = countLookup[key]
+                console.log(key, count)
                 document.getElementById(commentCntId).innerHTML = 
                   `<span class="comment-counter">
                     <i id="${commentAllId}" class="font-layer fa fa-comment"
-                    data-count="${Object.keys(commentLookup[index]).length}"></i>
+                    data-count="${count}"></i>
                   </span>`
               }
             })
+
+            // firebase.database().ref(`forum/${projectName}`).once('value').then(indexData => {
+            //   var commentLookup = indexData.val();
+            //   for (var index in commentLookup) {
+            //     var commentCntId = "comment_cnt_" + index;
+            //     var commentAllId = "comment_all" + index;
+            //     commentLookup[index].length
+            //     document.getElementById(commentCntId).innerHTML = 
+            //       `<span class="comment-counter">
+            //         <i id="${commentAllId}" class="font-layer fa fa-comment"
+            //         data-count="${Object.keys(commentLookup[index]).length}"></i>
+            //       </span>`
+            //   }
+            // })
             // Show the first forum
             $("#side-index li").get(0).click()
           })

@@ -1,5 +1,6 @@
 function addForum(index) {
   const entryData = entries[index]
+  const entryId = entryData["id"]
   const div = document.createElement('div');
   const boardId = "board_" + index;
   const submitId = "submit_" + index;
@@ -51,10 +52,7 @@ function addForum(index) {
         </table>
       </center>
     </div>
-    <div id="${boardId}" class="comment">
-    </div>
-    <div id="${spinId}">
-      <div class="spinning"></div>
+    <div id="${boardId}" class="comment" style="padding: 8px">
     </div>
   </div>
   `;
@@ -63,25 +61,52 @@ function addForum(index) {
   document.getElementById('comments-container').appendChild(div);
 
   const user = firebase.auth().currentUser;
+  const db = firebase.firestore()
+
   if (user) {
     $(`#${nameId}`).val(user.displayName);
   }
-  $("#" + spinId).removeClass("hide-loader");
+  // $("#" + spinId).removeClass("hide-loader");
   // loadComments(targetForum, boardId, spinId, commentCntId, commentAllId)
   
-  // This workaround is simple but looks a little bit messy.
+  // This workaround (using jq for jQuery defined outside) is simple but a little bit ugly.
   jq(`#${boardId}`).comments({
+    enableUpvoting: false,
+    noCommentsText: 'Be the first to start discussion',
     // profilePictureURL: 'https://viima-app.s3.amazonaws.com/media/public/defaults/user-icon.png',
     getComments: (success, error) => {
-      var commentsArray = [{
-        id: 1,
-        created: '2015-10-01',
-        content: `${lowerNote}`,
-        fullname: 'Simon Powell',
-        upvote_count: 2,
-        user_has_upvoted: true
-      }];
-      success(commentsArray);
+      db.collection(`forum/${entryId}/comment`).get().then(commentDatas => {
+        var commentArray = []
+        commentDatas.forEach(doc => {
+          commentArray.push(doc.data())
+          console.log("getComment ", doc.data())
+        })
+        success(commentArray);
+      });
+    },
+    postComment: function(commentJSON, success, error) {
+      const commentRef = db.collection(`forum/${entryId}/comment`).doc();
+      const counterRef = db.collection(`comment_count`).doc(dirname)
+      const increment = firebase.firestore.FieldValue.increment(1);
+      var batch = db.batch()
+
+      counterDoc = {}
+      counterDoc[entryId] = increment
+      commentJSON["uid"] = commentRef.id
+      batch.set(commentRef, commentJSON)
+      batch.update(counterRef, counterDoc)
+      batch.commit().then(() => {
+        success(commentJSON)
+      })
+    },
+    putComment: function(commentJSON, success, error) {
+      console.log("putComment ", commentJSON)
+      const commentRef = db.collection(`forum/${entryId}/comment`).doc(commentJSON.uid);
+      var batch = db.batch()
+      batch.set(commentRef, commentJSON)
+      batch.commit().then(() => {
+        success(commentJSON)
+      })
     }
   });
 
