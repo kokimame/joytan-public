@@ -205,6 +205,7 @@ window.onload = () => {
             timestamps = timestampData;
             quizzes = quizData;
             entries = data
+            // This is an ugly solution
             jq = _jq
             addQuiz()
             for (var i = 0; i < entries.length; i++){
@@ -216,36 +217,19 @@ window.onload = () => {
                   ${entries[i][wantedKey]}<span id="${commentCntId}"></span>
                 </li>`
               )
-            }
-            db.collection(`comment_count`).doc(projectName).get().then(commentData => {
-              var countLookup = commentData.data()
-              for (var key in countLookup) {
-                var commentCntId = "comment_cnt_" + key;
-                var commentAllId = "comment_all" + key;
-                var count = countLookup[key]
-                console.log(key, count)
-                document.getElementById(commentCntId).innerHTML = 
+              db.collection(`forum/${entries[i]['id']}/comment`).get().then(commentData => {
+                if (commentData.docs.length >= 1) {
+                  var entryId = commentData.docs[0].ref.path.split('/')[1]
+                  var commentAllId = "comment_all_" + entryId;
+                  var commentCntId = "comment_cnt_" + entryId;
+                  document.getElementById(commentCntId).innerHTML = 
                   `<span class="comment-counter">
                     <i id="${commentAllId}" class="font-layer fa fa-comment"
-                    data-count="${count}"></i>
+                    data-count="${commentData.size}"></i>
                   </span>`
-              }
-            })
-
-            // firebase.database().ref(`forum/${projectName}`).once('value').then(indexData => {
-            //   var commentLookup = indexData.val();
-            //   for (var index in commentLookup) {
-            //     var commentCntId = "comment_cnt_" + index;
-            //     var commentAllId = "comment_all" + index;
-            //     commentLookup[index].length
-            //     document.getElementById(commentCntId).innerHTML = 
-            //       `<span class="comment-counter">
-            //         <i id="${commentAllId}" class="font-layer fa fa-comment"
-            //         data-count="${Object.keys(commentLookup[index]).length}"></i>
-            //       </span>`
-            //   }
-            // })
-            // Show the first forum
+                }
+              })
+            }
             $("#side-index li").get(0).click()
           })
         })
