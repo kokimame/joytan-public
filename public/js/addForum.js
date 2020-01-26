@@ -93,7 +93,7 @@ function addForum(index) {
         commentJSON.fullname = user.displayName;
         commentJSON.client_id = user.uid;
       } else {
-        commentJSON.fullname = 'Anonymous helper';
+        commentJSON.fullname = 'Anonymous writer';
       }
       
       batch.set(commentRef, commentJSON)
