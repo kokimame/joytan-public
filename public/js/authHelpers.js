@@ -103,7 +103,7 @@ function handleAuthButton() {
 function closeModals() {
   $("#auth-form").hide();
   $("#about-view").hide();
-  $("#stat-view").hide();
+  $("#stats-view").hide();
   $("#quiz-view").hide();
 }
 

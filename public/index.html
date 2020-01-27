@@ -9,7 +9,6 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>Joytan Public</title>
-
   <!-- update the version number as needed -->
   <script defer src="/__/firebase/7.6.1/firebase-app.js"></script>
   <!-- include only the Firebase features as you need -->
@@ -44,12 +43,16 @@
   <!-- YouTube sub counter -->
   <script src="https://apis.google.com/js/platform.js"></script>
 
-  <script src="/js/addPlayer.js"></script>
-  <script src="/js/addProject.js"></script>
-  <script src="/js/addProject.js"></script>
-  <script src="/js/addPlayer.js"></script>
-  <script src="/js/authHelpers.js"></script>
-  
+  <!-- D3 for visualization -->
+  <script src = "https://d3js.org/d3.v4.min.js"></script>
+
+
+  <script src="js/addPlayer.js"></script>
+  <script src="js/addProject.js"></script>
+  <script src="js/addProject.js"></script>
+  <script src="js/addPlayer.js"></script>
+  <script src="js/authHelpers.js"></script>
+
   <link rel="stylesheet" href="css/pagination.css">
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/auth.css">
@@ -57,6 +60,7 @@
   <link rel="stylesheet" href="css/table.css">
   <link rel="stylesheet" href="css/shared.css">
   <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="css/stats.css">
 
   <link rel="apple-touch-icon" sizes="57x57" href="icons/apple-icon-57x57.png">
   <link rel="apple-touch-icon" sizes="60x60" href="icons/apple-icon-60x60.png">
@@ -141,6 +145,10 @@
         e.preventDefault();
         $("#about-view").show();
       }
+      document.getElementById('check-the-statistics').onclick = e => {
+        e.preventDefault();
+        $("#stats-view").show();
+      }
     } // ^^^^^ onload ^^^^^
   </script>
 </head>
@@ -155,7 +163,7 @@
               <a href="javascript:window.location.href=window.location.href"><img src="/icons/logo_512.png" 
                   alt="Joytan App Forums" title="Joytan App Forums" width="30" height="30"></a>
             </div>
-            <span class="form-inline my-2 my-lg-0 nav-item" id="auth-btn-wrapper">
+            <span class="form-inline my-2 nav-item" id="auth-btn-wrapper">
               <button id="auth-button" class="btn btn-warning btn-slim" onclick="handleAuthButton()" 
                 style="display: none;"></button>  
             </span>
@@ -174,8 +182,9 @@
                 <li class="nav-item">
                   <a class="nav-link" href="http://slack-invite.joytan.pub/">Join team</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" style="position: relative;">
                   <a class="nav-link" href="https://youtube.com/c/JoytanApp">YouTube</a>
+                  <span class="nav-yt-subs">40k subs</span>
                 </li>
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -183,10 +192,10 @@
                   </a>
                   <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <ul id="other-link-list">
-                      <li>Android <a href="https://play.google.com/store/apps/details?id=com.joytan.rec" class="fa icon fa-android"></a></li>
-                      <li>GitHub <a href="https://github.com/kokimame/joytan-public" class="fa icon fa-github"></a></li>
-                      <li>Desktop <a href="https://kokimame.github.io/joytan/" class="fa icon fa-desktop"></a></li>
-                      <li>Twitter <a href="https://twitter.com/JoytanApp" class="fa icon fa-twitter"></a></li>
+                      <li><a href="https://play.google.com/store/apps/details?id=com.joytan.rec">Android <a class="fa icon fa-android" /></a></li>
+                      <li><a href="https://github.com/kokimame/joytan-public">GitHub <a class="fa icon fa-github" /></a></li>
+                      <li><a href="https://kokimame.github.io/joytan/">Desktop <a class="fa icon fa-desktop" /></a></li>
+                      <li><a href="https://twitter.com/JoytanApp">Twitter <a class="fa icon fa-twitter" /></a></li>
                     </ul>
                   </div>
                 </li>
@@ -198,12 +207,13 @@
       
       <div id="service-general" style="background-color: white">
         <div class="container">
-          <h2 id="big-service-name">Joytan Public <span style="font-size: 70%;">🗣️<a href="https://play.google.com/store/apps/details?id=com.joytan.rec">📱</a>➡️📺🎶</span></h2>
+          <h2 id="big-service-name">Joytan Public</h2>
           <p id="top-message">
-            <b>Where we celebrate our special voice</b>. Review your voice and bring them to our YouTube channel.
-            <a href="" id="learn-more">Learn more</a>
+            Review people's voice contributions</br>
+            Deliver to language learners on YouTube.
+            <span id="learn-more" class="floating-btn">About <i class="fa fa-question-circle"></i></span>
+            <span id="check-the-statistics" class="floating-btn">Stats 📈<span class="small-beta">beta</span></span>
           </p>
-          <!-- <a href="" id="check-the-statistics">Check the statistics</a> -->
           <div id="about-view" class="modal"></div>
           <div id="stats-view" class="modal"></div>
           <div id="auth-form" class="modal">

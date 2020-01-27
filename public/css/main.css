@@ -7,8 +7,9 @@ html, body {
 .element::-webkit-scrollbar { width: 0 !important }
 
 #service-general {
-    padding-top: 10px;
-    padding-bottom: 6px;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 #other-link-list {
@@ -73,6 +74,34 @@ button {
 .btn-vote {
     width: 120px;
     margin-left: 2px;
+}
+.floating-btn {
+    position: relative;
+    font-size: 80%;
+    font-weight: bold;
+    color: #0079D3;
+    background-color: rgb(211, 255, 226);
+    padding: 2px 4px;
+    margin-left: 8px;
+    cursor: pointer;
+    border-radius: 10%/50%;
+    -moz-border-radius: 10%/50%;
+    -webkit-border-radius: 10%/50%;
+    -webkit-box-shadow: 0 3px 3px #ccc;
+    -moz-box-shadow: 0 3px 3px #ccc;
+    box-shadow: 0 3px 3px #ccc;
+}
+
+.small-beta {
+    position: absolute;
+    text-transform: uppercase;
+    font-size: 15px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bolder;
+    font-style: italic;
+    color: tomato;
+    top: 10px;
+    right: 4px;
 }
 
 .auto-play {

@@ -1,0 +1,181 @@
+name,id,population,views,youtube_red_watch_time_minutes,youtube_red_views,average_view_duration
+United States,US,9611124,537195,419168,24322,17.9
+Japan,JP,7515317,512394,68225,5025,14.7
+France,FR,3434957,279132,1252,100,12.3
+Canada,CA,2570398,141347,17568,810,18.2
+Philippines,PH,2464243,221953,1623,180,11.1
+United Kingdom,GB,1989707,143158,2671,175,13.9
+India,IN,1410828,195978,1751,202,7.2
+Italy,IT,1200032,105858,0,0,11.3
+Germany,DE,1052314,79227,2434,171,13.3
+Nepal,NP,1002407,173334,0,0,5.8
+Sweden,SE,859427,57603,167,10,14.9
+Australia,AU,811858,48870,4754,298,16.6
+Mexico,MX,710662,42378,2550,174,16.8
+Taiwan,TW,655494,53413,586,24,12.3
+Brazil,BR,610912,52660,782,72,11.6
+Thailand,TH,594894,48650,192,82,12.2
+Switzerland,CH,556953,37819,0,0,14.7
+Vietnam,VN,549374,42362,0,0,13.0
+South Korea,KR,530677,44190,24384,1932,12.0
+Hong Kong,HK,445185,39297,0,0,11.3
+Indonesia,ID,430162,44885,0,0,9.6
+Turkey,TR,403255,40493,16,11,10.0
+Singapore,SG,370515,33216,11,11,11.2
+Malaysia,MY,369322,32858,0,0,11.2
+Russia,RU,365853,33547,271,46,10.9
+Spain,ES,312695,25390,0,0,12.3
+Belgium,BE,298081,22441,2,10,13.3
+Netherlands,NL,256113,17203,0,0,14.9
+Bangladesh,BD,218175,37478,0,0,5.8
+Poland,PL,215336,19420,0,0,11.1
+Cambodia,KH,209012,23308,0,0,9.0
+Myanmar (Burma),MM,187137,29654,0,0,6.3
+Israel,IL,186460,13390,0,0,13.9
+United Arab Emirates,AE,161581,15427,0,0,10.5
+Saudi Arabia,SA,157046,15646,0,0,10.0
+Ukraine,UA,155077,13812,0,0,11.2
+Colombia,CO,148860,9737,0,0,15.3
+Morocco,MA,147774,19249,0,0,7.7
+Greece,GR,136246,11402,0,0,11.9
+Ireland,IE,132494,8779,0,0,15.1
+Egypt,EG,132158,17984,0,0,7.3
+Sri Lanka,LK,131130,26322,0,0,5.0
+Finland,FI,123968,7605,0,0,16.3
+New Zealand,NZ,119263,7580,47,22,15.7
+Luxembourg,LU,116048,6253,0,0,18.6
+Kenya,KE,115213,9704,0,0,11.9
+Austria,AT,111857,8059,0,0,13.9
+Nigeria,NG,99885,9056,0,0,11.0
+South Africa,ZA,96999,7263,0,0,13.4
+Romania,RO,94898,7788,0,0,12.2
+Argentina,AR,78540,6550,0,0,12.0
+Algeria,DZ,75766,11762,0,0,6.4
+Peru,PE,73305,5953,0,0,12.3
+Iraq,IQ,70918,8222,0,0,8.6
+Hungary,HU,70907,6188,0,0,11.5
+Pakistan,PK,67703,14425,0,0,4.7
+Serbia,RS,66663,5595,0,0,11.9
+Norway,NO,66091,3931,0,0,16.8
+Ghana,GH,64368,6159,0,0,10.5
+Czechia,CZ,58571,5485,0,0,10.7
+Portugal,PT,56051,3923,0,0,14.3
+Chile,CL,51860,3785,0,0,13.7
+Denmark,DK,50576,3331,0,0,15.2
+Tanzania,TZ,49332,6194,0,0,8.0
+Ethiopia,ET,47981,5239,0,0,9.2
+Qatar,QA,46641,3265,0,0,14.3
+Congo - Kinshasa,CD,42224,2778,0,0,15.2
+Georgia,GE,40805,4142,0,0,9.9
+Bulgaria,BG,38567,4069,0,0,9.5
+Dominican Republic,DO,38123,3034,0,0,12.6
+Mongolia,MN,37326,5375,0,0,6.9
+Senegal,SN,36805,2910,0,0,12.6
+Lithuania,LT,35356,2638,0,0,13.4
+Slovakia,SK,33136,2328,0,0,14.2
+Lebanon,LB,32424,3208,0,0,10.1
+Croatia,HR,32245,2455,0,0,13.1
+Côte d’Ivoire,CI,30952,3106,0,0,10.0
+Kazakhstan,KZ,30721,3124,0,0,9.8
+Cyprus,CY,29034,1991,0,0,14.6
+Cameroon,CM,25625,2691,0,0,9.5
+Tunisia,TN,24302,2545,0,0,9.5
+Jordan,JO,22349,2101,0,0,10.6
+Azerbaijan,AZ,21999,3575,0,0,6.2
+Rwanda,RW,21932,2536,0,0,8.6
+Puerto Rico,PR,21230,1198,0,0,17.7
+Mauritius,MU,21006,3842,0,0,5.5
+Ecuador,EC,18942,1192,0,0,15.9
+Trinidad & Tobago,TT,18065,920,0,0,19.6
+Kuwait,KW,17811,2178,0,0,8.2
+Albania,AL,16668,1774,0,0,9.4
+Guatemala,GT,16335,1206,0,0,13.5
+Costa Rica,CR,15901,1274,0,0,12.5
+Uzbekistan,UZ,15362,1860,0,0,8.3
+Slovenia,SI,15113,1160,0,0,13.0
+Armenia,AM,13536,1458,0,0,9.3
+Somalia,SO,13061,3547,0,0,3.7
+Jamaica,JM,12667,907,0,0,14.0
+Venezuela,VE,12460,1070,0,0,11.6
+Laos,LA,12104,1209,0,0,10.0
+Bosnia & Herzegovina,BA,10950,1100,0,0,10.0
+Uganda,UG,9656,942,0,0,10.3
+Kyrgyzstan,KG,9143,1031,0,0,8.9
+Syria,SY,8668,979,0,0,8.9
+Latvia,LV,8388,567,0,0,14.8
+Sudan,SD,7934,990,0,0,8.0
+El Salvador,SV,7338,792,0,0,9.3
+North Macedonia,MK,7148,567,0,0,12.6
+Malta,MT,6973,491,0,0,14.2
+Madagascar,MG,6818,1117,0,0,6.1
+Oman,OM,6403,679,0,0,9.4
+French Guiana,GF,5911,524,0,0,11.3
+Estonia,EE,5894,419,0,0,14.1
+Belarus,BY,5530,607,0,0,9.1
+Afghanistan,AF,5294,593,0,0,8.9
+Haiti,HT,4006,515,0,0,7.8
+Bolivia,BO,3795,312,0,0,12.2
+Sierra Leone,SL,3470,273,0,0,12.7
+Suriname,SR,3357,235,0,0,14.3
+Zambia,ZM,3039,418,0,0,7.3
+Bahrain,BH,2940,352,0,0,8.4
+Mali,ML,2688,293,0,0,9.2
+Honduras,HN,2604,253,0,0,10.3
+Montenegro,ME,2315,93,0,0,24.9
+Angola,AO,2313,203,0,0,11.4
+Barbados,BB,2312,107,0,0,21.6
+Panama,PA,2013,149,0,0,13.5
+Moldova,MD,1908,303,0,0,6.3
+Guinea,GN,1889,202,0,0,9.4
+Zimbabwe,ZW,1816,154,0,0,11.8
+Togo,TG,1684,98,0,0,17.2
+Gabon,GA,1666,177,0,0,9.4
+Bahamas,BS,1488,103,0,0,14.4
+Djibouti,DJ,1418,238,0,0,6.0
+Réunion,RE,1331,178,0,0,7.5
+Mozambique,MZ,1291,118,0,0,10.9
+Namibia,NA,1202,140,0,0,8.6
+Macao,MO,1135,142,0,0,8.0
+St. Lucia,LC,898,33,0,0,27.2
+Libya,LY,886,104,0,0,8.5
+Maldives,MV,829,129,0,0,6.4
+Guadeloupe,GP,785,66,0,0,11.9
+Congo - Brazzaville,CG,776,83,0,0,9.4
+Monaco,MC,728,33,0,0,22.1
+Yemen,YE,645,35,0,0,18.4
+Gambia,GM,636,86,0,0,7.4
+Benin,BJ,602,97,0,0,6.2
+Tajikistan,TJ,566,24,0,0,23.6
+Guam,GU,511,59,0,0,8.7
+Iceland,IS,486,35,0,0,13.9
+Brunei,BN,485,52,0,0,9.3
+Palestine,PS,421,73,0,0,5.8
+French Polynesia,PF,391,43,0,0,9.1
+Burundi,BI,317,43,0,0,7.4
+Mayotte,YT,311,46,0,0,6.8
+Nicaragua,NI,278,25,0,0,11.1
+Lesotho,LS,232,10,0,0,23.2
+Botswana,BW,229,34,0,0,6.7
+St. Martin,MF,220,12,0,0,18.3
+South Sudan,SS,216,24,0,0,9.0
+Burkina Faso,BF,193,10,0,0,19.3
+Liberia,LR,176,58,0,0,3.0
+Niger,NE,118,24,0,0,4.9
+St. Barthélemy,BL,100,10,0,0,10.0
+Jersey,JE,88,14,0,0,6.3
+Martinique,MQ,86,21,0,0,4.1
+Sint Maarten,SX,59,10,0,0,5.9
+Comoros,KM,56,11,0,0,5.1
+Uruguay,UY,54,10,0,0,5.4
+Guernsey,GG,47,10,0,0,4.7
+New Caledonia,NC,45,14,0,0,3.2
+Iran,IR,37,10,0,0,3.7
+Malawi,MW,37,10,0,0,3.7
+Curaçao,CW,19,10,0,0,1.9
+Paraguay,PY,17,21,0,0,0.8
+Turkmenistan,TM,9,12,0,0,0.7
+Aruba,AW,7,16,0,0,0.4
+Bhutan,BT,4,11,0,0,0.3
+Antigua & Barbuda,AG,0,0,0,0,0.0
+Mauritania,MR,0,0,0,0,0.0
+Palau,PW,0,0,0,0,0.0

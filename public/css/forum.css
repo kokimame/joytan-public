@@ -87,6 +87,13 @@ hr {
   margin: 4px;
   display: none;
 }
+
+.table-of-contents {
+  text-align: center;
+  font-weight: bold;
+  font-size: 16px;
+}
+
 .td-note {
 	font-size: 10px;
 	text-align: center;
