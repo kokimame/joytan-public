@@ -33,8 +33,8 @@ function handleAuthButton() {
       },
       // Will use popup for IDP Providers sign-in flow instead of the default, redirect.
       signInFlow: 'popup',
-      
-      signInSuccessUrl: 'http://localhost:5000',
+      // Redirect to current page
+      signInSuccessUrl: location.href,
       signInOptions: [
         // Leave the lines as is for the providers you want to offer your users.
         firebase.auth.TwitterAuthProvider.PROVIDER_ID,

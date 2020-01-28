@@ -3,13 +3,16 @@
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
     z-index: 10; /* Sit on top */
-    left: 0;
     top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
     overflow: auto; /* Enable scroll if needed */
     background-color: #474e5daa;
     padding-top: 50px;
+}
+
+.auth-container {
+    max-width: 100%;
+    width: max-content;
+    margin: auto;
 }
   
 /* Modal Content/Box */
@@ -17,38 +20,11 @@
     background-color: #fefefe;
     border: 5px solid #888;
     border-radius: 10px;
+    padding-bottom: 15px;
 }
 
 .modal-contents {
     margin: 2% 2%; /* 5% from the top, 15% from the bottom and centered */    
-}
-
-.modal-button {
-    /* background-color: #4CAF50; */
-    color: white;
-    padding: 14px 20px;
-    margin: 8px 0;
-    border: none;
-    cursor: pointer;
-    width: 100%;
-    opacity: 0.9;
-}
-  
-button:hover {
-    opacity:1;
-}
-  
-
-/* Extra styles for the cancel button */
-.cancel-btn {
-    padding: 14px 20px;
-    background-color: #f44336;
-}
-
-/* Float cancel and signup buttons and add an equal width */
-.cancel-btn, .signup-btn, .login-btn {
-    float: left;
-    width: 50%;
 }
    
 /* The Close Button (x) */
@@ -75,8 +51,8 @@ button:hover {
 }
   
 /* Change styles for cancel button and signup button on extra small screens */
-@media screen and (max-width: 300px) {
+/* @media screen and (max-width: 300px) {
     .cancel-btn, .signup-btn, .login-btn {
        width: 100%;
     }
-}
+} */

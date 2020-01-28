@@ -61,6 +61,7 @@
   <link rel="stylesheet" href="css/shared.css">
   <link rel="stylesheet" href="css/responsive.css">
   <link rel="stylesheet" href="css/stats.css">
+  <link rel="stylesheet" href="css/w3.css">
 
   <link rel="apple-touch-icon" sizes="57x57" href="icons/apple-icon-57x57.png">
   <link rel="apple-touch-icon" sizes="60x60" href="icons/apple-icon-60x60.png">
@@ -103,7 +104,7 @@
         $("#stats-view").load("stats.html"); 
       });
       // Close modal when clicking outside
-      $(".modal").click(function(ev) {
+      $(".modal, .w3-modal").click(function(ev) {
         if(ev.target.id != $(this).attr('id')) {
           return;
         } else {
@@ -203,20 +204,18 @@
           </p>
           <div id="about-view" class="modal"></div>
           <div id="stats-view" class="modal"></div>
-          <div id="auth-view" class="modal">
+          <div id="auth-view" class="w3-modal">
             <span onclick="closeModals()" class="close" title="Close Modal">&times;</span>
-            <div class="modal-container">
-              <div class="modal-contents">
-                <div style="text-align: center;">
-                  <div id="firebaseui-auth-container"></div>
-                  <span onclick="closeModals()" class="link-text">Maybe later ></span>
-                </div>
-              </div>  
+            <div class="w3-modal-content w3-animate-top modal-content auth-container">
+              <div style="text-align: center;">
+                <div id="firebaseui-auth-container"></div>
+                <span onclick="closeModals()" class="link-text">Maybe later ></span>
+              </div>
             </div>
           </div>
           <div id="account-view" class="modal">
             <span onclick="closeModals()" class="close" title="Close Modal">&times;</span>
-            <div class="modal-container">
+            <div class="modal-container container">
               <div class="modal-contents">
                 <div id="account-modal"></div>
               </div>
