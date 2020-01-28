@@ -138,6 +138,7 @@
         } else {
           $("#auth-button").html("Log in &bull; Sign up")
           $("#auth-button").show()
+          $("#auth-button").click()
         }
         // FIXME: Cannot move the show() outside of the if
       });
@@ -219,8 +220,8 @@
           <div id="auth-form" class="modal">
             <span onclick="closeModals()" class="close" title="Close Modal">&times;</span>
             <div class="modal-container">
+              <div id="firebaseui-auth-container"></div>
               <div class="modal-contents container">
-                <div id="firebaseui-auth-container"></div>
                 <div id="account-modal">
                 </div>
               </div>  

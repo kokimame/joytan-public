@@ -1,81 +1,42 @@
-function validatePassword(){
-    var pswInput = document.getElementById("signup-psw");
-    var confirmPswInput = document.getElementById("confirm-password");
-    if(pswInput.value != confirmPswInput.value) {
-      confirmPswInput.setCustomValidity("Passwords Don't Match");
-      return false;
-    } else {
-      confirmPswInput.setCustomValidity('');
-      return true;
-    }
-  }
-
-  function createNewUser() {
-    var emailInput = document.getElementById("signup-email");
-    var pswInput = document.getElementById("signup-psw");
-    var unameInput = document.getElementById("signup-uname");
-
-    // MAYBE Need a fix because this is NOT called on actual submit.
-    if (!emailInput.checkValidity() ||
-        !pswInput.checkValidity() ||
-        !unameInput.checkValidity() ||
-        !validatePassword()) {
-      return
-    }
-
-    //Create User with Email and Password
-    firebase.auth().createUserWithEmailAndPassword(emailInput.value, pswInput.value).catch((error) => {
-      // Handle Errors here.
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      console.log(errorCode);
-      console.log(errorMessage);
-      throw error;
-    }).then(userData => {
-      console.log("Created new User! =>", userData)
-      userData['user'].updateProfile({
-        displayName: unameInput.value
-      })
-      closeModals();
-    });
-  }
-function loginUser() {
-  var password = $("#login-psw").val()
-  var email = $("#login-email").val()
-  //Sign In User with Email and Password
-  firebase.auth().signInWithEmailAndPassword(email, password).catch((error) => {
-      // Handle Errors here.
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      console.log(errorCode);
-      console.log(errorMessage);
-      throw error;
-  }).then(user => {
-      console.log("Log in an user! =>", user)
-      closeModals();
-  });
-}
 function signOutUser() {
   firebase.auth().signOut().then(function() {
       // Sign-out successful.
       console.log('User Logged Out!');
+      location.reload();
       closeModals();
   }).catch(error => {
      // An error happened.
       console.log(error);
   });
 }
+
 function handleAuthButton() {
   var user = firebase.auth().currentUser;
   if (user) {
       generateAccountPage(user);
-      document.getElementById("account-modal").style.display = "block"
-      document.getElementById("firebaseui-auth-container").style.display = "none"
+      $("#account-modal").show()
+      $("#firebaseui-auth-container").hide()
   } else {
-    document.getElementById("account-modal").style.display = "none"
-    document.getElementById("firebaseui-auth-container").style.display = "block"
+    $("#account-modal").hide()
+    $("#firebaseui-auth-container").show()
     // FirebaseUI config.
     var uiConfig = {
+      callbacks: {
+        signInSuccessWithAuthResult: function(authResult, redirectUrl) {
+          // User successfully signed in.
+          // Return type determines whether we continue the redirect automatically
+          // or whether we leave that to developer to handle.
+          return true;
+        },
+        uiShown: function() {
+          // The widget is rendered.
+          // Hide the loader.
+          // document.getElementById('loader').style.display = 'none';
+        }
+      },
+      // Will use popup for IDP Providers sign-in flow instead of the default, redirect.
+      signInFlow: 'popup',
+      
       signInSuccessUrl: 'http://localhost:5000',
       signInOptions: [
         // Leave the lines as is for the providers you want to offer your users.
@@ -94,11 +55,11 @@ function handleAuthButton() {
       }
     }
     // Initialize the FirebaseUI Widget using Firebase.
-    var ui = new firebaseui.auth.AuthUI(firebase.auth());
+    var ui = firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(firebase.auth());
     // The start method will wait until the DOM is loaded.
     ui.start('#firebaseui-auth-container', uiConfig);
   };
-  document.getElementById("auth-form").style.display = "block";
+  $("#auth-form").show();
 }
 function closeModals() {
   $("#auth-form").hide();
@@ -111,7 +72,7 @@ function generateAccountPage(user) {
     var accountDiv = document.getElementById("account-modal");
     accountDiv.innerHTML = `
     <h2>Your Account</h2>
-    <p>Thank you for your contribution!</p>
+    <p>This section is work in progress👷</p>
     <hr>
     <p>Your username: 
       <span id="uname-display" >
@@ -170,19 +131,4 @@ function generateAccountPage(user) {
       $("#uname-edit").hide();
       $("#uname-display").show();
   })
-}
-// Smarter way to change login/signup modal!
-function signupLoginTransition(nextModal) {
-  if (nextModal == "login") {
-      document.getElementById('signup-modal').style.display='none';
-      document.getElementById('login-modal').style.display='block';
-      // Copy draft email/psw to the next modal
-      var draftEmail = document.getElementById('signup-email').value;
-      var draftPsw = document.getElementById('signup-psw').value;
-      document.getElementById('login-email').value = draftEmail;
-      document.getElementById('login-psw').value = draftPsw;
-  } else if (nextModal == "signup") {
-      document.getElementById('login-modal').style.display='none';
-      document.getElementById('signup-modal').style.display='block';
-  }
 }
