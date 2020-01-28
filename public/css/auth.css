@@ -26,7 +26,15 @@
 .modal-contents {
     margin: 2% 2%; /* 5% from the top, 15% from the bottom and centered */    
 }
-   
+
+.landing-message {
+    max-width: max-content;
+    margin: 10px;
+}
+.landing-message h3 {
+    font-family: 'Times New Roman', Times, serif;
+}
+
 /* The Close Button (x) */
 .close {
     position: absolute;
