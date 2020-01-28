@@ -103,28 +103,14 @@
         $("#stats-view").load("stats.html"); 
       });
       // Close modal when clicking outside
-      $("#auth-form").click(ev => {
-        if(ev.target != document.getElementById("auth-form")) {
+      $(".modal").click(function(ev) {
+        if(ev.target.id != $(this).attr('id')) {
           return;
         } else {
-          $("#auth-form").hide();
+          $(this).hide();
         }
       });
-      $("#about-view").click(ev => {
-        if(ev.target != document.getElementById("about-view")) {
-          return;
-        } else {
-          $("#about-view").hide();
-        }
-      });
-      $("#stats-view").click(ev => {
-        if(ev.target != document.getElementById("stats-view")) {
-          return;
-        } else {
-          $("#stats-view").hide();
-        }
-      });
-
+      
       firebase.auth().onAuthStateChanged(user => {
         if (user) {
           const db = firebase.firestore()
@@ -217,14 +203,23 @@
           </p>
           <div id="about-view" class="modal"></div>
           <div id="stats-view" class="modal"></div>
-          <div id="auth-form" class="modal">
+          <div id="auth-view" class="modal">
             <span onclick="closeModals()" class="close" title="Close Modal">&times;</span>
             <div class="modal-container">
-              <div id="firebaseui-auth-container"></div>
-              <div class="modal-contents container">
-                <div id="account-modal">
+              <div class="modal-contents">
+                <div style="text-align: center;">
+                  <div id="firebaseui-auth-container"></div>
+                  <span onclick="closeModals()" class="link-text">Maybe later ></span>
                 </div>
               </div>  
+            </div>
+          </div>
+          <div id="account-view" class="modal">
+            <span onclick="closeModals()" class="close" title="Close Modal">&times;</span>
+            <div class="modal-container">
+              <div class="modal-contents">
+                <div id="account-modal"></div>
+              </div>
             </div>
           </div>
         </div>
@@ -238,7 +233,7 @@
         </div>
         <div class="accordion" id="projectsTop">
           <div id="landing-spin" class="spinner-wrapper">
-            <i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>
+            <i class="fa fa-spinner fa-spin fa-2x fa-fw"></i>
           </div>
         </div>
       </div>

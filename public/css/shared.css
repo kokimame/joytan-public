@@ -96,3 +96,8 @@ text-decoration: none;
     text-align: center;
 }
 
+.link-text {
+    cursor: pointer;
+    color: #4285f4;
+    text-decoration: underline;
+}

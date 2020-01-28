@@ -14,11 +14,8 @@ function handleAuthButton() {
   var user = firebase.auth().currentUser;
   if (user) {
       generateAccountPage(user);
-      $("#account-modal").show()
-      $("#firebaseui-auth-container").hide()
+      $("#account-view").show()
   } else {
-    $("#account-modal").hide()
-    $("#firebaseui-auth-container").show()
     // FirebaseUI config.
     var uiConfig = {
       callbacks: {
@@ -58,11 +55,12 @@ function handleAuthButton() {
     var ui = firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(firebase.auth());
     // The start method will wait until the DOM is loaded.
     ui.start('#firebaseui-auth-container', uiConfig);
+    $("#auth-view").show();
   };
-  $("#auth-form").show();
 }
 function closeModals() {
-  $("#auth-form").hide();
+  $("#auth-view").hide();
+  $("#account-view").hide();
   $("#about-view").hide();
   $("#stats-view").hide();
   $("#quiz-view").hide();

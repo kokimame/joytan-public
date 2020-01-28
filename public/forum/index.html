@@ -114,11 +114,18 @@ window.onload = () => {
     $("#quiz-view").load("quiz.html");
   });
   // Close modal when clicking outside
-  $("#auth-form").click(ev => {
-      if(ev.target != document.getElementById("auth-form")) {
+  $("#auth-view").click(ev => {
+      if(ev.target != document.getElementById("auth-view")) {
           return;
       } else {
-          $("#auth-form").hide();
+          $("#auth-view").hide();
+      }
+  });
+  $("#account-view").click(ev => {
+      if(ev.target != document.getElementById("account-view")) {
+          return;
+      } else {
+          $("#account-view").hide();
       }
   });
   firebase.auth().onAuthStateChanged(user => {
@@ -314,7 +321,7 @@ window.onload = () => {
         Jump to a project using <b>the project search tool</b> (<i class="fas fa-search"></i>).
       </div>
 
-      <div id="auth-form" class="modal">
+      <div id="auth-view" class="modal">
         <span onclick="closeModals()" class="close" title="Close Modal">&times;</span>
         <div class="modal-container">
           <div class="modal-contents container">
