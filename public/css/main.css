@@ -90,6 +90,7 @@ button {
     -webkit-box-shadow: 0 3px 3px #ccc;
     -moz-box-shadow: 0 3px 3px #ccc;
     box-shadow: 0 3px 3px #ccc;
+    white-space: nowrap;
 }
 
 .small-beta {
@@ -102,6 +103,7 @@ button {
     color: tomato;
     top: 10px;
     right: 4px;
+    white-space: nowrap;
 }
 
 .auto-play {
