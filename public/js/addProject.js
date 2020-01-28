@@ -55,7 +55,7 @@ function addProject(pData) {
         Auto <a class="fa fa-volume-up"></a></button>
       </span>
       <div id="${spinId}" class="spinner-wrapper">
-      <i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>
+      <i class="fa fa-spinner fa-spin fa-2x fa-fw"></i>
       </div>
       <div id="${audioId}" class="player-field">
       </div>
