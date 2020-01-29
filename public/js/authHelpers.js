@@ -85,9 +85,8 @@ function generateAccountPage(user) {
           class="btn btn-secondary btn-slim">Cancel</button>
       </span>
     </p>
-    <p>Your email address: <span class="bold-line">${user.email}</span></p>
-    <p>Your total voice contribution: <span id="totalAudioCount" style="font-size: 30px;"><b></b></span></p>
-    <p>Your total votes: <span id="totalVoteCount" style="font-size: 30px;"><b></b></span></p>
+    <p id='user-email'>Your email address: <span class="bold-line">${user.email}</span></p>
+    <p>Your total voice contribution: <span id="total-voice-count" style="font-size: 30px;"><b>0</b></span></p>
     <p>Our project is still in an early stage. Your participation and contribution mean a lot to us 😌🏖️.</p>
 
     <div class="clearfix">
@@ -96,20 +95,24 @@ function generateAccountPage(user) {
       </center>
     </div>
     `
-    firebase.database().ref("users").child(user.uid).child("audio").child("all").once('value').then(snapshot => {
-      var totalVoteCount = 0
-      if (snapshot.val()) {
-        totalVoteCount = Object.keys(snapshot.val()).length
+    var db = firebase.firestore()
+    db.collection('users').doc(user.uid).get().then(doc => {
+      var data = doc.data()
+      if (typeof data != 'undefined' && 'voice' in data) {
+        var totalVoiceCount = data['voice'].length
+        $("#total-voice-count").text(totalVoiceCount)
       }
-      document.getElementById("totalAudioCount").innerText = totalVoteCount.toString()
     })
-    firebase.database().ref("users").child(user.uid).child("votes").once('value').then(snapshot => {
-      var totalVoteCount = 0
-      if (snapshot.val()) {
-        totalVoteCount = Object.keys(snapshot.val()).length
-      }
-      document.getElementById("totalVoteCount").innerText = totalVoteCount.toString()
-    })
+    if (user.email == null) {
+      $('#user-email').hide()
+    }
+    // firebase.database().ref("users").child(user.uid).child("votes").once('value').then(snapshot => {
+    //   var totalVoteCount = 0
+    //   if (snapshot.val()) {
+    //     totalVoteCount = Object.keys(snapshot.val()).length
+    //   }
+    //   document.getElementById("totalVoteCount").innerText = totalVoteCount.toString()
+    // })
 
     $("#uname-edit-btn").click(ev => {
       $("#uname-display").hide();
