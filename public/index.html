@@ -121,13 +121,11 @@
             }
           })
           $("#auth-button").html(`Account <i class="fa fa-user" />`)
-          $("#auth-button").show()
         } else {
           $("#auth-button").html("Log in &bull; Sign up")
-          $("#auth-button").show()
           $("#auth-button").click()
         }
-        // FIXME: Cannot move the show() outside of the if
+        $("#auth-button").show()
       });
       document.getElementById('learn-more').onclick = e => {
         e.preventDefault();

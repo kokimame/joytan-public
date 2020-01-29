@@ -4,6 +4,7 @@ function addProject(pData) {
   const div = document.createElement('div');
   const projectName = pData["dirname"]
   const pagingId = "paging_" + projectName
+  const lastUpdatedId = "last_" + projectName
   const controlId = "control_" + projectName
   const autoBtnId = "auto_" + projectName
   const forumId = "forum_" + projectName
@@ -42,6 +43,9 @@ function addProject(pData) {
         style="width: 0%; height: 80%; border-radius: 0px 10px 10px 0px;" aria-valuenow="30"
         aria-valuemin="0" aria-valuemax="100" id="${availProgId}"></div>
     </div>
+    <span class="last-updated">
+      Last updated: <span id="${lastUpdatedId}"></span>
+    </span>
     <span class="forum-link" id="${forumId}">
       Go to Forum <a class="far fa-comments" style="text-decoration: underline"></a>
     </span>
@@ -72,6 +76,19 @@ function addProject(pData) {
   var audioDiv = document.getElementById(audioId)
 
   setupProgressBar();
+  setLastUpdated();
+
+  function setLastUpdated() {
+    var db = firebase.firestore()
+    db.collection(`projects/${projectName}/voice`).
+            orderBy("created_at", "desc").limit(1).get().then(result => {
+      if (result.docs.length == 1) {
+        var data = result.docs[0].data()
+        var creationTime = data['created_at'].toDate()
+        $(`#${lastUpdatedId}`).html(timeSince(creationTime))
+      }
+    })
+  }
   
   function setupPagination() {
     var db = firebase.firestore()
@@ -223,4 +240,29 @@ function playNext(audioDiv, justEnded, autoBtnId) {
     autoBtn.value = "off"
     autoBtn.innerHTML = `Auto <a class="fa fa-volume-up">`
   }
+}
+
+function timeSince(date) {
+  var seconds = Math.floor((new Date() - date) / 1000);
+  var interval = Math.floor(seconds / 31536000);
+  if (interval >= 1) {
+      return interval + " years ago";
+    }
+    interval = Math.floor(seconds / 2592000);
+    if (interval >= 1) {
+      return interval + " months ago";
+    }
+    interval = Math.floor(seconds / 86400);
+    if (interval >= 1) {
+      return interval + " days ago";
+    }
+    interval = Math.floor(seconds / 3600);
+    if (interval >= 1) {
+      return interval + " hours ago";
+    }
+    interval = Math.floor(seconds / 60);
+    if (interval >= 1) {
+      return interval + " minutes ago";
+    }
+    return Math.floor(seconds) + " seconds ago";
 }

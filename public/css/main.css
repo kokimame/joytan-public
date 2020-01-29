@@ -138,6 +138,11 @@ button {
     color: black;
     text-decoration: none;
 }
+.last-updated {
+    font-size: 11px;
+    color: gray;
+    float: left;
+}
 
 .forum-link {
     font-size: 13px;
