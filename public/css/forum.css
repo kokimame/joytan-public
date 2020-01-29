@@ -81,11 +81,26 @@ hr {
   font-weight: bolder;
   display: none;
 }
+
 #top-page-message {
   text-align: center;
   font-size: 14px;
   margin: 4px;
   display: none;
+}
+
+#activity-slide {
+  background-color: #dae0e6;
+  border-top-left-radius: 20px;
+  -moz-border-top-left-radius: 20px;
+  -webkit-border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  -moz-border-top-right-radius: 20px;
+  -webkit-border-top-right-radius: 20px;
+}
+
+.panel-body {
+  background-color: #dae0e6;
 }
 
 .table-of-contents {
@@ -110,56 +125,6 @@ hr {
 .space-between {
   display: flex;
   justify-content: space-between;
-}
-
-.comment-date {
-  font-size: 12px;
-  margin-top: 6px;
-}
-
-.comment-control {
-  float: right;
-  font-size: 14px;
-  margin-top: -10px;
-}
-
-.commentor-info {
-  display: inline-block;
-}
-
-.comment-text {
-  white-space: pre-wrap;
-  margin-left: 8px;
-}
-
-.comment-separator {
-  margin: 8px;
-}
-
-.comment-form {
-  background-color: lightgray;
-  padding: 5px;
-  border-radius: 3px;
-}
-
-.comment-name-input {
-  width: 50%;
-  border: 1px solid #ccc;
-  border-radius: 2px;
-  box-sizing: border-box;
-  resize: vertical;
-}
-
-.comment-textarea {
-  width: 100%;
-  border: 1px solid #ccc;
-  border-radius: 2px;
-  box-sizing: border-box;
-  resize: vertical;
-}
-
-.btn-submit {
-  margin-top: 4px;
 }
 
 .icon {
