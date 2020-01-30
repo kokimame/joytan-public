@@ -13,7 +13,7 @@ function addPlayer(voiceId, entryData, targetId) {
   const storage = firebase.storage();
   const voiceRef = storage.ref().child(`n_d_voice/${projectName}/n_d_${voiceId}.wav`);
 
-  voiceRef.getDownloadURL().then((url) => {
+  voiceRef.getDownloadURL().then(url => {
     // Add extra assertion to prevent failed loadings
     var upnString = entryData["upn"];
     var lonString = entryData["lon"];
@@ -23,19 +23,31 @@ function addPlayer(voiceId, entryData, targetId) {
     mainString = entryData["main_script"];
     upnString = (typeof upnString === 'undefined') ? "" : upnString;
     lonString = (typeof lonString === 'undefined') ? "" : lonString;
-    color = "#D0D0D0"; // Light gray by default;
 
     const div = document.createElement('div');
     div.className = 'player-table';
     div.innerHTML = `
-    <table class="bordered" style="background: ${color};">
-      <td style="text-align: center">
-        <i id="${playBtnId}" class="fa fa-play ml-2"></i><br />
-        <div style="overflow: hidden">
-          <div class="like grow" id="${likeId}" value="like">
-            <i class="fa fa-thumbs-o-up like" aria-hidden="true"></i>
-          </div>
-        </div>
+    <table class="bordered base-table">
+      <td class="control-cell">
+        <table style="height: 82px;">
+          <tr>
+            <td style="position: relative">
+              <span class="hole"></span>
+            </td>
+          </tr>
+          <tr>
+            <td style="background: #deebe0; height: 30%; text-align: center;">
+              <i id="${playBtnId}" class="fa fa-play"></i>
+            </td>
+          </tr>
+          <tr>
+            <td style="background: #deebe0; text-align: center;">
+              <div class="like grow" id="${likeId}">
+                <i class="fa fa-thumbs-o-up like" aria-hidden="true"></i>
+              </div>
+            </td>
+          </tr>
+        </table>
       </td>
       <td>
         <div class="card-body text-center">

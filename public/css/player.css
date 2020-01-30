@@ -1,6 +1,6 @@
-table {
-    background: #d4d4d4;
-    border: solid #ccc 2px;
+.base-table {
+    background: #f0fdf2;
+    border: solid #ccc 1px;
     border-collapse: separate !important;
     border-spacing: 0;
     border-radius: 0px 6px 6px 0px;
@@ -10,8 +10,8 @@ table {
     -moz-box-shadow: 0 3px 3px #ccc;
     box-shadow: 0 3px 3px #ccc;
 }
-table:hover {
-    border: solid rgb(68, 68, 68) 2px;
+.base-table:hover {
+    border: solid rgb(68, 68, 68) 1px;
     border-radius: 0px 6px 6px 0px;
     -moz-border-radius: 0px 6px 6px 0px;
     -webkit-border-radius: 0px 6px 6px 0px;
@@ -25,9 +25,29 @@ table:hover {
     transition: all 0.1s ease-in-out;
 }
 
+.control-cell {
+    padding: 0px;
+    background: #deebe0;
+}
+
 .player-table {
     display: inline-block;
     margin: 3px;
+}
+
+.hole {
+    position: absolute;
+    margin-top: 4px;
+    top: 0;
+    left: 4px;
+    width: 8px;
+    height: 8px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0px -1px  rgba(0,0,0,0.6);
+    -moz-box-shadow: 0px -1px  rgba(0,0,0,0.6);
+    -webkit-box-shadow: 0px -1px  rgba(0,0,0,0.6);
+    -o-box-shadow: 0px -1px  rgba(0,0,0,0.6);
 }
 
 .player-table .main-script {
@@ -36,7 +56,6 @@ table:hover {
     margin-top: -5px;
     margin-bottom: 2px;
 }
-
 
 .player-table .upper-note {
     font-style: italic;
@@ -49,13 +68,8 @@ table:hover {
     margin: 3px;
 }
 
-
 .player-table h1, h2, h3, h4, h5, h6 {
     margin: 0px;
-}
-
-.player-table td {
-    padding-left: 2px;
 }
 
 .player-table .fa-play, .player-table .fa-pause {
