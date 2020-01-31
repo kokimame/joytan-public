@@ -71,7 +71,6 @@ function addForum(index) {
         var commentArray = []
         commentDatas.forEach(doc => {
           var commentJSON = doc.data();
-          console.log(commentJSON.created_by_current_user)
           if (user && user.uid == commentJSON.client_id) {
             commentJSON.created_by_current_user = true
           } else {
@@ -79,7 +78,6 @@ function addForum(index) {
           }
 
           commentArray.push(commentJSON)
-          console.log("getComment ", doc.data())
         })
         success(commentArray);
       });
@@ -112,7 +110,6 @@ function addForum(index) {
       })
     },
     putComment: function(commentJSON, success, error) {
-      console.log("putComment ", commentJSON)
       const commentRef = db.collection(`forum/${entryId}/comment`).doc(commentJSON.uid);
       var batch = db.batch()
       batch.set(commentRef, commentJSON)

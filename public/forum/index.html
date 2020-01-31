@@ -104,6 +104,7 @@ window.onload = () => {
   const urlVars = getUrlVars()
   const projectName = urlVars["p"];
   const startQuiz = urlVars["quiz"];
+  const startEntryId = urlVars["eid"]
 
   const storage = firebase.storage();
   const storageRef = storage.ref();
@@ -228,7 +229,20 @@ window.onload = () => {
                 }
               })
             }
-            $("#side-index li").get(0).click()
+            if (typeof startEntryId != "undefined") {
+              for (var i = 0; i < entries.length; i++){
+                if (entries[i]["id"] == startEntryId) {
+                  $("#side-index li").get(i).click()
+                  break
+                }
+                // At last, open index 0 by default
+                if (i == entries.length - 1) {
+                  $("#side-index li").get(0).click()
+                }
+              }
+            } else {
+              $("#side-index li").get(0).click()
+            }
           })
         })
       }
@@ -357,7 +371,7 @@ window.onload = () => {
             </div>
             <ul class="list-group" id="side-index"></ul>
           </div>
-          <div class="col-xs-12 col-sm-8 col-md-9" style="padding: 2px;">
+          <div class="col-xs-12 col-sm-8 col-md-9" style="padding: 0px;">
             <div id="comments-container"></div>
           </div>
         </div>
