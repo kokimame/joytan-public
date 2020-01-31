@@ -8,6 +8,7 @@ function addPlayer(voiceId, entryData, targetId) {
   const spinId = "spin_" + projectName;
   const controlId = "control_" + projectName;
   const likeId = "like_" + voiceId;
+  const likeCountId = "likeCount_" + voiceId;
   const mediaLinkId = "mediaLink_" + voiceId;
 
   const storage = firebase.storage();
@@ -28,23 +29,17 @@ function addPlayer(voiceId, entryData, targetId) {
     div.className = 'player-table';
     div.innerHTML = `
     <table class="bordered base-table">
-      <td class="control-cell">
-        <table style="height: 82px;">
+      <td class="control-cell" style="position: relative; height: 65px">
+        <span class="hole"></span>
+        <span class="like grow" id="${likeId}" style="white-space: nowrap;">
+          <i class="fa fa-arrow-up" aria-hidden="true"></i>
+           <span id="${likeCountId}"></span>
+        </span>
+        <table>
           <tr>
-            <td style="position: relative">
-              <span class="hole"></span>
-            </td>
-          </tr>
-          <tr>
-            <td style="background: #deebe0; height: 30%; text-align: center;">
+            <td style="background: #deebe0; text-align: center;
+             padding-left: 6px; padding-right: 6px">
               <i id="${playBtnId}" class="fa fa-play"></i>
-            </td>
-          </tr>
-          <tr>
-            <td style="background: #deebe0; text-align: center;">
-              <div class="like grow" id="${likeId}">
-                <i class="fa fa-thumbs-o-up like" aria-hidden="true"></i>
-              </div>
             </td>
           </tr>
         </table>
@@ -58,13 +53,16 @@ function addPlayer(voiceId, entryData, targetId) {
               <source src="${url}">
           </audio>
         </div>
-        <div id="${mediaLinkId}"></div>
+        <div>
+        <span id="${mediaLinkId}"></span>
+        <div>
       </td>
     </table>
     `;
     document.getElementById(targetId).appendChild(div);
     // Hide loader
     $("#" + spinId).addClass("hide-loader");
+    $(`#${likeCountId}`).text(entryData['vote_like'])
     document.getElementById(controlId).style.display = "block";
 
     var likedArray = window.userData[`vote_${projectName}`]
@@ -77,14 +75,14 @@ function addPlayer(voiceId, entryData, targetId) {
         var twitterUid = mediaLink.slice(4)
         var userLink = $("<a />", {
           href : "https://twitter.com/i/user/" + twitterUid,
-          html : "by " + displayName + ' <i class="fab fa-twitter"></i>',
+          html : '<i class="fab fa-twitter"></i>' + replaceWithDots(displayName),
           target : "__blank",
           class : "media-link"
         })
       } else if (mediaLink.startsWith("fb::")) {
         var userLink = $("<a />", {
           href : "https://www.facebook.com/search/people/?q=" + displayName,
-          html : "by " + displayName + ' <i class="fab fa-facebook"></i>',
+          html : ' <i class="fab fa-facebook"></i>' + replaceWithDots(displayName),
           target : "__blank",
           class : "media-link"
         })
@@ -94,12 +92,16 @@ function addPlayer(voiceId, entryData, targetId) {
 
     $(`#${likeId}`).on('click', function() {
       event.preventDefault();
+      var likeCount = parseInt($(`#${likeCountId}`).text())
       if($(this).hasClass('active-thumb')) {
         $(this).removeClass('active-thumb')
+        
         updateLike(-1, projectName, voiceId, entryId)
+        $(`#${likeCountId}`).text(likeCount - 1)
       } else {
         $(this).addClass('active-thumb');
         updateLike(1, projectName, voiceId, entryId)
+        $(`#${likeCountId}`).text(likeCount + 1)
       }
     });
   
@@ -140,6 +142,15 @@ function addPlayer(voiceId, entryData, targetId) {
   })
 }
 
+function replaceWithDots(name) {
+  var newName = name
+  const cutoffAt = 6
+  if (newName.length > cutoffAt) {
+    newName = newName.slice(0, cutoffAt) + '..'
+  }
+  return newName
+}
+
 function updateLike(sign, projectName, voiceId, entryId) {
   const increment = firebase.firestore.FieldValue.increment(sign);
 
@@ -161,7 +172,6 @@ function updateLike(sign, projectName, voiceId, entryId) {
       if (likeCount == 0 || likeCount == 1) {
         trans.update(projectRef, projectDoc)
       }
-
       var newVoiceDoc = {}
       newVoiceDoc['vote_like'] = increment
       trans.update(voiceRef, newVoiceDoc)

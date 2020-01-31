@@ -150,50 +150,6 @@ button {
     float: right;
 }
 
-.rating {
-    display: inline-block;
-    width: 100%;
-    margin-top: 40px;
-    padding-top: 40px;
-    text-align: center;
-}
-  
-.like {
-    display: inline-block;
-    font-size: 20px;
-    cursor: pointer;
-}
-.dislike  {
-    display: inline-block;
-    cursor: pointer;
-    font-size: 20px;
-    transform: rotate(90deg);
-}
-
-.dislike:hover {
-    transition: all .1s ease-in-out;
-    transform: rotate(90deg) scale(1.1);
-}
-
-.like:hover {
-    transition: all .1s ease-in-out;
-    transform: scale(1.1);
-}
-
-.like.active-thumb {
-    color: rgb(0, 175, 0);
-}
-.dislike.active-thumb {
-    color: rgb(233, 0, 0);
-}
-
-.media-link {
-    font-size: 12px;
-    float: right;
-    cursor: pointer;
-    color: rgb(87, 87, 87);
-}
-
 .project-category {
     display: inline-block;
     font-weight: 600;

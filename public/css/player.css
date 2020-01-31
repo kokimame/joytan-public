@@ -50,6 +50,34 @@
     -o-box-shadow: 0px -1px  rgba(0,0,0,0.6);
 }
 
+.like {
+    position: absolute;
+    bottom: 2px;
+    color: gray;
+    left: 2px;
+    display: inline-block;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.like:hover {
+    transition: all .1s ease-in-out;
+    transform: scale(1.2);
+    color: orangered;
+}
+
+.like.active-thumb {
+    color: orangered;
+}
+
+.media-link {
+    font-size: 12px;
+    float: right;
+    cursor: pointer;
+    color: rgb(87, 87, 87);
+}
+
+
 .player-table .main-script {
     font-size: 20px;
     font-style: bold;
