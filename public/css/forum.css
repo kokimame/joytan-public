@@ -3,9 +3,6 @@ html, body {
   overflow-x: hidden;
 }
 
-.card {
-	padding: 10px;
-}
 .small-index {
 	position: absolute;
 	font-size: 10px;
@@ -216,4 +213,111 @@ hr {
 .player-icon {
   color: red;
   cursor: pointer;
+}
+
+.ss-container {
+  text-align: center;
+  background: #bbc8d4;
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.ss-label {
+  margin-bottom: 0px;
+  position: relative;
+}
+.ss-heading {
+  padding: 6px 0px;
+}
+.ss-image {
+  max-width: 30%;
+}
+
+#ss-collapse {
+  padding-bottom: 4px
+}
+
+#ss-help {
+  float: right;
+  position: absolute;
+  top: 2px;
+  right: 5px;
+}
+ /*---- Toggle Switches ------*/
+.checkbox-switch {
+/* border: 0.1em solid #444; */
+  border-radius: 20px;
+  display: inline-block;
+  font-size: 16px;
+  width: 2em;
+  height: 1em;
+  overflow: hidden;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+  
+.checkbox-switch > input {
+  display: none;
+}
+
+.checkbox-switch > input ~ .checkbox-switch-inner {
+  margin-left: -2.5em;
+  -webkit-transition: margin-left 0.2s ease;
+  -moz-transition: margin-left 0.2s ease;
+  -o-transition: margin-left 0.2s ease;
+  transition: margin-left 0.2s ease;
+}
+
+.checkbox-switch > input:checked ~ .checkbox-switch-inner {
+  margin-left: -1.5em;
+}
+
+.checkbox-switch > .checkbox-switch-inner {
+  display: block;
+  width: 8em;
+  height: 2em;
+  color: #fff;
+  overflow: hidden;
+}
+
+.checkbox-switch-inner > * {
+  display: block;
+  float: left;
+  height: 2em;
+  line-height: 2em;
+}
+
+.checkbox-switch-inner > .checkbox-switch-on {
+  /* background: #31A354; */
+  background: #14aa4b;
+  width: 3em;
+  padding-left: 1em;
+}
+
+.checkbox-switch-inner > .checkbox-switch-off {
+  background: #b3b3b3;
+  width: 3em;
+  padding-right: 1em;
+  text-align: right;
+}
+
+#ecosystem-collapse .checkbox-switch-inner > .checkbox-switch-on {
+  background: #23527C;
+}
+
+#reference-collapse .checkbox-switch-inner > .checkbox-switch-on {
+  background: #CE691B;
+}
+
+.checkbox-switch-inner > .checkbox-switch-handle {
+  background: #eee;
+  width: 1em;
+  height: 1em;
+  margin-left: -3.5em;
+  border: 0.1em solid #999;
+  border-radius: 20px;
 }

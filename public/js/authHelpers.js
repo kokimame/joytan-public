@@ -64,6 +64,7 @@ function closeModals() {
   $("#about-view").hide();
   $("#stats-view").hide();
   $("#quiz-view").hide();
+  $("#ss-help-view").hide();
 }
 
 function generateAccountPage(user) {

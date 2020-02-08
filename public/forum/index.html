@@ -100,6 +100,31 @@ function dropdownProject() {
   }
 }
 
+function loadImages(entryId) {
+  $("#ss-collapse").empty()
+    const db = firebase.firestore()
+    db.collection("images").doc(entryId).get().then(doc => {
+      const docData = doc.data();
+      if (typeof docData !== "undefined" && typeof docData["urls"] !== "undefined") {
+        var urls = docData["urls"]
+        urls =  urls[Math.floor(Math.random() * urls.length)];
+        docData["urls"].slice(0, 3).forEach(url => {
+          $("#ss-collapse").append(
+            `<img class="ss-image" src="${url}">`
+          )
+        })
+      }
+    })
+}
+
+function changeIndex(newIndex) {
+  addForum(newIndex)
+  if ($("#ss-panel").is(":visible") && $("#ss-input").is(":checked")) {
+    entryId = $("#side-index li").get(newIndex).id
+    loadImages(entryId)
+  }
+}
+
 window.onload = () => {
   const urlVars = getUrlVars()
   const projectName = urlVars["p"];
@@ -117,6 +142,7 @@ window.onload = () => {
 
   $(() => {
     $("#quiz-view").load("quiz.html");
+    $("#ss-help-view").load("ss-help.html");
   });
   // Close modal when clicking outside
   $(".modal, .w3-modal").click(function(ev) {
@@ -126,6 +152,10 @@ window.onload = () => {
       $(this).hide();
     }
   });
+  $('#ss-help').click(function(ev) {
+    ev.preventDefault();
+    $("#ss-help-view").show();
+  })
 
   firebase.auth().onAuthStateChanged(user => {
       if (user) {
@@ -143,6 +173,7 @@ window.onload = () => {
   $("#goQuiz").click(ev => {
     mainToggle("quiz")
   })
+
   if (startQuiz) {
     $("#goQuiz").click()
   } else {
@@ -194,6 +225,9 @@ window.onload = () => {
         else {
           $("#coming-soon").show()
         }
+        if (pData["gallery_available"]) {
+          $('#ss-panel').show()
+        }
 
         jsonRef.getDownloadURL().then(url => {
           $.getJSON(url, data => {
@@ -204,15 +238,17 @@ window.onload = () => {
             timestamps = timestampData;
             quizzes = quizData;
             entries = data
+
+            addQuiz()
             // This is an ugly solution
             jq = _jq
-            addQuiz()
             for (var i = 0; i < entries.length; i++){
-              var commentCntId = "comment_cnt_" + entries[i]['id'];
+              var entryId = entries[i]['id'];
+              var commentCntId = "comment_cnt_" + entryId;
               // console.log(forumArg.entryData, typeof forumArg.entryData)
               $("#side-index").append(
-                `<li class="list-group-item"
-                  onclick="addForum(${i})"><span class="small-numbering">${i+1}</span> 
+                `<li class="list-group-item" onclick="changeIndex(${i})" id="${entryId}">
+                  <span class="small-numbering">${i+1}</span> 
                   ${entries[i][wantedKey]}<span id="${commentCntId}"></span>
                 </li>`
               )
@@ -351,6 +387,7 @@ window.onload = () => {
           </div>
         </div>
       </div>
+      <div id="ss-help-view" class="modal"></div>
 
       <div id="activity-slide" class="row justify-content-center">
         <link href="https://cdn.jsdelivr.net/css-toggle-switch/latest/toggle-switch.css" rel="stylesheet" />
@@ -365,6 +402,30 @@ window.onload = () => {
 
       <div id="activity-container">
         <div class="row" id="forum-wrapper">
+          <div id="ss-panel" class="col-xs-12 col-sm-12 col-md-12" style="padding: 0px; display: none;">
+            <div id="accordion">
+              <div class="ss-container">
+                <i id="ss-help" class="fa fa-question-circle"></i>
+                <span data-toggle="collapse" data-parent="#accordion" href="#ss-collapse">
+                  <label for="ss-input" class="ss-label">
+                    <div class="ss-heading">
+                      <i class="far fa-images"></i> <b>Gallery</b>
+                      <label class="checkbox-switch ss-label">
+                        <input type="checkbox" class="radio tn-switch" id="ss-input" />
+                        <span class="checkbox-switch-inner">
+                          <span class="checkbox-switch-on"></span>
+                          <span class="checkbox-switch-off"></span>
+                          <span class="checkbox-switch-handle"></span>
+                        </span>
+                      </label>
+                    </div>
+                  </label>
+                </span>
+                <div id="ss-collapse" class="panel-collapse collapse in">
+                </div>
+              </div>
+            </div>
+          </div>
           <div class="panel-body col-xs-12 col-sm-4 col-md-3" style="padding: 2px;">
             <div class="table-of-contents">
               Table of Contents
