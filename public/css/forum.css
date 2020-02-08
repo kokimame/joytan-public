@@ -163,7 +163,7 @@ hr {
   font-size: 10px;
 }
 
-.corner-numbering {
+#corner-numbering {
   position: absolute;
   left: 8px;
   top: 4px;
@@ -266,10 +266,10 @@ hr {
 
 .checkbox-switch > input ~ .checkbox-switch-inner {
   margin-left: -2.5em;
-  -webkit-transition: margin-left 0.2s ease;
-  -moz-transition: margin-left 0.2s ease;
-  -o-transition: margin-left 0.2s ease;
-  transition: margin-left 0.2s ease;
+  -webkit-transition: margin-left 0.1s ease;
+  -moz-transition: margin-left 0.1s ease;
+  -o-transition: margin-left 0.1s ease;
+  transition: margin-left 0.1s ease;
 }
 
 .checkbox-switch > input:checked ~ .checkbox-switch-inner {

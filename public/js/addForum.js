@@ -29,7 +29,7 @@ function addForum(index) {
     <div class="board-header">
       <center>
         <table style="position: relative">
-          <span class="corner-numbering">${index + 1}</span>
+          <span id="corner-numbering">${index + 1}</span>
           <tr>
             <td class="td-note">
               ${upperNote}

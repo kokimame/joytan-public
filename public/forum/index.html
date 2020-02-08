@@ -102,19 +102,36 @@ function dropdownProject() {
 
 function loadImages(entryId) {
   $("#ss-collapse").empty()
-    const db = firebase.firestore()
-    db.collection("images").doc(entryId).get().then(doc => {
-      const docData = doc.data();
-      if (typeof docData !== "undefined" && typeof docData["urls"] !== "undefined") {
-        var urls = docData["urls"]
-        urls =  urls[Math.floor(Math.random() * urls.length)];
-        docData["urls"].slice(0, 3).forEach(url => {
-          $("#ss-collapse").append(
-            `<img class="ss-image" src="${url}">`
-          )
-        })
-      }
-    })
+  const db = firebase.firestore()
+  db.collection("images").doc(entryId).get().then(doc => {
+    const docData = doc.data();
+    if (typeof docData !== "undefined" && typeof docData["urls"] !== "undefined") {
+      var urls = docData["urls"]
+      urls =  urls[Math.floor(Math.random() * urls.length)];
+      // Without empty here, duplicated donwload happens on fast multiple clicks
+      $("#ss-collapse").empty()
+      docData["urls"].slice(0, 3).forEach(url => {
+        $("#ss-collapse").append(
+          `<img class="ss-image" src="${url}">`
+        )
+      })
+    }
+  })
+}
+function openGallery() {
+  const currentIndex = parseInt($("#corner-numbering").text()) - 1;
+
+  if ($("#ss-panel").is(":visible") && $("#ss-input").is(":checked")) {
+    entryId = $("#side-index li").get(currentIndex).id
+    loadImages(entryId)
+  }
+
+  if(!$("#ss-input").is(":checked") && ($("#ss-controller").attr("aria-expanded") == "true")) {
+    $("#ss-input").prop("checked", true);
+  }
+  if($("#ss-input").is(":checked") && ($("#ss-controller").attr("aria-expanded") != "true")) {
+    $("#ss-input").prop("checked", false);
+  }
 }
 
 function changeIndex(newIndex) {
@@ -406,18 +423,18 @@ window.onload = () => {
             <div id="accordion">
               <div class="ss-container">
                 <i id="ss-help" class="fa fa-question-circle"></i>
-                <span data-toggle="collapse" data-parent="#accordion" href="#ss-collapse">
+                <span id="ss-controller" data-toggle="collapse" data-parent="#accordion" href="#ss-collapse">
                   <label for="ss-input" class="ss-label">
                     <div class="ss-heading">
                       <i class="far fa-images"></i> <b>Gallery</b>
-                      <label class="checkbox-switch ss-label">
-                        <input type="checkbox" class="radio tn-switch" id="ss-input" />
+                      <span class="checkbox-switch">
+                        <input type="checkbox" class="radio" id="ss-input" onclick="openGallery()"/>
                         <span class="checkbox-switch-inner">
                           <span class="checkbox-switch-on"></span>
                           <span class="checkbox-switch-off"></span>
                           <span class="checkbox-switch-handle"></span>
                         </span>
-                      </label>
+                      </span>
                     </div>
                   </label>
                 </span>
