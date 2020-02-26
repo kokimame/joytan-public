@@ -26,7 +26,7 @@ function addPlayer(voiceId, entryData, targetId) {
     lonString = (typeof lonString === 'undefined') ? "" : lonString;
 
     const div = document.createElement('div');
-    div.className = 'player-table';
+    div.className = `player-table ${entryId}`;
     div.innerHTML = `
     <table class="bordered base-table">
       <td class="control-cell" style="position: relative; height: 65px">
@@ -59,7 +59,13 @@ function addPlayer(voiceId, entryData, targetId) {
       </td>
     </table>
     `;
-    document.getElementById(targetId).appendChild(div);
+    var sameEntries = document.getElementsByClassName(entryId)
+    if (sameEntries.length != 0) {
+      $(`.player-table.${entryId}`).after(div)
+    } else {
+      // If this voice recording is not duplicated entry, append to the last
+      document.getElementById(targetId).appendChild(div);
+    }
     // Hide loader
     $("#" + spinId).addClass("hide-loader");
     $(`#${likeCountId}`).text(entryData['vote_like'])
