@@ -103,15 +103,28 @@ function loadImages(entryId) {
   db.collection("images").doc(entryId).get().then(doc => {
     const docData = doc.data();
     if (typeof docData !== "undefined" && typeof docData["urls"] !== "undefined") {
-      var urls = docData["urls"]
-      urls =  urls[Math.floor(Math.random() * urls.length)];
       // Without empty here, duplicated donwload happens on fast multiple clicks
       $("#ss-collapse").empty()
-      docData["urls"].slice(0, 3).forEach(url => {
-        $("#ss-collapse").append(
-          `<img class="ss-image" src="${url}">`
-        )
-      })
+      var urls = docData["urls"].slice(0, 3)
+      var page_srcs = docData["page_srcs"]
+      console.log(page_srcs)
+      for (var i = 0; i < urls.length; i++) {
+        var url = urls[i]
+        if (typeof page_srcs !== 'undefined') {
+          $("#ss-collapse").append(
+            `<a class="ss-img-container" href="${page_srcs[i]}" target="_blank" >
+              <img class="ss-image" src="${url}">
+              <div class="ss-bottom-link">
+                <div>${page_srcs[i].slice(0, 25)}...</div>
+              </div>
+            </a>`
+          ) 
+        } else {
+          $("#ss-collapse").append(
+            `<img class="ss-image" src="${url}">`
+          ) 
+        }
+      }
     }
   })
 }
