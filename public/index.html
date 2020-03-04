@@ -100,7 +100,6 @@
     
       $(() => {
         $("#about-view").load("about.html"); 
-        $("#stats-view").load("stats.html"); 
       });
       // Close modal when clicking outside
       $(".modal, .w3-modal").click(function(ev) {
@@ -132,6 +131,7 @@
       }
       document.getElementById('check-the-statistics').onclick = e => {
         e.preventDefault();
+        $("#stats-view").load("stats.html"); 
         $("#stats-view").show();
       }
     } // ^^^^^ onload ^^^^^

@@ -1,3 +1,5 @@
+console.log("Stats loaded")
+
 // set the dimensions and margins of the graph
 var margin = {top: 30, right: 30, bottom: 50, left: 50},
     width = 450 - margin.left - margin.right,
