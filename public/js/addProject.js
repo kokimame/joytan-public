@@ -178,14 +178,16 @@ function addProject(pData) {
 
   document.getElementById(autoBtnId).addEventListener('click', () => {
     var autoBtn = document.getElementById(autoBtnId)
-    var playBtns = audioDiv.getElementsByClassName("fa fa-play ml-2");
+    console.log("Auto Clicked")
+
+    var playBtns = audioDiv.getElementsByClassName("fa fa-play");
     if (autoBtn.value == "off" && playBtns.length > 0) {
       autoBtn.value = "on"
       autoBtn.innerHTML = `Auto <a class="fa fa-pause">`
 
       // FIXME: Considerably messy...
       var players = document.getElementsByClassName("card-player")
-      var pauseBtns = audioDiv.getElementsByClassName("fa fa-pause ml-2");
+      var pauseBtns = audioDiv.getElementsByClassName("fa fa-pause");
       while(pauseBtns.length > 0) {
         pauseBtns[0].classList.replace('fa-pause', 'fa-play');
       }
@@ -226,7 +228,7 @@ function addProject(pData) {
 }
 
 function playNext(audioDiv, justEnded, autoBtnId) {
-  var players = audioDiv.getElementsByClassName("fa fa-play ml-2");
+  var players = audioDiv.getElementsByClassName("fa fa-play");
   var arrayOfId = [];
   for (var i = 0; i < players.length; i++) {
     arrayOfId.push(players[i].id)
