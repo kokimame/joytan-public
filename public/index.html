@@ -59,7 +59,6 @@
   <link rel="stylesheet" href="css/player.css">
   <link rel="stylesheet" href="css/shared.css">
   <link rel="stylesheet" href="css/responsive.css">
-  <link rel="stylesheet" href="css/stats.css">
   <link rel="stylesheet" href="css/w3.css">
 
   <link rel="apple-touch-icon" sizes="57x57" href="icons/apple-icon-57x57.png">
@@ -129,11 +128,6 @@
         e.preventDefault();
         $("#about-view").show();
       }
-      document.getElementById('check-the-statistics').onclick = e => {
-        e.preventDefault();
-        $("#stats-view").load("stats.html"); 
-        $("#stats-view").show();
-      }
     } // ^^^^^ onload ^^^^^
   </script>
 </head>
@@ -197,10 +191,11 @@
             Review people's voice contributions</br>
             Deliver to language learners on YouTube.
             <span id="learn-more" class="floating-btn">About <i class="fa fa-question-circle"></i></span>
-            <span id="check-the-statistics" class="floating-btn">Stats 📈<span class="small-beta">beta</span></span>
+            <a href="https://datastudio.google.com/reporting/d3b2df08-5651-4b6e-b1fc-0ff45a110ad4" target="_blank">
+              <span id="check-the-statistics" class="floating-btn">Stats 📈<span class="small-beta">beta</span></span>
+            </a>
           </p>
           <div id="about-view" class="modal"></div>
-          <div id="stats-view" class="modal"></div>
           <div id="auth-view" class="w3-modal">
             <span onclick="closeModals()" class="close" title="Close Modal">&times;</span>
             <div class="w3-modal-content w3-animate-top modal-container auth-container">
